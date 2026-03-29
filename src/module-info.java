@@ -9,5 +9,7 @@ module patp {
 	requires javafx.graphics;
 	requires javafx.controls;
     requires javafx.fxml;
-    exports dao;
+    requires jakarta.mail;
+    requires jakarta.activation;
+    
 }
