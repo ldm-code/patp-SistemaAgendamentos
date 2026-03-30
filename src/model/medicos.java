@@ -1,6 +1,5 @@
 package model;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import dao.medicosDAO;
 public class medicos {
