@@ -11,7 +11,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 public class enviarEmail  {
-	 public static void enviar(String email){
+	 public static void enviar(String email,String titulo, String conteudo){
 		    final String remetente = "demoraesleonardo327@gmail.com";
 	        final String senha = "gpkx skpj ftln efmb"; 
 
@@ -43,8 +43,8 @@ public class enviarEmail  {
 	                Message.RecipientType.TO,
 	                InternetAddress.parse(destinatario)
 	            );
-	            message.setSubject("Teste");
-	            message.setText("Oi,fiz funcionar a parte do email mano :)");
+	            message.setSubject(titulo);
+	            message.setText(conteudo);
 
 	            Transport.send(message);
 
