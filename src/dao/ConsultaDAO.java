@@ -24,8 +24,24 @@ public class ConsultaDAO {
 		
 		ps.close();
 		conn.close();
+	
 		
 		
-	} 
+	}
+	public static void atualizarConsulta(int id,
+			String status)throws Exception {
+		Connection conn=conexaoBanco.conectar();
+		String sql="UPDATE consultas SET status = ? WHERE id = ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1,status);
+		stmt.setInt(2, id);
+		int linhasAfetadas = stmt.executeUpdate();
+		if (linhasAfetadas > 0) {
+              System.out.println("Atualizado com sucesso!");
+        } else {
+              System.out.println("Nenhum registro encontrado.");
+        }
+
+	}
 
 }

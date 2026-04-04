@@ -4,6 +4,7 @@ package model;
 import dao.ConsultaDAO;
 
 public class consultas {
+	
 	public static void cadastrarConsultas(
 			int idUsuario, 
 			int idMed,
@@ -24,6 +25,13 @@ public class consultas {
 			  System.out.println("Erro no cadastro:");
               e.printStackTrace();
 		 }
+	}
+	public static void cancelarConsulta(int id)throws Exception {
+		ConsultaDAO.atualizarConsulta(id,"cancelada");
+		System.out.println("consulta cancelada com sucesso");
+	}
+	public static void concluirConsulta(int id)throws Exception {
+		ConsultaDAO.atualizarConsulta(id,"concluida");
 	}
 
 }

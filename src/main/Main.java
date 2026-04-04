@@ -9,7 +9,7 @@ import model.consultas;
 public class Main {
 
 	   public static void main(String[] args) throws Exception {
-            enviarEmail.enviar("nicolascole543@gmail.com","eai","se apagar e gay xD");
+            enviarEmail.enviar("demoraesleonardo327@gmail.com","eai","xD");
 	        List<MedicosSelect> medicos = medicosDAO.select();
 
 	        for (MedicosSelect m : medicos) {
@@ -21,7 +21,8 @@ public class Main {
 	         
       
 	}
-	        consultas.cadastrarConsultas(4, 1, "11/07/2026");   
+	        consultas.cancelarConsulta(1);  
+	        consultas.concluirConsulta(2);
 
 }
 }
