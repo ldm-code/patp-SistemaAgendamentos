@@ -1,6 +1,4 @@
 package model;
-
-
 import dao.ConsultaDAO;
 
 public class consultas {
