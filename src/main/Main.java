@@ -1,15 +1,18 @@
 package main;
 
 import java.util.List;
+
+import dao.ConsultaDAO;
 import dao.medicosDAO;
 import utils.enviarEmail;
+import model.Consulta;
 import model.MedicosSelect;
 import model.consultas;
 
 public class Main {
 
 	   public static void main(String[] args) throws Exception {
-            enviarEmail.enviar("demoraesleonardo327@gmail.com","eai","xD");
+            
 	        List<MedicosSelect> medicos = medicosDAO.select();
 
 	        for (MedicosSelect m : medicos) {
@@ -18,11 +21,26 @@ public class Main {
 	                m.getNome() + " - " +
 	                m.getTipo()
 	            );
+	        
 	         
       
 	}
-	        consultas.cancelarConsulta(1);  
-	        consultas.concluirConsulta(2);
+	       consultas.cadastrarConsultas(3, 1, "11/09/2026 17:30");
+	       consultas.cadastrarConsultas(3, 1, "11/09/2026 14:30");
+	       
+	       
+	       List<Consulta> lista = ConsultaDAO.listarConsultas();
+	       for (Consulta c : lista) {
+
+	    	    System.out.println(
+	    	        c.getId() + " - " +
+	    	        c.getNomeUsuario() + " - " +
+	    	        c.getNomeMedico() + " - " +
+	    	        c.getEspecialidade() + " - " +
+	    	        c.getDataConsulta() + " - " +
+	    	        c.getStatus()
+	    	    );
+	    	}
 
 }
 }

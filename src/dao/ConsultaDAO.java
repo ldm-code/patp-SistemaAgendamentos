@@ -1,24 +1,30 @@
 package dao;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import model.Consulta;
+
 public class ConsultaDAO {
 	public static void inserir(
 			int idUser,
 			int idMedico,
 			String dataConsulta
 			)throws Exception {
-		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-          LocalDate data = LocalDate.parse(dataConsulta, formatter);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+		LocalDateTime data = LocalDateTime.parse(dataConsulta, formatter);
 		Connection conn=conexaoBanco.conectar();
 		String sql="INSERT INTO consultas (fk_usuario,fk_medico,data_consulta) VALUES (?, ?, ?)";
 		PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		ps.setInt(1,idUser);
 		
 		ps.setInt(2, idMedico);
-		ps.setDate(3, java.sql.Date.valueOf(data));
+		ps.setObject(3, data);
 		
 		ps.executeUpdate();
 		
@@ -43,5 +49,55 @@ public class ConsultaDAO {
         }
 
 	}
+	public static List<Consulta> listarConsultas() throws Exception {
+
+	    List<Consulta> lista = new ArrayList<>();
+
+	    Connection conn = conexaoBanco.conectar();
+
+	    String sql = """
+	        SELECT 
+	            c.id,
+	            u.nome AS nome_usuario,
+	            m.nome AS nome_medico,
+	            m.tipo AS especialidade,
+	            c.data_consulta,
+	            c.status,
+	            c.fk_medico
+	        FROM consultas c
+	        JOIN usuarios u ON c.fk_usuario = u.id
+	        JOIN medicos m ON c.fk_medico = m.id
+	    """;
+
+	    PreparedStatement ps = conn.prepareStatement(sql);
+	    ResultSet rs = ps.executeQuery();
+
+	    while (rs.next()) {
+
+	        int id = rs.getInt("id");
+	        String usuario = rs.getString("nome_usuario");
+	        String medico = rs.getString("nome_medico");
+	        String especialidade = rs.getString("especialidade");
+
+	        LocalDateTime data = rs.getTimestamp("data_consulta").toLocalDateTime();
+
+	        String status = rs.getString("status");
+	        int idMedico = rs.getInt("fk_medico");
+
+	      
+	        Consulta consulta = new Consulta(
+	            id, usuario, medico, especialidade, data, status,idMedico
+	        );
+
+	        lista.add(consulta);
+	    }
+
+	    rs.close();
+	    ps.close();
+	    conn.close();
+
+	    return lista;
+	}
+	
 
 }
