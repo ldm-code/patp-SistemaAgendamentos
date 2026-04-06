@@ -1,4 +1,4 @@
-package model;
+package List;
 
 public class MedicosSelect {
 

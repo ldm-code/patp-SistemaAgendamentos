@@ -2,12 +2,13 @@ package main;
 
 import java.util.List;
 
+import List.Consulta;
+import List.MedicosSelect;
 import dao.ConsultaDAO;
 import dao.medicosDAO;
 import utils.enviarEmail;
-import model.Consulta;
-import model.MedicosSelect;
 import model.consultas;
+import model.agendamentos;
 
 public class Main {
 
@@ -25,8 +26,7 @@ public class Main {
 	         
       
 	}
-	       consultas.cadastrarConsultas(3, 1, "11/09/2026 17:30");
-	       consultas.cadastrarConsultas(3, 1, "11/09/2026 14:30");
+	     
 	       
 	       
 	       List<Consulta> lista = ConsultaDAO.listarConsultas();
@@ -41,6 +41,8 @@ public class Main {
 	    	        c.getStatus()
 	    	    );
 	    	}
-
+	
+           System.out.println("consultas finalizadas");
+	       agendamentos.exibirConsultasTerminal();
 }
 }
