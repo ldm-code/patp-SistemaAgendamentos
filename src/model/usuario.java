@@ -24,8 +24,8 @@ public class usuario {
      String matricula,
      String nome,
      String email,
-     String senha,
-     String tipo
+     String senha
+
  ) {
 
      try {
@@ -42,7 +42,7 @@ public class usuario {
          String senhaCripto=usuario.gerarHash(senha);
 
 
-         UsuarioDAO.inserir(matricula, nome, email,senhaCripto , tipo);
+         UsuarioDAO.inserir(matricula, nome, email,senhaCripto);
 
          System.out.println("Usuário cadastrado com sucesso!");
 

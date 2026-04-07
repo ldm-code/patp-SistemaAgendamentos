@@ -10,9 +10,16 @@ import utils.enviarEmail;
 import model.consultas;
 import model.agendamentos;
 
-public class Main {
 
-	   public static void main(String[] args) throws Exception {
+import javafx.application.Application;
+import view.CadastroUsuario;
+import view.CadastroUsuario;
+public class Main {
+    public static void main(String[] args) {
+    	 try {
+    		 
+        Application.launch(CadastroUsuario.class, args);
+
             
 	        List<MedicosSelect> medicos = medicosDAO.select();
 
@@ -28,7 +35,7 @@ public class Main {
 	}
 	     
 	       
-	       
+	     
 	       List<Consulta> lista = ConsultaDAO.listarConsultas();
 	       for (Consulta c : lista) {
 
@@ -44,5 +51,8 @@ public class Main {
 	
            System.out.println("consultas finalizadas");
 	       agendamentos.exibirConsultasTerminal();
+    	 }catch (Exception e) {
+    	        e.printStackTrace();
+    	    }
 }
 }

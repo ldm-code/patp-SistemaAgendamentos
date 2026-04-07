@@ -10,13 +10,13 @@ public class UsuarioDAO {
      String matricula,
      String nome,
      String email,
-     String senha,
-     String tipo
+     String senha
+   
  ) throws Exception {
 
      Connection conn = conexaoBanco.conectar();
 
-     String sql = "INSERT INTO usuarios (matricula, nome, email, senha, tipo) VALUES (?, ?, ?, ?, ?)";
+     String sql = "INSERT INTO usuarios (matricula, nome, email, senha) VALUES (?, ?, ?, ?)";
 
      PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -24,8 +24,7 @@ public class UsuarioDAO {
      stmt.setString(2, nome);
      stmt.setString(3, email);
      stmt.setString(4, senha);
-     stmt.setString(5, tipo);
-
+   
      stmt.executeUpdate();
 
      stmt.close();
