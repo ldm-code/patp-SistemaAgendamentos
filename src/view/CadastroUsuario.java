@@ -18,7 +18,7 @@ public class CadastroUsuario extends Application {
 	    public void start(Stage stage) {
 
 	        // ===== TÍTULO =====
-	        Label titulo = new Label("Agenademntos cotriel");
+	        Label titulo = new Label("Agendamentos cotriel");
 	        titulo.setFont(new Font("Arial", 28));
 	        titulo.setTextFill(Color.web("#FFD700")); 
 	        // ===== CAMPOS =====
@@ -33,13 +33,16 @@ public class CadastroUsuario extends Application {
 
 	        PasswordField senha = new PasswordField();
 	        senha.setPromptText("Senha");
+	        
+	        TextField cpf = new TextField();
+	        cpf.setPromptText("CPF");
 
 	        // ===== BOTÃO =====
 	        Button botao = new Button("Cadastrar");
 
 	        // Ação do botão
 	        botao.setOnAction(e -> {
-	            usuario.cadastrarUsuario(matricula.getText(),nome.getText() , email.getText(), senha.getText());
+	            usuario.cadastrarUsuario(matricula.getText(),nome.getText() , email.getText(), senha.getText(),cpf.getText());
 	            System.out.println("Matrícula: " + matricula.getText());
 	            System.out.println("Nome: " + nome.getText());
 	            System.out.println("Email: " + email.getText());
@@ -57,6 +60,7 @@ public class CadastroUsuario extends Application {
 	        nome.setStyle(estiloCampos);
 	        email.setStyle(estiloCampos);
 	        senha.setStyle(estiloCampos);
+	        cpf.setStyle(estiloCampos);
 
 	        // ===== ESTILO BOTÃO =====
 	        botao.setStyle("-fx-background-color: #FFD700; " +
@@ -76,6 +80,7 @@ public class CadastroUsuario extends Application {
 	                nome,
 	                email,
 	                senha,
+	                cpf,
 	                botao
 	        );
 

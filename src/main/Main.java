@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
     	 try {
     		 
-        Application.launch(CadastroUsuario.class, args);
+           Application.launch(CadastroUsuario.class, args);
 
             
 	        List<MedicosSelect> medicos = medicosDAO.select();
