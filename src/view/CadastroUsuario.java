@@ -39,14 +39,62 @@ public class CadastroUsuario extends Application {
 
 	        // ===== BOTÃO =====
 	        Button botao = new Button("Cadastrar");
-
+	        Label mensagem = new Label();
+	        mensagem.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
 	        // Ação do botão
 	        botao.setOnAction(e -> {
-	            usuario.cadastrarUsuario(matricula.getText(),nome.getText() , email.getText(), senha.getText(),cpf.getText());
-	            System.out.println("Matrícula: " + matricula.getText());
-	            System.out.println("Nome: " + nome.getText());
-	            System.out.println("Email: " + email.getText());
-	            System.out.println("Senha: " + senha.getText());
+
+	            String m = matricula.getText();
+	            String n = nome.getText();
+	            String em = email.getText();
+	            String s = senha.getText();
+	            String c = cpf.getText();
+
+	            // limpa cpf
+	            c = c.replaceAll("[^\\d]", "").trim();
+
+	            // ===== VALIDAÇÕES =====
+
+	            if (m.isEmpty() || n.isEmpty() || em.isEmpty() || s.isEmpty() || c.isEmpty()) {
+
+	                mensagem.setText("Todos os campos são obrigatórios");
+	                mensagem.setStyle("-fx-text-fill: red;");
+
+	            } else if (!em.contains("@") || !em.contains(".")) {
+
+	                mensagem.setText("Email inválido");
+	                mensagem.setStyle("-fx-text-fill: red;");
+
+	            } else if (!m.matches("\\d+")) {
+
+	                mensagem.setText("Matrícula inválida");
+	                mensagem.setStyle("-fx-text-fill: red;");
+
+	            } else if (c.length() != 11) {
+
+	                mensagem.setText("CPF inválido");
+	                mensagem.setStyle("-fx-text-fill: red;");
+
+	            } else if (s.length() < 6) {
+
+	                mensagem.setText("Senha muito curta");
+	                mensagem.setStyle("-fx-text-fill: red;");
+
+	            } else {
+
+	                // ✔ passou tudo
+	                usuario.cadastrarUsuario(m, n, em, s, c);
+
+	                mensagem.setText("Usuário cadastrado com sucesso!");
+	                mensagem.setStyle("-fx-text-fill: #00ff88; -fx-font-weight: bold;");
+
+	                // limpa campos
+	                matricula.clear();
+	                nome.clear();
+	                email.clear();
+	                senha.clear();
+	                cpf.clear();
+	            }
 	        });
 
 	        // ===== ESTILIZAÇÃO DOS CAMPOS =====
@@ -81,7 +129,8 @@ public class CadastroUsuario extends Application {
 	                email,
 	                senha,
 	                cpf,
-	                botao
+	                botao,
+	                mensagem
 	        );
 
 	        // ===== FUNDO =====

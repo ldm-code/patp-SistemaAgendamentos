@@ -49,7 +49,7 @@ public class usuario {
 			            System.out.println("Email inválido");
 			            return;
 			        }
-                    // validacao de matricula
+                 // validacao de matricula
 			        if (!usuario.validarMatricula(matricula)) {
 			        	System.out.println("matricula invalida");
 			        	return;
@@ -77,7 +77,7 @@ public class usuario {
 			        UsuarioDAO.inserir(matricula, nome, email, senhaCripto, cpf);
 
 			        // 🔹 Email (descomente para que funcione)
-//			        enviarEmail.enviar(
+//		        enviarEmail.enviar(
 //			            email,
 //			            "Bem-vindo",
 //			            "Seja bem-vindo ao sistema de cadastro de consultas da Cotriel"
@@ -90,4 +90,15 @@ public class usuario {
 			        e.printStackTrace();
 			    }
 			}
+	 public static boolean validarLogin(String email, String senha) {
+		    try {
+		        String senhaHash = gerarHash(senha); // você já tem isso
+
+		        return UsuarioDAO.loginSelect(email, senhaHash);
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        return false;
+		    }
+		}
 }

@@ -3,6 +3,7 @@ package dao;
 //UsuarioDAO.java
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class UsuarioDAO {
 
@@ -31,6 +32,18 @@ public class UsuarioDAO {
 
      stmt.close();
      conn.close();
+ }
+ public static boolean loginSelect(String email,String senha) throws Exception{
+	 Connection conn = conexaoBanco.conectar();
+	 String sql = "SELECT * FROM usuarios WHERE email = ? AND senha = ?";
+	 PreparedStatement stmt = conn.prepareStatement(sql);
+
+	    stmt.setString(1, email);
+	    stmt.setString(2, senha);
+	    ResultSet rs = stmt.executeQuery();
+	    return rs.next();
+
+	 
  }
  
 }
