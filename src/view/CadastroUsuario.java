@@ -122,7 +122,7 @@ public class CadastroUsuario extends Application {
                 mensagem.setText("Todos os campos são obrigatórios");
                 mensagem.setStyle("-fx-text-fill: red;");
 
-            } else if (!em.contains("@") || !em.contains(".")) {
+            } else if (!em.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
 
                 mensagem.setText("Email inválido");
 

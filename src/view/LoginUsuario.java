@@ -75,6 +75,11 @@ public class LoginUsuario {
         	        mensagem.setText("Preencha todos os campos!");
         	        mensagem.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
         	        return;
+        	    } else if (!emailDigitado.contains("@")) {
+        	    	mensagem.setText("email invalido!");
+           	        mensagem.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+           	        return;
+        	    	
         	    }
 
         	    boolean valido = usuario.validarLogin(emailDigitado, senhaDigitada);

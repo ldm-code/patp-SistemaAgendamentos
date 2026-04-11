@@ -45,7 +45,7 @@ public class usuario {
 			        }
 
 			        // 🔹 Email básico
-			        if (!email.contains("@") || !email.contains(".")) {
+			        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
 			            System.out.println("Email inválido");
 			            return;
 			        }
@@ -77,11 +77,11 @@ public class usuario {
 			        UsuarioDAO.inserir(matricula, nome, email, senhaCripto, cpf);
 
 			        // 🔹 Email (descomente para que funcione)
-//		        enviarEmail.enviar(
-//			            email,
-//			            "Bem-vindo",
-//			            "Seja bem-vindo ao sistema de cadastro de consultas da Cotriel"
-//			        );
+		        enviarEmail.enviar(
+			            email,
+			            "Bem-vindo",
+			            "Seja bem-vindo ao sistema de cadastro de consultas da Cotriel"
+		        );
 
 			        System.out.println("Usuário cadastrado com sucesso!");
 
