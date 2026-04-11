@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,13 +26,42 @@ public class LoginUsuario {
 
         PasswordField senha = new PasswordField();
         senha.setPromptText("Senha");
+        TextField senhaVisivel = new TextField(); 
+        senhaVisivel.setPromptText("Senha");
+        
+        senhaVisivel.setVisible(false);
+        senhaVisivel.setManaged(false);
 
         // ===== BOTÕES =====
+        Button olho = new Button("👁");
+        olho.setStyle(
+                "-fx-background-color: transparent;" +
+                "-fx-cursor: hand;" +
+                "-fx-font-size: 14;"
+        );
         Button botaoLogin = new Button("Login");
         Button botaoCadastro = new Button("Não sou cadastrado");
 
         // ===== AÇÕES =====
+        olho.setOnAction(e -> {
+            if (senhaVisivel.isVisible()) {
+                senha.setText(senhaVisivel.getText());
 
+                senha.setVisible(true);
+                senha.setManaged(true);
+
+                senhaVisivel.setVisible(false);
+                senhaVisivel.setManaged(false);
+            } else {
+                senhaVisivel.setText(senha.getText());
+
+                senhaVisivel.setVisible(true);
+                senhaVisivel.setManaged(true);
+
+                senha.setVisible(false);
+                senha.setManaged(false);
+            }
+        });
         Label mensagem = new Label();
         mensagem.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
          
@@ -63,6 +93,11 @@ public class LoginUsuario {
         	        mensagem.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         	    }
         	});
+        	  StackPane campoSenha = new StackPane();
+              campoSenha.getChildren().addAll(senha, senhaVisivel, olho);
+
+              StackPane.setAlignment(olho, Pos.CENTER_RIGHT);
+              StackPane.setMargin(olho, new Insets(0, 10, 0, 0));
  
       
 
@@ -77,6 +112,9 @@ public class LoginUsuario {
                               "-fx-background-radius: 10; " +
                               "-fx-padding: 10;";
 
+        // padding maior para caber o olho
+        senha.setStyle(estiloCampos + "-fx-padding: 10 35 10 10;");
+        senhaVisivel.setStyle(estiloCampos + "-fx-padding: 10 35 10 10;");
         email.setStyle(estiloCampos);
         senha.setStyle(estiloCampos);
 
@@ -108,7 +146,7 @@ public class LoginUsuario {
         layout.getChildren().addAll(
                 titulo,
                 email,
-                senha,
+                campoSenha,
                 boxBotoes,
                 mensagem
         );
