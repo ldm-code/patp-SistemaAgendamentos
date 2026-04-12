@@ -151,6 +151,7 @@ public class CadastroUsuario extends Application {
                 senha.clear();
                 senhaVisivel.clear();
                 cpf.clear();
+                new LoginUsuario().start(stage);
             }
         });
 

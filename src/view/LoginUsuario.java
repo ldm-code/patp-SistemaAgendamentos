@@ -1,5 +1,6 @@
 package view;
 
+import List.Usuario;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import model.usuario;
+import utils.SessaoUsuario;
 
 public class LoginUsuario {
 
@@ -82,15 +84,25 @@ public class LoginUsuario {
         	    	
         	    }
 
-        	    boolean valido = usuario.validarLogin(emailDigitado, senhaDigitada);
+        	    Usuario valido = usuario.validarLogin(emailDigitado, senhaDigitada);
+        	    SessaoUsuario.usuarioLogado = valido;
 
-        	    if (valido) {
+        	    if (valido !=null) {
 
         	        mensagem.setText("Login realizado com sucesso!");
         	        mensagem.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
 
         	        // opcional: trocar de tela
         	        // new Home().start(stage);
+        	        if (SessaoUsuario.usuarioLogado.getTipo().equals("adm")) {
+        	        	System.out.println("voce e adm roblox???");
+        	        	
+        	        }
+        	        else {
+        	        	System.out.println("nao e adm");
+        	        }
+        	        email.clear();
+        	        senha.clear();
 
         	    } else {
 
