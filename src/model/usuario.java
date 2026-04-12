@@ -1,7 +1,8 @@
 package model;
 import java.security.MessageDigest;
+
+import List.Usuario;
 import dao.UsuarioDAO;
-import javafx.scene.text.Text;
 import utils.enviarEmail;
 //UsuarioService.java
 public class usuario {
@@ -55,7 +56,7 @@ public class usuario {
 			        	return;
 			        }
 			        // 🔹 CPF (estrutura básica)
-			     // limpa máscara
+			        // limpa máscara
 			        cpf = cpf.replaceAll("[^\\d]", "");
 
 			        // valida
@@ -73,10 +74,10 @@ public class usuario {
 			        // 🔹 Criptografia
 			        String senhaCripto = usuario.gerarHash(senha);
 
-			        // 🔹 Inserção (AGORA com CPF)
+			        // 🔹 Inserção de dados em banco
 			        UsuarioDAO.inserir(matricula, nome, email, senhaCripto, cpf);
 
-			        // 🔹 Email (descomente para que funcione)
+			        // 🔹 Envio de Email 
 		        enviarEmail.enviar(
 			            email,
 			            "Bem-vindo",
@@ -90,15 +91,17 @@ public class usuario {
 			        e.printStackTrace();
 			    }
 			}
-	 public static boolean validarLogin(String email, String senha) {
+	 // Validacao de login
+	 public static Usuario validarLogin(String email, String senha) {
 		    try {
-		        String senhaHash = gerarHash(senha); // você já tem isso
+		        String senhaHash = gerarHash(senha); // Criptografa o valor digitado para comparacao
 
-		        return UsuarioDAO.loginSelect(email, senhaHash);
+		       Usuario u= UsuarioDAO.loginSelect(email, senhaHash);// faz o login
+		       return u;
 
 		    } catch (Exception e) {
 		        e.printStackTrace();
-		        return false;
+		        return null;
 		    }
 		}
 }

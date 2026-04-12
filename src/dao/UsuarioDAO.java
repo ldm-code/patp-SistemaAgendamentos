@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import List.Usuario;
+
 public class UsuarioDAO {
 
  public static void inserir(
@@ -33,7 +35,7 @@ public class UsuarioDAO {
      stmt.close();
      conn.close();
  }
- public static boolean loginSelect(String email,String senha) throws Exception{
+ public static Usuario loginSelect(String email, String senha) throws Exception{
 	 Connection conn = conexaoBanco.conectar();
 	 String sql = "SELECT * FROM usuarios WHERE email = ? AND senha = ?";
 	 PreparedStatement stmt = conn.prepareStatement(sql);
@@ -41,7 +43,29 @@ public class UsuarioDAO {
 	    stmt.setString(1, email);
 	    stmt.setString(2, senha);
 	    ResultSet rs = stmt.executeQuery();
-	    return rs.next();
+	
+	    if (rs.next()) {
+	    	Usuario u= new Usuario();
+	    	u.setId(rs.getInt("id"));
+	    	u.setMatricula(rs.getString("matricula"));
+	    	u.setNome(rs.getString("nome"));
+	    	u.setEmail(rs.getString("email"));
+	    	u.setCpf(rs.getString("cpf"));
+	    	u.setTipo(rs.getString("tipo"));
+	    	 rs.close();
+	         stmt.close();
+	         conn.close();
+
+	         return u;
+	     
+
+	    }
+	     rs.close();
+	     stmt.close();
+	     conn.close();
+
+	     return null;
+	    	
 
 	 
  }
