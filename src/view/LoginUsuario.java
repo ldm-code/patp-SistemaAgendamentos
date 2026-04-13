@@ -93,13 +93,12 @@ public class LoginUsuario {
         	        mensagem.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
 
         	        // opcional: trocar de tela
-        	        // new Home().start(stage);
         	        if (SessaoUsuario.usuarioLogado.getTipo().equals("adm")) {
-        	        	System.out.println("voce e adm roblox???");
+        	            new TelaConsultas().start(stage);
         	        	
         	        }
         	        else {
-        	        	System.out.println("nao e adm");
+        	        	new TelaConsultasUser().start(stage);
         	        }
         	        email.clear();
         	        senha.clear();

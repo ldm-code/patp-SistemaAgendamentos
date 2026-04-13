@@ -99,6 +99,59 @@ public class ConsultaDAO {
 
 	    return lista;
 	}
+	public static List<Consulta> listarConsultasUser(int idUsuario) throws Exception {
+
+	    List<Consulta> lista = new ArrayList<>();
+
+	    Connection conn = conexaoBanco.conectar();
+
+	    String sql = """
+	        SELECT 
+	            c.id,
+	            u.nome AS nome_usuario,
+	            m.nome AS nome_medico,
+	            m.tipo AS especialidade,
+	            c.data_consulta,
+	            c.status,
+	            c.fk_medico
+	        FROM consultas c
+	        JOIN usuarios u ON c.fk_usuario = u.id
+	        JOIN medicos m ON c.fk_medico = m.id
+	        WHERE c.fk_usuario = ?
+	    """;
+
+	    PreparedStatement ps = conn.prepareStatement(sql);
+
 	
+	    ps.setInt(1, idUsuario);
+
+	    ResultSet rs = ps.executeQuery();
+
+	    while (rs.next()) {
+
+	        int id = rs.getInt("id");
+	        String usuario = rs.getString("nome_usuario");
+	        String medico = rs.getString("nome_medico");
+	        String especialidade = rs.getString("especialidade");
+
+	        LocalDateTime data = rs.getTimestamp("data_consulta").toLocalDateTime();
+
+	        String status = rs.getString("status");
+	        int idMedico = rs.getInt("fk_medico");
+
+	        Consulta consulta = new Consulta(
+	            id, usuario, medico, especialidade, data, status, idMedico
+	        );
+
+	        lista.add(consulta);
+	    }
+
+	    rs.close();
+	    ps.close();
+	    conn.close();
+
+	    return lista;
+	}
+
 
 }
