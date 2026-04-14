@@ -70,7 +70,12 @@ public class LoginUsuario {
         	botaoLogin.setOnAction(e -> {
 
         	    String emailDigitado = email.getText();
-        	    String senhaDigitada = senha.getText();
+        	    String senhaDigitada;
+        	    if (senhaVisivel.isVisible()) {
+        	        senhaDigitada = senhaVisivel.getText();
+        	    } else {
+        	        senhaDigitada = senha.getText();
+        	    }
 
         	    // 🔹 valida campos vazios
         	    if (emailDigitado.isEmpty() || senhaDigitada.isEmpty()) {

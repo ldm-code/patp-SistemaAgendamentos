@@ -142,18 +142,18 @@ public class TelaConsultas {
      // nulo retorna nada
         if (status == null) return "";
          // switch para condicionar o que exibido
-        switch (status.toLowerCase()) {
+        switch (status.toLowerCase()) { // toLoweCase() transforma em minúsculo
             case "em_espera":
-                return "Em espera";
+                return "Em espera"; // em_espera vira Em espera na tela
 
             case "concluida":
-                return "Concluída";
+                return "Concluída"; // concluida vira   Concluída   na tela
 
             case "cancelada":
-                return "Cancelada";
+                return "Cancelada"; // cancelada vida Cancelada na tela
 
             default:
-                return status;
+                return status; // retorna o valor 
         }
     }
 
@@ -177,9 +177,9 @@ public class TelaConsultas {
 
         // ===== BOTÕES DE AÇÃO =====
 
-        Button btnCancelar = new Button("Cancelar");
-        Button btnConcluir = new Button("Concluir");
-        Button btnEspera = new Button("Em Espera");
+        Button btnCancelar = new Button("Cancelar"); // cancelar
+        Button btnConcluir = new Button("Concluir"); // concluir
+        Button btnEspera = new Button("Em Espera");  // marcar em espera
 
         // Estilo visual dos botões
         btnCancelar.setStyle("-fx-background-color: #ff4d4d; -fx-text-fill: white;");
@@ -190,6 +190,8 @@ public class TelaConsultas {
         String status = consulta.getStatus();
 
         // ===== REGRAS DE NEGÓCIO =====
+        
+        
         // Se já estiver concluído ,desbilita botao de concluir
         if (status.equalsIgnoreCase("concluida")) {
             btnConcluir.setDisable(true);
