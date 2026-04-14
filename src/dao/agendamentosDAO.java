@@ -37,7 +37,8 @@ public class agendamentosDAO  {
 FROM agendamentos a
 INNER JOIN consultas c ON a.fk_consulta = c.id
 INNER JOIN usuarios u ON c.fk_usuario = u.id
-INNER JOIN medicos m ON c.fk_medico = m.id;
+INNER JOIN medicos m ON c.fk_medico = m.id
+WHERE  c.status="concluida";
 		        """;
 
 		        Connection conn = conexaoBanco.conectar();
