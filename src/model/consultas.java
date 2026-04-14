@@ -63,5 +63,9 @@ public class consultas {
 		agendamentosDAO.inserirAgendamento(id);
 		ConsultaDAO.atualizarConsulta(id,"concluida");
 	}
+	public static void marcarEmEspera(int id) throws Exception{
+		ConsultaDAO.atualizarConsulta(id,"em_espera");
+		
+	}
 
 }
