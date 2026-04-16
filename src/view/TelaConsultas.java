@@ -143,6 +143,7 @@ public class TelaConsultas {
         if (status == null) return "";
          // switch para condicionar o que exibido
         switch (status.toLowerCase()) { // toLoweCase() transforma em minúsculo
+        // mudar para agenadada:
             case "em_espera":
                 return "Em espera"; // em_espera vira Em espera na tela
 
@@ -179,7 +180,7 @@ public class TelaConsultas {
 
         Button btnCancelar = new Button("Cancelar"); // cancelar
         Button btnConcluir = new Button("Concluir"); // concluir
-        Button btnEspera = new Button("Em Espera");  // marcar em espera
+        Button btnEspera = new Button("Agendada");  // marcar como agendada
 
         // Estilo visual dos botões
         btnCancelar.setStyle("-fx-background-color: #ff4d4d; -fx-text-fill: white;");
