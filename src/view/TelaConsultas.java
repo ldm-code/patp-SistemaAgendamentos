@@ -61,7 +61,7 @@ public class TelaConsultas {
 
         // Ação ao clicar no botão
         btnAgendar.setOnAction(e -> {
-            System.out.println("abrir tela de agendamento");
+            new TelaAgendamento().start(stage); 
         });
 
         // ===== LISTA DE CONSULTAS =====
@@ -144,8 +144,8 @@ public class TelaConsultas {
          // switch para condicionar o que exibido
         switch (status.toLowerCase()) { // toLoweCase() transforma em minúsculo
         // mudar para agenadada:
-            case "em_espera":
-                return "Em espera"; // em_espera vira Em espera na tela
+            case "agendada":
+                return "Agendada"; // em_espera vira Em espera na tela
 
             case "concluida":
                 return "Concluída"; // concluida vira   Concluída   na tela
@@ -243,7 +243,7 @@ public class TelaConsultas {
         // Marcar como em espera
         btnEspera.setOnAction(e -> {
             try {
-                consultas.marcarEmEspera(consulta.getId());
+                consultas.marcarAgendamento(consulta.getId());
 
                 mensagemFeedback.setText("Consulta marcada como EM ESPERA");
                 mensagemFeedback.setTextFill(Color.ORANGE);
