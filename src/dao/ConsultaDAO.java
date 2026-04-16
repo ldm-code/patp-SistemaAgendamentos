@@ -13,27 +13,27 @@ import java.sql.Statement;
 
 public class ConsultaDAO {
 	public static void inserir(
-			int idUser,
-			int idMedico,
-			String dataConsulta
-			)throws Exception {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-		LocalDateTime data = LocalDateTime.parse(dataConsulta, formatter);
-		Connection conn=conexaoBanco.conectar();
-		String sql="INSERT INTO consultas (fk_usuario,fk_medico,data_consulta) VALUES (?, ?, ?)";
-		PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		ps.setInt(1,idUser);
-		
-		ps.setInt(2, idMedico);
-		ps.setObject(3, data);
-		
-		ps.executeUpdate();
-		
-		ps.close();
-		conn.close();
-	
-		
-		
+	        int idUser,
+	        int idMedico,
+	        LocalDateTime dataConsulta
+	) throws Exception {
+
+	    Connection conn = conexaoBanco.conectar();
+
+	    String sql = "INSERT INTO consultas (fk_usuario,fk_medico,data_consulta) VALUES (?, ?, ?)";
+
+	    PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+	    ps.setInt(1, idUser);
+	    ps.setInt(2, idMedico);
+
+	    // 🔥 Aqui está o ponto importante
+	    ps.setObject(3, dataConsulta);
+
+	    ps.executeUpdate();
+
+	    ps.close();
+	    conn.close();
 	}
 	public static void atualizarConsulta(int id,
 			String status)throws Exception {

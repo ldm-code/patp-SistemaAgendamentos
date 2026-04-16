@@ -1,4 +1,5 @@
 package model;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import dao.agendamentosDAO;
 import java.time.format.DateTimeFormatter;
@@ -22,38 +23,40 @@ public class consultas {
 
 	
 
-	public static void cadastrarConsultas(
-			int idUsuario, 
-			int idMed,
-			String dataConsultas
-		
-			)  {
-		 try {
-			
-			 
-		if (dataConsultas == null || dataConsultas.isEmpty()) {
-			System.out.println("Data final inválida ou inexistente.");
-		}
-		LocalDateTime agora = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-		LocalDateTime data = LocalDateTime.parse(dataConsultas, formatter);
+	public static String cadastrarConsultas(
+	        int idUsuario, 
+	        int idMed,
+	        LocalDateTime dataConsultas
+	) {
+	    try {
 
-		Consulta c = new Consulta();
-		c.setDataConsulta(data);
+	        if (dataConsultas == null) {
+	            return "Data inválida ou inexistente.";
+	        }
 
+	        if (dataConsultas.isBefore(LocalDateTime.now())) {
+	            return "Data no passado não permitida.";
+	        }
 
-		if (!c.isHorarioValido()|| medicoTemConsultaNoHorario(idMed, data) || data.isBefore(agora)) {
-		    System.out.println("Horário inválido!,escolha outro");
-		}
-		else {
-			
-		ConsultaDAO.inserir(idUsuario, idMed, dataConsultas);
-		System.out.println("Consulta marcada com sucesso!");
-		}
-		 }catch (Exception e){
-			  System.out.println("Erro no cadastro:");
-              e.printStackTrace();
-		 }
+	        Consulta c = new Consulta();
+	        c.setDataConsulta(dataConsultas);
+
+	        if (!c.isHorarioValido()) {
+	            return "Horário inválido!";
+	        }
+
+	        if (medicoTemConsultaNoHorario(idMed, dataConsultas)) {
+	            return "Horário já ocupado!";
+	        }
+
+	        ConsultaDAO.inserir(idUsuario, idMed, dataConsultas);
+
+	        return "Consulta marcada com sucesso!";
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "Erro no cadastro!";
+	    }
 	}
 	public static void cancelarConsulta(int id)throws Exception {
 		ConsultaDAO.atualizarConsulta(id,"cancelada");
@@ -63,8 +66,8 @@ public class consultas {
 		agendamentosDAO.inserirAgendamento(id);
 		ConsultaDAO.atualizarConsulta(id,"concluida");
 	}
-	public static void marcarEmEspera(int id) throws Exception{
-		ConsultaDAO.atualizarConsulta(id,"em_espera");
+	public static void marcarAgendamento(int id) throws Exception{
+		ConsultaDAO.atualizarConsulta(id,"agendada");
 		
 	}
 
