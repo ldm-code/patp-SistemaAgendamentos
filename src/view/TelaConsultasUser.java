@@ -46,7 +46,7 @@ public class TelaConsultasUser {
 
 	        layout.setStyle("-fx-background-color: #0f3d2e;");
 
-	        Scene scene = new Scene(layout, 500, 500);
+	        Scene scene = new Scene(layout, 1366, 700);
 	        stage.setScene(scene);
 	        stage.setTitle("Consultas");
 	        stage.show();

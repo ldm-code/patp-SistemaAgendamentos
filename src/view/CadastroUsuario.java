@@ -154,7 +154,11 @@ public class CadastroUsuario extends Application {
                 new LoginUsuario().start(stage);
             }
         });
-
+        matricula.setMaxWidth(210);
+        cpf.setMaxWidth(210);
+        nome.setMaxWidth(210);
+        email.setMaxWidth(210);
+        campoSenha.setMaxWidth(210);
         // ===== LAYOUT =====
         VBox layout = new VBox(15);
         layout.setAlignment(Pos.CENTER);
@@ -173,7 +177,7 @@ public class CadastroUsuario extends Application {
 
         layout.setStyle("-fx-background-color: #0f3d2e;");
 
-        Scene scene = new Scene(layout, 400, 500);
+        Scene scene = new Scene(layout, 1366, 700);
 
         stage.setTitle("Tela de Cadastro");
         stage.setScene(scene);

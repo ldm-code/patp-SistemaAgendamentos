@@ -101,7 +101,7 @@ public class TelaConsultas {
         layout.setStyle("-fx-background-color: #0f3d2e;");
 
         // Cria a cena (tela visível)
-        Scene scene = new Scene(layout, 500, 500);
+        Scene scene = new Scene(layout,1366, 700);
 
         // Define a cena na janela
         stage.setScene(scene);
@@ -145,7 +145,7 @@ public class TelaConsultas {
         switch (status.toLowerCase()) { // toLoweCase() transforma em minúsculo
         // mudar para agenadada:
             case "agendada":
-                return "Agendada"; // em_espera vira Em espera na tela
+                return "Agendada"; // agendada vira Agendada na tela
 
             case "concluida":
                 return "Concluída"; // concluida vira   Concluída   na tela
@@ -228,6 +228,7 @@ public class TelaConsultas {
         // Concluir consulta
         btnConcluir.setOnAction(e -> {
             try {
+                
                 consultas.concluirConsulta(consulta.getId());
 
                 mensagemFeedback.setText("Consulta concluída!");

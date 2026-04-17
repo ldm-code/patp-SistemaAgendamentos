@@ -100,6 +100,7 @@ public class TelaAgendamento {
                     feedback.setTextFill(Color.RED);
                     return;
                 }
+              
 
                 // 🔥 CONVERSÃO FINAL
                 LocalTime hora = LocalTime.parse(horaStr);
@@ -156,6 +157,10 @@ public class TelaAgendamento {
         btnAgendar.setMaxWidth(Double.MAX_VALUE);
         btnVoltar.setMaxWidth(Double.MAX_VALUE);
         campoEmail.setMaxWidth(210);
+        btnAgendar.setMaxWidth(210);
+        selectMedico.setMaxWidth(210);
+        dataConsulta.setMaxWidth(210);
+        comboHora.setMaxWidth(210);
 
         // ===== LAYOUT =====
         VBox layout = new VBox(15);
@@ -175,7 +180,7 @@ public class TelaAgendamento {
 
         layout.setStyle("-fx-background-color: #0f3d2e;");
 
-        Scene scene = new Scene(layout, 400, 450);
+        Scene scene = new Scene(layout, 1366, 700);
         stage.setTitle("Agendamento");
         stage.setScene(scene);
         stage.show();

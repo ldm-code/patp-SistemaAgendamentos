@@ -138,6 +138,8 @@ public class LoginUsuario {
         senhaVisivel.setStyle(estiloCampos + "-fx-padding: 10 35 10 10;");
         email.setStyle(estiloCampos);
         senha.setStyle(estiloCampos);
+        campoSenha.setMaxWidth(210);
+        email.setMaxWidth(210);
 
         // ===== ESTILO BOTÕES =====
         botaoLogin.setStyle("-fx-background-color: #FFD700; " +
@@ -153,6 +155,7 @@ public class LoginUsuario {
         // ===== RESPONSIVIDADE DOS BOTÕES =====
         botaoLogin.setMaxWidth(Double.MAX_VALUE);
         botaoCadastro.setMaxWidth(Double.MAX_VALUE);
+        botaoLogin.setMaxWidth(210);
 
         VBox boxBotoes = new VBox(10);
         boxBotoes.setAlignment(Pos.CENTER);
@@ -176,7 +179,7 @@ public class LoginUsuario {
         layout.setStyle("-fx-background-color: #0f3d2e;");
 
         // ===== CENA =====
-        Scene scene = new Scene(layout, 400, 400);
+        Scene scene = new Scene(layout, 1366, 700);
 
         stage.setTitle("Tela de Login");
         stage.setScene(scene);
