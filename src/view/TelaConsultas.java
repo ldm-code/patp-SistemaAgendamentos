@@ -203,7 +203,7 @@ public class TelaConsultas {
         	btnCancelar.setDisable(true);
         }
         // se esta em espera (agendada) desabiliita o botao de agendar
-        else if( status.equalsIgnoreCase("em_espera")) {
+        else if( status.equalsIgnoreCase("agendada")) {
         	
         	btnEspera.setDisable(true);
         }
@@ -245,7 +245,7 @@ public class TelaConsultas {
             try {
                 consultas.marcarAgendamento(consulta.getId());
 
-                mensagemFeedback.setText("Consulta marcada como EM ESPERA");
+                mensagemFeedback.setText("Consulta marcada como agendada");
                 mensagemFeedback.setTextFill(Color.ORANGE);
 
                 carregarConsultas();
