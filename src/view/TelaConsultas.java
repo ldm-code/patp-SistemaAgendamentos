@@ -74,12 +74,18 @@ public class TelaConsultas {
 
         // Faz o conteúdo ocupar toda a largura
         scroll.setFitToWidth(true);
-
+        scroll.setPrefWidth(400);
+        scroll.setMaxWidth(400);
         // Remove fundo padrão do scroll
-        scroll.setStyle("-fx-background: transparent;");
+        scroll.setStyle(
+        	    "-fx-background: transparent;" +
+        	    "-fx-background-color: transparent;" +
+        	    "-fx-control-inner-background: transparent;"
+        	);
 
         // Carrega os dados do banco ao iniciar a tela
         carregarConsultas();
+        listaConsultas.setAlignment(Pos.CENTER);
 
         // ===== LAYOUT PRINCIPAL =====
 
@@ -129,7 +135,10 @@ public class TelaConsultas {
             for (Consulta c : consultas) {
 
                 // Cria um "card" visual e adiciona na tela
-                listaConsultas.getChildren().add(criarCardConsulta(c));
+            	HBox wrapper = new HBox(criarCardConsulta(c));
+            	wrapper.setAlignment(Pos.CENTER);
+
+            	listaConsultas.getChildren().add(wrapper);
             }
 
         } catch (Exception e) {
@@ -175,6 +184,7 @@ public class TelaConsultas {
 
         // Define cor do texto
         info.setTextFill(Color.WHITE);
+        // largura fixa
 
         // ===== BOTÕES DE AÇÃO =====
 
@@ -263,9 +273,11 @@ public class TelaConsultas {
 
         // HBox organiza horizontalmente (info + botões)
         HBox card = new HBox(20);
+        card.setPrefWidth(400);
+        card.setMaxWidth(400);
 
         card.setPadding(new Insets(15));         // espaçamento interno
-        card.setAlignment(Pos.CENTER_LEFT);      // alinhamento
+        card.setAlignment(Pos.CENTER_LEFT);     // alinhamento
 
         // Adiciona os elementos no card
         card.getChildren().addAll(info, botoes);

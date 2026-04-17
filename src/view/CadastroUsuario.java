@@ -154,11 +154,11 @@ public class CadastroUsuario extends Application {
                 new LoginUsuario().start(stage);
             }
         });
-        matricula.setMaxWidth(210);
-        cpf.setMaxWidth(210);
-        nome.setMaxWidth(210);
-        email.setMaxWidth(210);
-        campoSenha.setMaxWidth(210);
+        matricula.setMaxWidth(300);
+        cpf.setMaxWidth(300);
+        nome.setMaxWidth(300);
+        email.setMaxWidth(300);
+        campoSenha.setMaxWidth(300);
         // ===== LAYOUT =====
         VBox layout = new VBox(15);
         layout.setAlignment(Pos.CENTER);

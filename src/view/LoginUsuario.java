@@ -138,8 +138,8 @@ public class LoginUsuario {
         senhaVisivel.setStyle(estiloCampos + "-fx-padding: 10 35 10 10;");
         email.setStyle(estiloCampos);
         senha.setStyle(estiloCampos);
-        campoSenha.setMaxWidth(210);
-        email.setMaxWidth(210);
+        campoSenha.setMaxWidth(300);
+        email.setMaxWidth(300);
 
         // ===== ESTILO BOTÕES =====
         botaoLogin.setStyle("-fx-background-color: #FFD700; " +
@@ -155,7 +155,7 @@ public class LoginUsuario {
         // ===== RESPONSIVIDADE DOS BOTÕES =====
         botaoLogin.setMaxWidth(Double.MAX_VALUE);
         botaoCadastro.setMaxWidth(Double.MAX_VALUE);
-        botaoLogin.setMaxWidth(210);
+        botaoLogin.setMaxWidth(300);
 
         VBox boxBotoes = new VBox(10);
         boxBotoes.setAlignment(Pos.CENTER);

@@ -156,11 +156,11 @@ public class TelaAgendamento {
 
         btnAgendar.setMaxWidth(Double.MAX_VALUE);
         btnVoltar.setMaxWidth(Double.MAX_VALUE);
-        campoEmail.setMaxWidth(210);
-        btnAgendar.setMaxWidth(210);
-        selectMedico.setMaxWidth(210);
-        dataConsulta.setMaxWidth(210);
-        comboHora.setMaxWidth(210);
+        campoEmail.setMaxWidth(300);
+        btnAgendar.setMaxWidth(300);
+        selectMedico.setMaxWidth(300);
+        dataConsulta.setMaxWidth(300);
+        comboHora.setMaxWidth(300);
 
         // ===== LAYOUT =====
         VBox layout = new VBox(15);
