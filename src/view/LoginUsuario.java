@@ -18,7 +18,7 @@ public class LoginUsuario {
     public void start(Stage stage) {
 
         // ===== TÍTULO =====
-        Label titulo = new Label("Agendamentos cotriel");
+        Label titulo = new Label("Sistema de Agendamentos - Cotriel");
         titulo.setFont(new Font("Arial", 28));
         titulo.setTextFill(Color.web("#FFD700"));
 

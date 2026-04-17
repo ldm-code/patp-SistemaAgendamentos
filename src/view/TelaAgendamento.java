@@ -59,7 +59,7 @@ public class TelaAgendamento {
             @Override
             protected void updateItem(MedicosSelect m, boolean empty) {
                 super.updateItem(m, empty);
-                setText(empty || m == null ? "" : m.getNome());
+                setText(empty || m == null ? "" : m.getNome() + " - " + m.getTipo());
             }
         });
 
