@@ -1,5 +1,6 @@
 package model;
 import java.time.LocalDate;
+import dao.ConsultaDAO;
 import java.time.LocalDateTime;
 import dao.agendamentosDAO;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +15,7 @@ public class consultas {
 	    List<Consulta> lista = ConsultaDAO.listarConsultas();
 	    for (Consulta c : lista) {
 	     
-	        if (c.getIdMedico() == idMedico && c.getDataConsulta().equals(data)) {
+	        if (c.getIdMedico() == idMedico && c.getDataConsulta().equals(data) && c.getStatus().equalsIgnoreCase("agendada")) {
 	            return true; 
 	        }
 	    }
@@ -48,6 +49,30 @@ public class consultas {
 	        if (medicoTemConsultaNoHorario(idMed, dataConsultas)) {
 	            return "Horário já ocupado!";
 	        }
+	        if (dataConsultas.isBefore(LocalDateTime.now().plusHours(1))) {
+	            return "Agendamento deve ser feito com 1h de antecedência.";
+	        }
+	        if (dataConsultas.getDayOfWeek().getValue() == 7) {
+	            return "Não há atendimento aos domingos!";
+	        }
+	        if (dataConsultas.getDayOfWeek().getValue() == 6) {
+	            return "Não há atendimento aos sábados!";
+	        }
+	        boolean existe = ConsultaDAO.usuarioJaTemConsulta(
+                    idUsuario,
+                    idMed, 
+                    dataConsultas
+                    
+                   
+            );
+	        boolean marcada=ConsultaDAO.usuarioJaTemConsultaMesmoHorario(idUsuario, dataConsultas);
+	        if (existe) { 
+	            return "Você já possui uma consulta com esse médico em um horário proximo!";
+	        }
+	        if(marcada) {
+	        	  return "Você já possui uma consulta com outro médico nesse horário !";
+	        }
+
 
 	        ConsultaDAO.inserir(idUsuario, idMed, dataConsultas);
 

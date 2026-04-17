@@ -3,6 +3,7 @@ package view;
 // ===== IMPORTS =====
 // Importações do JavaFX para construção da interface gráfica
 import javafx.geometry.Insets;      // Espaçamento interno (padding)
+import java.time.LocalDate;
 import javafx.geometry.Pos;         // Alinhamento de elementos
 import javafx.scene.Scene;          // Cena (tela)
 import javafx.scene.control.*;      // Componentes (Button, Label, ScrollPane, etc)
@@ -10,7 +11,6 @@ import javafx.scene.layout.*;       // Layouts (VBox, HBox)
 import javafx.scene.paint.Color;    // Manipulação de cores
 import javafx.scene.text.Font;      // Fonte de texto
 import javafx.stage.Stage;          // Janela principal
-
 // Importações de utilidades Java
 import java.time.format.DateTimeFormatter; // Formatar datas
 import java.util.List;                     // Lista de objetos
@@ -46,11 +46,41 @@ public class TelaConsultas {
 
         mensagemFeedback.setTextFill(Color.LIGHTGREEN); // cor padrão
         mensagemFeedback.setFont(new Font("Arial", 14)); // tamanho da fonte
+        
+        HBox barraTopo = new HBox(10);
+        barraTopo.setAlignment(Pos.CENTER_LEFT);
+        
+        DatePicker filtroData = new DatePicker();
+        filtroData.setPromptText("Filtrar por data");
+        
+        filtroData.setStyle(
+        	    "-fx-background-color: #1e1e1e;" +
+        	    "-fx-control-inner-background: #1e1e1e;" +
+        	    "-fx-text-fill: white;" +               
+        	    "-fx-prompt-text-fill: white;" +        
+        	    "-fx-border-radius: 10;" +
+        	    "-fx-background-radius: 10;" +
+        	    "-fx-padding: 5;"
+        	);
+        ((TextField) filtroData.getEditor()).setStyle(
+        	    "-fx-text-fill: white;" +
+        	    "-fx-prompt-text-fill: white;"
+        	);
+        
+        Button btnFiltrar = new Button("Filtrar");
+
+        btnFiltrar.setStyle(
+            "-fx-background-color: #F7E7CE;" +
+            "-fx-text-fill: black;" +
+            "-fx-font-weight: bold;"
+        );
+        
+        barraTopo.getChildren().addAll(filtroData, btnFiltrar);
 
         // ===== BOTÃO AGENDAR =====
 
         Button btnAgendar = new Button("Agendar Consulta");
-
+       
         // Estilização usando CSS inline
         btnAgendar.setStyle(
                 "-fx-background-color: #FFD700;" +   // fundo dourado
@@ -74,8 +104,6 @@ public class TelaConsultas {
 
         // Faz o conteúdo ocupar toda a largura
         scroll.setFitToWidth(true);
-        scroll.setPrefWidth(400);
-        scroll.setMaxWidth(400);
         // Remove fundo padrão do scroll
         scroll.setStyle(
         	    "-fx-background: transparent;" +
@@ -85,6 +113,19 @@ public class TelaConsultas {
 
         // Carrega os dados do banco ao iniciar a tela
         carregarConsultas();
+        btnFiltrar.setOnAction(e -> {
+            LocalDate data = filtroData.getValue();
+
+            try {
+                if (data == null) {
+                    carregarConsultas(); // 🔥 traz tudo
+                } else {
+                    carregarConsultasPorData(data); // 🔥 filtrado
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
         listaConsultas.setAlignment(Pos.CENTER);
 
         // ===== LAYOUT PRINCIPAL =====
@@ -99,6 +140,7 @@ public class TelaConsultas {
         layout.getChildren().addAll(
                 titulo,
                 btnAgendar,
+                barraTopo,
                 mensagemFeedback,
                 scroll
         );
@@ -118,8 +160,69 @@ public class TelaConsultas {
         // Exibe a janela
         stage.show();
     }
+    private boolean confirmarAcao(String mensagem) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        alert.setTitle("Confirmação");
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+
+        ButtonType btnSim = new ButtonType("Sim");
+        ButtonType btnNao = new ButtonType("Não");
+
+        alert.getButtonTypes().setAll(btnSim, btnNao);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle(
+        	  
+        	     "-fx-background-color: #FFFFFF;"  // fundo escuro
+        	   
+        	);
+       
+        dialogPane.lookupButton(btnSim).setStyle(
+        	    "-fx-background-color: #4CAF50; -fx-text-fill: white;"
+        	);
+
+        dialogPane.lookupButton(btnNao).setStyle(
+        	    "-fx-background-color: #ff4d4d; -fx-text-fill: white;"
+        	);
+        
+        // showAndWait() pausa execução até o usuário responder
+        return alert.showAndWait().orElse(btnNao) == btnSim;
+    }
 
     // ===== MÉTODO QUE BUSCA DADOS DO BANCO =====
+    private void carregarConsultasPorData(LocalDate data) {
+
+        // Limpa a lista antes de recarregar
+        listaConsultas.getChildren().clear();
+
+        List<Consulta> consultas;
+
+        try {
+            // Busca todas as consultas no banco
+            consultas = ConsultaDAO.buscarPorData(data);
+            if (consultas == null || consultas.isEmpty()) {
+                listaConsultas.setAlignment(Pos.CENTER);
+                listaConsultas.getChildren().add(criarCardVazio());
+                return;
+            }
+
+            // Para cada consulta encontrada...
+            for (Consulta c : consultas) {
+
+                // Cria um "card" visual e adiciona na tela
+            	HBox wrapper = new HBox(criarCardConsulta(c));
+            	wrapper.setAlignment(Pos.CENTER);
+
+            	listaConsultas.getChildren().add(wrapper);
+            }
+
+        } catch (Exception e) {
+            // Caso ocorra erro, imprime no console
+            e.printStackTrace();
+        }
+    }
     private void carregarConsultas() {
 
         // Limpa a lista antes de recarregar
@@ -196,7 +299,9 @@ public class TelaConsultas {
         btnCancelar.setStyle("-fx-background-color: #ff4d4d; -fx-text-fill: white;");
         btnConcluir.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         btnEspera.setStyle("-fx-background-color: #ffaa00; -fx-text-fill: black;");
+        
 
+        
         // Obtém o status da consulta
         String status = consulta.getStatus();
 
@@ -222,6 +327,9 @@ public class TelaConsultas {
 
         // Cancelar consulta
         btnCancelar.setOnAction(e -> {
+        	if (!confirmarAcao("Deseja cancelar esta consulta?")) {
+        		return; // usuário clicou em NÃO → sai
+        	}
             try {
                 consultas.cancelarConsulta(consulta.getId());
 
@@ -237,8 +345,11 @@ public class TelaConsultas {
 
         // Concluir consulta
         btnConcluir.setOnAction(e -> {
+        	if (!confirmarAcao("Deseja marcar como concluida esta consulta?")) {
+        		return; // usuário clicou em NÃO → sai
+        	}
+        	
             try {
-                
                 consultas.concluirConsulta(consulta.getId());
 
                 mensagemFeedback.setText("Consulta concluída!");
@@ -253,6 +364,9 @@ public class TelaConsultas {
 
         // Marcar como em espera
         btnEspera.setOnAction(e -> {
+        	if (!confirmarAcao("Deseja marcar como agendada esta consulta?")) {
+        		return; // usuário clicou em NÃO → sai
+        	}
             try {
                 consultas.marcarAgendamento(consulta.getId());
 
@@ -286,6 +400,33 @@ public class TelaConsultas {
         card.setStyle(
             "-fx-background-color: #1e1e1e;" +   // fundo escuro
             "-fx-background-radius: 10;"         // bordas arredondadas
+        );
+
+        return card;
+    }
+    private HBox criarCardVazio() {
+
+        Label mensagem = new Label("Nenhuma consulta agendada");
+        mensagem.setTextFill(Color.WHITE);
+        mensagem.setFont(new Font("Arial", 16));
+
+        Label dica = new Label("Contate um administrador para marcar uma consulta");
+        dica.setTextFill(Color.web("#aaaaaa"));
+
+        VBox conteudo = new VBox(5, mensagem, dica);
+        conteudo.setAlignment(Pos.CENTER_LEFT);
+
+        HBox card = new HBox();
+        card.setPadding(new Insets(50));
+        card.setAlignment(Pos.CENTER_LEFT);
+        card.setPrefWidth(400);
+        card.setMaxWidth(400);
+
+        card.getChildren().add(conteudo);
+
+        card.setStyle(
+                "-fx-background-color: #1e1e1e;" +
+                "-fx-background-radius: 10;"
         );
 
         return card;

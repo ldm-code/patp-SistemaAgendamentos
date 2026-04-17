@@ -1,5 +1,6 @@
 package dao;
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import List.Consulta;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 
 public class ConsultaDAO {
 	public static void inserir(
@@ -117,7 +119,7 @@ public class ConsultaDAO {
 	        FROM consultas c
 	        JOIN usuarios u ON c.fk_usuario = u.id
 	        JOIN medicos m ON c.fk_medico = m.id
-	        WHERE c.fk_usuario = ?
+	        WHERE c.fk_usuario = ? AND c.status = "agendada"
 	    """;
 
 	    PreparedStatement ps = conn.prepareStatement(sql);
@@ -151,6 +153,120 @@ public class ConsultaDAO {
 	    conn.close();
 
 	    return lista;
+	}
+	public static List<Consulta> buscarPorData(LocalDate data) throws Exception {
+
+	    List<Consulta> lista = new ArrayList<>();
+
+	    Connection conn = conexaoBanco.conectar();
+
+	    String sql = """
+	        SELECT 
+	            c.id,
+	            u.nome AS nome_usuario,
+	            m.nome AS nome_medico,
+	            m.tipo AS especialidade,
+	            c.data_consulta,
+	            c.status,
+	            c.fk_medico
+	        FROM consultas c
+	        JOIN usuarios u ON c.fk_usuario = u.id
+	        JOIN medicos m ON c.fk_medico = m.id
+	        WHERE c.data_consulta BETWEEN ? AND ?
+	    """;
+
+	    PreparedStatement ps = conn.prepareStatement(sql);
+
+	    // 🔥 conversão LocalDate → intervalo do dia
+	    LocalDateTime inicio = data.atStartOfDay();
+	    LocalDateTime fim = data.atTime(23, 59, 59);
+
+	    // 🔥 seta os parâmetros no SQL
+	    ps.setTimestamp(1, Timestamp.valueOf(inicio));
+	    ps.setTimestamp(2, Timestamp.valueOf(fim));
+
+	    ResultSet rs = ps.executeQuery();
+
+	    while (rs.next()) {
+
+	        int id = rs.getInt("id");
+	        String usuario = rs.getString("nome_usuario");
+	        String medico = rs.getString("nome_medico");
+	        String especialidade = rs.getString("especialidade");
+
+	        // converte DATETIME → LocalDateTime
+	        LocalDateTime dataConsulta = rs.getTimestamp("data_consulta").toLocalDateTime();
+
+	        String status = rs.getString("status");
+	        int idMedico = rs.getInt("fk_medico");
+
+	        Consulta consulta = new Consulta(
+	            id, usuario, medico, especialidade, dataConsulta, status, idMedico
+	        );
+
+	        lista.add(consulta);
+	    }
+
+	    rs.close();
+	    ps.close();
+	    conn.close();
+
+	    return lista;
+	}
+	public static boolean usuarioJaTemConsulta(
+	        int idUsuario,
+	        int idMedico,
+	        LocalDateTime data) throws Exception {
+
+	    String sql = """
+	        SELECT COUNT(*)
+	        FROM consultas
+	        WHERE fk_usuario = ?
+	        AND fk_medico = ?
+	        AND status = 'agendada'
+	        AND data_consulta BETWEEN ? AND ?
+	    """;
+
+	    try (Connection conn = conexaoBanco.conectar();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+	        ps.setInt(1, idUsuario);
+	        ps.setInt(2, idMedico);
+
+	        LocalDateTime inicio = data.minusHours(1);
+	        LocalDateTime fim = data.plusHours(1);
+
+	        ps.setTimestamp(3, Timestamp.valueOf(inicio));
+	        ps.setTimestamp(4, Timestamp.valueOf(fim));
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            return rs.next() && rs.getInt(1) > 0;
+	        }
+	    }
+	}
+	public static boolean usuarioJaTemConsultaMesmoHorario(
+	        int idUsuario,
+	        LocalDateTime data) throws Exception {
+
+	    String sql = """
+	        SELECT COUNT(*)
+	        FROM consultas
+	        WHERE fk_usuario = ?
+		    AND status = 'agendada'
+	        AND data_consulta = ?
+	    """;
+
+	    try (Connection conn = conexaoBanco.conectar();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+	        ps.setInt(1, idUsuario);
+	     
+	        ps.setTimestamp(2, Timestamp.valueOf(data));
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            return rs.next() && rs.getInt(1) > 0;
+	        }
+	    }
 	}
 
 

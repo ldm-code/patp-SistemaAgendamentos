@@ -43,7 +43,8 @@ public class TelaAgendamento {
 
         comboHora.getItems().addAll(
                 "08:00", "09:00", "10:00", "11:00",
-                "13:00", "14:00", "15:00", "16:00"
+                "13:00", "14:00", "15:00", "16:00",
+                "17:00"
         );
 
         // ===== CARREGAR MÉDICOS =====
@@ -127,21 +128,48 @@ public class TelaAgendamento {
                 feedback.setTextFill(Color.RED);
             }
         });
+        
+        dataConsulta.setPromptText("Dia da consulta:");
 
         // ===== AÇÃO VOLTAR =====
         btnVoltar.setOnAction(e -> new TelaConsultas().start(stage));
 
         // ===== ESTILO CAMPOS (igual login) =====
-        String estiloCampos = "-fx-background-color: #1e1e1e; " +
-                              "-fx-text-fill: white; " +
-                              "-fx-prompt-text-fill: #aaaaaa; " +
-                              "-fx-background-radius: 10; " +
-                              "-fx-padding: 10;";
-
+        String estiloCampos =
+                "-fx-background-color: #1e1e1e;" +
+                "-fx-control-inner-background: #1e1e1e;" +
+                "-fx-text-fill: white;" +
+                "-fx-prompt-text-fill: #aaaaaa;" +
+                "-fx-background-radius: 10;" +
+                "-fx-border-radius: 10;" +
+                "-fx-padding: 8;";
+        String estiloDatePicker =
+        		"-fx-background-color: #1e1e1e;" +
+        				"-fx-control-inner-background: #1e1e1e;" +
+        				"-fx-text-fill: white;" +
+        				"-fx-prompt-text-fill: #aaaaaa;" +
+        				"-fx-background-radius: 10;" +
+        				"-fx-border-radius: 10;" +
+        				"-fx-padding: 5;";
         campoEmail.setStyle(estiloCampos);
-        selectMedico.setStyle(estiloCampos);
-        dataConsulta.setStyle(estiloCampos);
-        comboHora.setStyle(estiloCampos);
+        selectMedico.setStyle(estiloCampos  +   "-fx-control-inner-background: #1e1e1e;" );
+
+        dataConsulta.setStyle(estiloDatePicker);
+
+        // 🔥 ESSENCIAL: estilizar o campo interno (editor)
+        dataConsulta.getEditor().setStyle(
+                "-fx-text-fill: white;" +
+                "-fx-prompt-text-fill: #aaaaaa;"
+        );
+        comboHora.setStyle(  
+        		"-fx-background-color: #1e1e1e;" +
+        	    "-fx-control-inner-background: #1e1e1e;" +
+        	    "-fx-text-inner-color: white;" +
+        	    "-fx-prompt-text-fill: #aaaaaa;" +   // 🔥 aqui resolve o invisível
+        	    "-fx-border-color: #FFD700;" +
+        	    "-fx-border-radius: 10;" +
+        	    "-fx-background-radius: 10;" +
+        	    "-fx-padding: 5;");
 
         // ===== ESTILO BOTÕES =====
         btnAgendar.setStyle("-fx-background-color: #FFD700; " +
