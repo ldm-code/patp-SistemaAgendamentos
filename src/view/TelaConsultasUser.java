@@ -32,9 +32,12 @@ public class TelaConsultasUser {
 	        listaConsultas.setPadding(new Insets(10));
 
 	        ScrollPane scroll = new ScrollPane(listaConsultas);
+	        scroll.setStyle(
+	        	    "-fx-background: transparent;" +
+	        	    "-fx-background-color: transparent;" +
+	        	    "-fx-control-inner-background: transparent;"
+	        	);
 	        scroll.setFitToWidth(true);
-	        scroll.setStyle("-fx-background: transparent;");
-
 	        carregarConsultas();
 
 	        // ===== LAYOUT =====
@@ -66,6 +69,8 @@ public class TelaConsultasUser {
 	        HBox card = new HBox();
 	        card.setPadding(new Insets(50));
 	        card.setAlignment(Pos.CENTER_LEFT);
+	        card.setPrefWidth(400);
+	        card.setMaxWidth(400);
 
 	        card.getChildren().add(conteudo);
 
@@ -88,13 +93,18 @@ public class TelaConsultasUser {
 
 	            // 🔥 CASO NÃO TENHA CONSULTAS
 	            if (consultas.isEmpty()) {
-	                listaConsultas.getChildren().add(criarCardVazio());
+	            	HBox wrapper = new HBox(criarCardVazio());
+	            	wrapper.setAlignment(Pos.CENTER);
+	            	listaConsultas.getChildren().add(wrapper);
 	                return;
 	            }
 
 	            // 🔹 CASO TENHA CONSULTAS
 	            for (Consulta c : consultas) {
-	                listaConsultas.getChildren().add(criarCardConsulta(c));
+	             	HBox wrapper = new HBox(criarCardConsulta(c));
+	            	wrapper.setAlignment(Pos.CENTER);
+
+	            	listaConsultas.getChildren().add(wrapper);
 	            }
 
 	        } catch (Exception e) {
@@ -124,6 +134,8 @@ public class TelaConsultasUser {
 	                "-fx-background-color: #1e1e1e;" +
 	                "-fx-background-radius: 10;"
 	        );
+	        card.setPrefWidth(400);
+	        card.setMaxWidth(400);
 
 	        return card;
 	    }
