@@ -294,6 +294,7 @@ public class TelaConsultas {
         Button btnCancelar = new Button("Cancelar"); // cancelar
         Button btnConcluir = new Button("Concluir"); // concluir
         Button btnEspera = new Button("Agendada");  // marcar como agendada
+        Button btnEditar = new Button("Editar");
 
         // Estilo visual dos botões
         btnCancelar.setStyle("-fx-background-color: #ff4d4d; -fx-text-fill: white;");
@@ -301,12 +302,20 @@ public class TelaConsultas {
         btnEspera.setStyle("-fx-background-color: #ffaa00; -fx-text-fill: black;");
         
 
+        btnEditar.setStyle(
+            "-fx-background-color: #3399ff;" +
+            "-fx-text-fill: white;"
+        );
+
         
         // Obtém o status da consulta
         String status = consulta.getStatus();
 
         // ===== REGRAS DE NEGÓCIO =====
-        
+        // desbilita botao de edicao caso nao esteja agendada
+        if (status.equalsIgnoreCase("concluida") || status.equalsIgnoreCase("cancelada")) {
+            btnEditar.setDisable(true);
+        }
         
         // Se já estiver concluído ,desbilita botao de concluir
         if (status.equalsIgnoreCase("concluida")) {
@@ -324,7 +333,17 @@ public class TelaConsultas {
         }
 
         // ===== AÇÕES DOS BOTÕES =====
-
+        
+        // Editar data e hora
+        btnEditar.setOnAction(e -> {
+        	if (!confirmarAcao("Deseja editar esta consulta?")) {
+        		return; // usuário clicou em NÃO → sai
+        	}
+        	new TelaEdicaoConsulta().start(
+        		    consulta,
+        		    () -> carregarConsultas()
+        		);
+        });
         // Cancelar consulta
         btnCancelar.setOnAction(e -> {
         	if (!confirmarAcao("Deseja cancelar esta consulta?")) {
@@ -381,7 +400,7 @@ public class TelaConsultas {
         });
 
         // VBox para organizar os botões verticalmente
-        VBox botoes = new VBox(5, btnCancelar, btnConcluir, btnEspera);
+        VBox botoes = new VBox(5,btnEditar, btnCancelar, btnConcluir, btnEspera);
 
         // ===== CARD VISUAL =====
 
@@ -406,11 +425,11 @@ public class TelaConsultas {
     }
     private HBox criarCardVazio() {
 
-        Label mensagem = new Label("Nenhuma consulta agendada para esta data");
+        Label mensagem = new Label("Nenhuma consulta agendada.");
         mensagem.setTextFill(Color.WHITE);
         mensagem.setFont(new Font("Arial", 16));
 
-        Label dica = new Label("Aguarde ate alguem marcar uma consulta");
+        Label dica = new Label("Aguarde ate alguem marcar uma consulta.");
         dica.setTextFill(Color.web("#aaaaaa"));
 
         VBox conteudo = new VBox(5, mensagem, dica);

@@ -12,18 +12,22 @@ public class Consulta {
     private LocalDateTime dataConsulta;
     private String status;
     private int idMedico;
+    private int idUsuario;
 
   
     public Consulta(int id, String nomeUsuario, String nomeMedico,
-                    String especialidade, LocalDateTime dataConsulta, String status, int idMedico) {
-        this.id = id;
-        this.nomeUsuario = nomeUsuario;
-        this.nomeMedico = nomeMedico;
-        this.especialidade = especialidade;
-        this.dataConsulta = dataConsulta;
-        this.status = status;
-        this.idMedico = idMedico;
-    }
+            String especialidade, LocalDateTime dataConsulta,
+            String status, int idMedico, int idUsuario) {
+
+			this.id = id;
+			this.nomeUsuario = nomeUsuario;
+			this.nomeMedico = nomeMedico;
+			this.especialidade = especialidade;
+			this.dataConsulta = dataConsulta;
+			this.status = status;
+			this.idMedico = idMedico;
+			this.idUsuario = idUsuario;
+    		}
 
     public int getIdMedico() {
         return idMedico;
@@ -32,7 +36,13 @@ public class Consulta {
     public void setIdMedico(int idMedico) {
         this.idMedico = idMedico;
     }
+    public int getIdUsuario() {
+        return idUsuario;
+    }
 
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
    
     public Consulta() {}
 

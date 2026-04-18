@@ -83,6 +83,66 @@ public class consultas {
 	        return "Erro no cadastro!";
 	    }
 	}
+	public static String editarConsulta(
+	        Consulta consulta,
+	        LocalDateTime novaData
+
+	) {
+	    try {
+
+	        // 🔴 1. valida nulo
+	        if (novaData == null) {
+	            return "Data inválida.";
+	        }
+
+	        // 🔴 2. não pode ser no passado
+	        if (novaData.isBefore(LocalDateTime.now())) {
+	            return "Data no passado não permitida.";
+	        }
+
+	        // 🔴 3. valida regra de negócio (reutilizando teu model)
+	        Consulta temp = new Consulta();
+	        temp.setDataConsulta(novaData);
+
+	        if (!temp.isHorarioValido()) {
+	            return "Horário inválido!";
+	        }
+
+	        // 🔴 4. sábado/domingo
+	        if (novaData.getDayOfWeek().getValue() >= 6) {
+	            return "Não há atendimento aos finais de semana!";
+	        }
+
+	        // 🔴 5. conflito com médico
+	        if (medicoTemConsultaNoHorario(consulta.getIdMedico(), novaData)) {
+	            return "Horário já ocupado para esse médico!";
+	        }
+
+
+	        // 🔴 7. conflito mesmo horário (outro médico)
+	        boolean mesmoHorario = ConsultaDAO.usuarioJaTemConsultaMesmoHorario(
+	                consulta.getIdUsuario(),
+	                novaData
+	        );
+
+	        if (mesmoHorario) {
+	            return "Você já possui outra consulta nesse horário!";
+	        }
+
+	        // 🔹 8. atualiza no banco
+	        ConsultaDAO.atualizarHorario(
+	                consulta.getId(),
+	                novaData.toLocalDate(),
+	                novaData.toLocalTime()
+	        );
+
+	        return "Consulta atualizada com sucesso!";
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "Erro ao editar consulta!";
+	    }
+	}
 	public static void cancelarConsulta(int id)throws Exception {
 		ConsultaDAO.atualizarConsulta(id,"cancelada");
 		System.out.println("consulta cancelada com sucesso");

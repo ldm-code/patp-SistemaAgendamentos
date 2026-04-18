@@ -2,6 +2,7 @@ package dao;
 import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,8 @@ public class ConsultaDAO {
 	            m.tipo AS especialidade,
 	            c.data_consulta,
 	            c.status,
-	            c.fk_medico
+	            c.fk_medico,
+	            c.fk_usuario
 	        FROM consultas c
 	        JOIN usuarios u ON c.fk_usuario = u.id
 	        JOIN medicos m ON c.fk_medico = m.id
@@ -86,10 +88,11 @@ public class ConsultaDAO {
 
 	        String status = rs.getString("status");
 	        int idMedico = rs.getInt("fk_medico");
+	        int idUser=rs.getInt("fk_usuario");
 
 	      
 	        Consulta consulta = new Consulta(
-	            id, usuario, medico, especialidade, data, status,idMedico
+	            id, usuario, medico, especialidade, data, status,idMedico,idUser
 	        );
 
 	        lista.add(consulta);
@@ -110,6 +113,7 @@ public class ConsultaDAO {
 	    String sql = """
 	        SELECT 
 	            c.id,
+	            u.id AS id_usuario,
 	            u.nome AS nome_usuario,
 	            m.nome AS nome_medico,
 	            m.tipo AS especialidade,
@@ -140,9 +144,10 @@ public class ConsultaDAO {
 
 	        String status = rs.getString("status");
 	        int idMedico = rs.getInt("fk_medico");
+	        int idUser = rs.getInt("id_usuario");
 
 	        Consulta consulta = new Consulta(
-	            id, usuario, medico, especialidade, data, status, idMedico
+	            id, usuario, medico, especialidade, data, status, idMedico,idUser
 	        );
 
 	        lista.add(consulta);
@@ -168,7 +173,8 @@ public class ConsultaDAO {
 	            m.tipo AS especialidade,
 	            c.data_consulta,
 	            c.status,
-	            c.fk_medico
+	            c.fk_medico,
+                c.fk_usuario
 	        FROM consultas c
 	        JOIN usuarios u ON c.fk_usuario = u.id
 	        JOIN medicos m ON c.fk_medico = m.id
@@ -199,9 +205,10 @@ public class ConsultaDAO {
 
 	        String status = rs.getString("status");
 	        int idMedico = rs.getInt("fk_medico");
+	        int idUser=rs.getInt("fk_usuario");
 
 	        Consulta consulta = new Consulta(
-	            id, usuario, medico, especialidade, dataConsulta, status, idMedico
+	            id, usuario, medico, especialidade, dataConsulta, status, idMedico,idUser
 	        );
 
 	        lista.add(consulta);
@@ -262,6 +269,97 @@ public class ConsultaDAO {
 	        ps.setInt(1, idUsuario);
 	     
 	        ps.setTimestamp(2, Timestamp.valueOf(data));
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            return rs.next() && rs.getInt(1) > 0;
+	        }
+	    }
+	}
+	public static void atualizarHorario(
+	        int id,
+	        LocalDate novaData,
+	        LocalTime novaHora
+	) throws Exception {
+
+	    Connection conn = conexaoBanco.conectar();
+
+	    String sql = "UPDATE consultas SET data_consulta = ? WHERE id = ?";
+
+	    PreparedStatement ps = conn.prepareStatement(sql);
+
+	    // 🔥 Junta data + hora
+	    LocalDateTime dataHora = LocalDateTime.of(novaData, novaHora);
+
+	    ps.setTimestamp(1, Timestamp.valueOf(dataHora));
+	    ps.setInt(2, id);
+
+	    int linhas = ps.executeUpdate();
+
+	    if (linhas > 0) {
+	        System.out.println("Horário atualizado com sucesso!");
+	    } else {
+	        System.out.println("Consulta não encontrada.");
+	    }
+
+	    ps.close();
+	    conn.close();
+	}
+	public static boolean medicoJaTemConsultaEdicao(
+	        int idMedico,
+	        LocalDateTime data,
+	        int idAtual
+	) throws Exception {
+
+	    String sql = """
+	        SELECT COUNT(*)
+	        FROM consultas
+	        WHERE fk_medico = ?
+	        AND status = 'agendada'
+	        AND data_consulta = ?
+	        AND id != ?
+	    """;
+
+	    try (Connection conn = conexaoBanco.conectar();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+	        ps.setInt(1, idMedico);
+	        ps.setTimestamp(2, Timestamp.valueOf(data));
+	        ps.setInt(3, idAtual);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            return rs.next() && rs.getInt(1) > 0;
+	        }
+	    }
+	}
+	public static boolean usuarioJaTemConsultaEdicao(
+	        int idUsuario,
+	        int idMedico,
+	        LocalDateTime data,
+	        int idAtual
+	) throws Exception {
+
+	    String sql = """
+	        SELECT COUNT(*)
+	        FROM consultas
+	        WHERE fk_usuario = ?
+	        AND fk_medico = ?
+	        AND status = 'agendada'
+	        AND data_consulta BETWEEN ? AND ?
+	        AND id != ?
+	    """;
+
+	    try (Connection conn = conexaoBanco.conectar();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+	        ps.setInt(1, idUsuario);
+	        ps.setInt(2, idMedico);
+
+	        LocalDateTime inicio = data.minusHours(1);
+	        LocalDateTime fim = data.plusHours(1);
+
+	        ps.setTimestamp(3, Timestamp.valueOf(inicio));
+	        ps.setTimestamp(4, Timestamp.valueOf(fim));
+	        ps.setInt(5, idAtual);
 
 	        try (ResultSet rs = ps.executeQuery()) {
 	            return rs.next() && rs.getInt(1) > 0;
