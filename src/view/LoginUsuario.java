@@ -27,9 +27,9 @@ public class LoginUsuario {
         email.setPromptText("Email");
 
         PasswordField senha = new PasswordField();
-        senha.setPromptText("Senha");
+        senha.setPromptText("Senha (minimo 6 digitos)");
         TextField senhaVisivel = new TextField(); 
-        senhaVisivel.setPromptText("Senha");
+        senhaVisivel.setPromptText("Senha (minimo 6 digitos)");
         
         senhaVisivel.setVisible(false);
         senhaVisivel.setManaged(false);

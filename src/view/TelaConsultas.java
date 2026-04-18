@@ -407,7 +407,7 @@ public class TelaConsultas {
     private HBox criarCardVazio() {
 
         Label mensagem = new Label("Nenhuma consulta agendada para esta data");
-        mensagem.setTextFill(Color.WHITE);s
+        mensagem.setTextFill(Color.WHITE);
         mensagem.setFont(new Font("Arial", 16));
 
         Label dica = new Label("Aguarde ate alguem marcar uma consulta");

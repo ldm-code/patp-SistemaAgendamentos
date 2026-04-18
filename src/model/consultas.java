@@ -42,15 +42,15 @@ public class consultas {
 	        Consulta c = new Consulta();
 	        c.setDataConsulta(dataConsultas);
 
+	        if (dataConsultas.isBefore(LocalDateTime.now().plusMinutes(30))) {
+	        	return "Agendamento deve ser feito com 30 minutos de antecedência.";
+	        }
 	        if (!c.isHorarioValido()) {
 	            return "Horário inválido!";
 	        }
 
 	        if (medicoTemConsultaNoHorario(idMed, dataConsultas)) {
 	            return "Horário já ocupado!";
-	        }
-	        if (dataConsultas.isBefore(LocalDateTime.now().plusHours(1))) {
-	            return "Agendamento deve ser feito com 1h de antecedência.";
 	        }
 	        if (dataConsultas.getDayOfWeek().getValue() == 7) {
 	            return "Não há atendimento aos domingos!";

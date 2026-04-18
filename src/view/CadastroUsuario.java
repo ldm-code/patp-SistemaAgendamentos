@@ -42,15 +42,15 @@ public class CadastroUsuario extends Application {
         email.setStyle(estiloCampos);
 
         TextField cpf = new TextField();
-        cpf.setPromptText("CPF");
+        cpf.setPromptText("CPF (insira 11 numeros)");
         cpf.setStyle(estiloCampos);
 
         // ===== SENHA COM OLHO =====
         PasswordField senha = new PasswordField();
-        senha.setPromptText("Senha");
+        senha.setPromptText("Senha (minimo 6 digitos)");
 
         TextField senhaVisivel = new TextField();
-        senhaVisivel.setPromptText("Senha");
+        senhaVisivel.setPromptText("Senha (minimo 6 digitos)");
 
         senhaVisivel.setVisible(false);
         senhaVisivel.setManaged(false);
