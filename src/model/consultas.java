@@ -114,10 +114,11 @@ public class consultas {
 	        }
 
 	        // 🔴 5. conflito com médico
-	        if (medicoTemConsultaNoHorario(consulta.getIdMedico(), novaData)) {
-	            return "Horário já ocupado para esse médico!";
-	        }
+	        boolean ValidarHora= ConsultaDAO.medicoJaTemConsultaEdicao(consulta.getIdMedico(), novaData, consulta.getId());
 
+	        if (ValidarHora) {
+	            return "Você já possui outra consulta nesse horário!";
+	        }
 
 	        // 🔴 7. conflito mesmo horário (outro médico)
 	        boolean mesmoHorario = ConsultaDAO.usuarioJaTemConsultaMesmoHorario(
