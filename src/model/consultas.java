@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import dao.ConsultaDAO;
 import java.time.LocalDateTime;
 import dao.agendamentosDAO;
+import utils.DateUtil;
 import utils.enviarEmail;
 
 import java.time.format.DateTimeFormatter;
@@ -75,9 +76,7 @@ public class consultas {
 	        if(marcada) {
 	        	  return "Você já possui uma consulta com outro médico nesse horário !";
 	        }
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
-	        String dataFormatada = dataConsultas.format(formatter);
+	        String dataFormatada = DateUtil.format(dataConsultas);
 
             enviarEmail.enviar(email, "Consulta Agendada",
             	    "Sua consulta foi agendada para: " + dataFormatada+ "\n\n" +
@@ -161,9 +160,26 @@ public class consultas {
 		agendamentosDAO.inserirAgendamento(id);
 		ConsultaDAO.atualizarConsulta(id,"concluida");
 	}
-	public static void marcarAgendamento(int id) throws Exception{
-		ConsultaDAO.atualizarConsulta(id,"agendada");
-		
+	public static String marcarAgendamento(int id, int idMedico, LocalDateTime data, int idUsuario) throws Exception {
+
+	    // 🔴 1. valida conflito do médico
+	    boolean medicoOcupado = ConsultaDAO.medicoJaTemConsultaEdicao(idMedico, data, id);
+
+	    if (medicoOcupado) {
+	        return "Este médico já possui consulta nesse horário!";
+	    }
+
+	    // 🔴 2. valida conflito do usuário com mesmo horário
+	    boolean usuarioOcupado = ConsultaDAO.usuarioJaTemConsultaMesmoHorario(idUsuario, data);
+
+	    if (usuarioOcupado) {
+	        return "Você já possui uma consulta nesse horário!";
+	    }
+
+	    // 🔴 3. atualiza status
+	    ConsultaDAO.atualizarConsulta(id, "agendada");
+
+	    return "Consulta marcada como agendada!";
 	}
 
 }

@@ -19,6 +19,7 @@ import java.util.List;                     // Lista de objetos
 import dao.ConsultaDAO;   // Classe responsável por acessar o banco
 import List.Consulta;     // Classe modelo da consulta (dados)
 import model.consultas;   // Classe com métodos de ação (cancelar, concluir, etc)
+import utils.DateUtil;
 
 public class TelaConsultas {
 
@@ -283,7 +284,7 @@ public class TelaConsultas {
             "Paciente: " + consulta.getNomeUsuario() +
             "\nMédico: " + consulta.getNomeMedico() +
             "\nEspecialidade: " + consulta.getEspecialidade() +
-            "\nData: " + consulta.getDataConsulta().format(formatter) +
+            "\nData: " + DateUtil.format(consulta.getDataConsulta()) +
             "\nStatus: " +  formatarStatus(consulta.getStatus()) // campo de status formatado para melhor exibicao visual
         );
 
@@ -389,12 +390,21 @@ public class TelaConsultas {
         		return; // usuário clicou em NÃO → sai
         	}
             try {
-                consultas.marcarAgendamento(consulta.getId());
+            	String resultado = consultas.marcarAgendamento(
+            		    consulta.getId(),
+            		    consulta.getIdMedico(),
+            		    consulta.getDataConsulta(),
+            		    consulta.getIdUsuario()
+            		);
 
-                mensagemFeedback.setText("Consulta marcada como agendada");
-                mensagemFeedback.setTextFill(Color.ORANGE);
+            		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            		alert.setTitle("Ação não permitida");
+            		alert.setHeaderText(null);
+            		alert.setContentText(resultado);
+            		alert.showAndWait();
 
-                carregarConsultas();
+            		
+            		carregarConsultas();
 
             } catch (Exception ex) {
                 ex.printStackTrace();
