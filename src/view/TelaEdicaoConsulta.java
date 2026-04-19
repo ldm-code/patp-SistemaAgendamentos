@@ -101,11 +101,9 @@ public class TelaEdicaoConsulta {
                 "-fx-font-weight: bold; " +
                 "-fx-background-radius: 10; " +
                 "-fx-padding: 10 20;");
-       btnCancelar.setStyle("-fx-background-color: #A9A9A9; " +
-                "-fx-text-fill: black; " +
-                "-fx-font-weight: bold; " +
-                "-fx-background-radius: 10; " +
-                "-fx-padding: 10 20;");
+       btnCancelar.setStyle("-fx-background-color: transparent; " +
+               "-fx-text-fill: #FFD700; " +
+               "-fx-underline: true;");
 
 
 
