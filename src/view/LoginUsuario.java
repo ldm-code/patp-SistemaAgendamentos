@@ -77,22 +77,24 @@ public class LoginUsuario {
         	        senhaDigitada = senha.getText();
         	    }
 
-        	    // 🔹 valida campos vazios
-        	    if (emailDigitado.isEmpty() || senhaDigitada.isEmpty()) {
-        	        mensagem.setText("Preencha todos os campos!");
-        	        mensagem.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+        	    String erro = usuario.validarLogin(emailDigitado, senhaDigitada);
+
+        	    if (erro != null) {
+        	        mensagem.setText(erro);
         	        return;
-        	    } else if (!emailDigitado.contains("@")) {
-        	    	mensagem.setText("email invalido!");
-           	        mensagem.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
-           	        return;
-        	    	
         	    }
 
-        	    Usuario valido = usuario.validarLogin(emailDigitado, senhaDigitada);
-        	    SessaoUsuario.usuarioLogado = valido;
+        	    // só aqui você decide logar
+        	    Usuario user;
+				try {
+					user = usuario.buscarUsuario(emailDigitado, senhaDigitada);
+					SessaoUsuario.usuarioLogado = user;
+     
+        	        mensagem.setText("Login realizado com sucesso!");
+        	        mensagem.setStyle("-fx-text-fill: green;");
+        	        
 
-        	    if (valido !=null) {
+        	    if (user !=null) {
 
         	        mensagem.setText("Login realizado com sucesso!");
         	        mensagem.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
@@ -107,12 +109,13 @@ public class LoginUsuario {
         	        }
         	        email.clear();
         	        senha.clear();
-
-        	    } else {
-
-        	        mensagem.setText("Email ou senha incorretos!");
-        	        mensagem.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         	    }
+
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
         	});
         	  StackPane campoSenha = new StackPane();
               campoSenha.getChildren().addAll(senha, senhaVisivel, olho);

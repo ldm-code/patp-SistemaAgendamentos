@@ -3,6 +3,7 @@ import java.security.MessageDigest;
 
 import List.Usuario;
 import dao.UsuarioDAO;
+import utils.SessaoUsuario;
 import utils.enviarEmail;
 //UsuarioService.java
 public class usuario {
@@ -24,84 +25,90 @@ public class usuario {
 		    return matricula != null && matricula.matches("\\d+");
 		}
 
-	 public static void cadastrarUsuario(
-			    String matricula,
-			    String nome,
-			    String email,
-			    String senha,
-			    String cpf
-			) {
+	 public static String cadastrarUsuario(
+		        String matricula,
+		        String nome,
+		        String email,
+		        String senha,
+		        String cpf
+		) {
 
-			    try {
+		    try {
 
-			        // 🔹 Validação geral
-			        if (matricula == null || matricula.isEmpty() ||
-			            nome == null || nome.isEmpty() ||
-			            email == null || email.isEmpty() ||
-			            senha == null || senha.isEmpty() ||
-			            cpf == null || cpf.isEmpty()) {
+		        if (matricula == null || matricula.isEmpty() ||
+		            nome == null || nome.isEmpty() ||
+		            email == null || email.isEmpty() ||
+		            senha == null || senha.isEmpty() ||
+		            cpf == null || cpf.isEmpty()) {
 
-			            System.out.println("Todos os campos são obrigatórios");
-			            return;
-			        }
+		            return "Todos os campos são obrigatórios";
+		        }
 
-			        // 🔹 Email básico
-			        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-			            System.out.println("Email inválido");
-			            return;
-			        }
-                 // validacao de matricula
-			        if (!usuario.validarMatricula(matricula)) {
-			        	System.out.println("matricula invalida");
-			        	return;
-			        }
-			        // 🔹 CPF (estrutura básica)
-			        // limpa máscara
-			        cpf = cpf.replaceAll("[^\\d]", "");
+		        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+		            return "Email inválido";
+		        }
 
-			        // valida
-			        if (cpf.length() != 11) {
-			            System.out.println("CPF inválido");
-			            return;
-			        }
+		        if (!validarMatricula(matricula)) {
+		            return "Matrícula inválida";
+		        }
 
-			        // 🔹 Senha mínima
-			        if (senha.length() < 6) {
-			            System.out.println("Senha muito curta");
-			            return;
-			        }
+		        cpf = cpf.replaceAll("[^\\d]", "");
 
-			        // 🔹 Criptografia
-			        String senhaCripto = usuario.gerarHash(senha);
+		        if (cpf.length() != 11) {
+		            return "CPF inválido";
+		        }
 
-			        // 🔹 Inserção de dados em banco
-			        UsuarioDAO.inserir(matricula, nome, email, senhaCripto, cpf);
+		        if (senha.length() < 6) {
+		            return "Senha muito curta";
+		        }
 
-			        // 🔹 Envio de Email 
+		        String senhaCripto = gerarHash(senha);
+
+		        UsuarioDAO.inserir(matricula, nome, email, senhaCripto, cpf);
+
 		        enviarEmail.enviar(
-			            email,
-			            "Bem-vindo",
-			            "Seja bem-vindo ao sistema de cadastro de consultas da Cotriel"
+		                email,
+		                "Bem-vindo",
+		                "Seja bem-vindo ao sistema de cadastro de consultas da Cotriel"
 		        );
 
-			        System.out.println("Usuário cadastrado com sucesso!");
-
-			    } catch (Exception e) {
-			        System.out.println("Erro no cadastro:");
-			        e.printStackTrace();
-			    }
-			}
-	 // Validacao de login
-	 public static Usuario validarLogin(String email, String senha) {
-		    try {
-		        String senhaHash = gerarHash(senha); // Criptografa o valor digitado para comparacao
-
-		       Usuario u= UsuarioDAO.loginSelect(email, senhaHash);// faz o login
-		       return u;
+		        return null; // sucesso
 
 		    } catch (Exception e) {
 		        e.printStackTrace();
-		        return null;
+		        return "Erro ao cadastrar usuário";
 		    }
+		}
+	 // Validacao de login
+	 public static String validarLogin(String email, String senha) {
+		    try {
+
+		        if (email == null || email.isEmpty() || senha == null || senha.isEmpty()) {
+		            return "Preencha todos os campos!";
+		        }
+
+		        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+		            return "Email inválido!";
+		        }
+
+		        String senhaHash = gerarHash(senha);
+
+		        Usuario u = UsuarioDAO.loginSelect(email, senhaHash);
+
+		        if (u == null) {
+		            return "Email ou senha incorretos!";
+		        }
+
+		        // ✔ NÃO mexe com sessão aqui
+		        return null;
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        return "Erro interno no sistema!";
+		    }
+		}
+	 public static Usuario buscarUsuario(String email, String senha) throws Exception {
+		    String senhaHash = gerarHash(senha);
+		    return UsuarioDAO.loginSelect(email, senhaHash);
 		}
 }

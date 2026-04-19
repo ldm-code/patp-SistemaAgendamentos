@@ -1,5 +1,6 @@
 package view;
 
+import List.Usuario;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import model.usuario;
+import utils.SessaoUsuario;
 
 public class CadastroUsuario extends Application {
 
@@ -111,48 +113,36 @@ public class CadastroUsuario extends Application {
             String n = nome.getText();
             String em = email.getText();
 
-            // pega senha correta
             String s = senha.isVisible() ? senha.getText() : senhaVisivel.getText();
 
             String c = cpf.getText();
-            c = c.replaceAll("[^\\d]", "").trim();
 
-            if (m.isEmpty() || n.isEmpty() || em.isEmpty() || s.isEmpty() || c.isEmpty()) {
+            String erro = usuario.cadastrarUsuario(m, n, em, s, c);
 
-                mensagem.setText("Todos os campos são obrigatórios");
+            if (erro != null) {
+                mensagem.setText(erro);
                 mensagem.setStyle("-fx-text-fill: red;");
-
-            } else if (!em.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-
-                mensagem.setText("Email inválido");
-
-            } else if (!m.matches("\\d+")) {
-
-                mensagem.setText("Matrícula inválida");
-
-            } else if (c.length() != 11) {
-
-                mensagem.setText("CPF inválido");
-
-            } else if (s.length() < 6) {
-
-                mensagem.setText("Senha muito curta");
-
-            } else {
-
-                usuario.cadastrarUsuario(m, n, em, s, c);
-
-                mensagem.setText("Usuário cadastrado com sucesso!");
-                mensagem.setStyle("-fx-text-fill: #00ff88; -fx-font-weight: bold;");
-
-                matricula.clear();
-                nome.clear();
-                email.clear();
-                senha.clear();
-                senhaVisivel.clear();
-                cpf.clear();
-                new LoginUsuario().start(stage);
+                return;
             }
+
+            mensagem.setText("Usuário cadastrado com sucesso!");
+            mensagem.setStyle("-fx-text-fill: #00ff88; -fx-font-weight: bold;");
+
+            matricula.clear();
+            nome.clear();
+            email.clear();
+            senha.clear();
+            senhaVisivel.clear();
+            cpf.clear();
+			try {
+				Usuario user;
+				user = usuario.buscarUsuario(em, s);
+				SessaoUsuario.usuarioLogado = user;
+				new TelaConsultasUser().start(stage);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
         });
         matricula.setMaxWidth(300);
         cpf.setMaxWidth(300);
