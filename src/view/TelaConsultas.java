@@ -70,9 +70,11 @@ public class TelaConsultas {
         Button btnFiltrar = new Button("Filtrar");
 
         btnFiltrar.setStyle(
-            "-fx-background-color: #F7E7CE;" +
-            "-fx-text-fill: black;" +
-            "-fx-font-weight: bold;"
+        		"-fx-background-color: #FFD700; " +
+                          "-fx-text-fill: black; " +
+                          "-fx-font-weight: bold; " +
+                          "-fx-background-radius: 10; " +
+                          "-fx-padding: 10 20;"
         );
         
         barraTopo.getChildren().addAll(filtroData, btnFiltrar);
