@@ -3,6 +3,8 @@ import java.time.LocalDate;
 import dao.ConsultaDAO;
 import java.time.LocalDateTime;
 import dao.agendamentosDAO;
+import utils.enviarEmail;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -27,7 +29,8 @@ public class consultas {
 	public static String cadastrarConsultas(
 	        int idUsuario, 
 	        int idMed,
-	        LocalDateTime dataConsultas
+	        LocalDateTime dataConsultas,
+	        String email
 	) {
 	    try {
 
@@ -72,8 +75,14 @@ public class consultas {
 	        if(marcada) {
 	        	  return "Você já possui uma consulta com outro médico nesse horário !";
 	        }
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+	        String dataFormatada = dataConsultas.format(formatter);
 
+            enviarEmail.enviar(email, "Consulta Agendada",
+            	    "Sua consulta foi agendada para: " + dataFormatada+ "\n\n" +
+            	    	    "Atenciosamente,\n" +
+            	    	    "Equipe de Atendimento");
 	        ConsultaDAO.inserir(idUsuario, idMed, dataConsultas);
 
 	        return "Consulta marcada com sucesso!";

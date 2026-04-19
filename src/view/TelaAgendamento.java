@@ -110,7 +110,8 @@ public class TelaAgendamento {
                 String resultado = consultas.cadastrarConsultas(
                         usuario.getId(),
                         medico.getId(),
-                        dataCompleta
+                        dataCompleta,
+                        email
                 );
 
                 feedback.setText(resultado);
