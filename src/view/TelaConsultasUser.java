@@ -14,6 +14,7 @@ import java.util.List;
 
 import dao.ConsultaDAO;
 import List.Consulta;
+import utils.DateUtil;
 import utils.SessaoUsuario;
 import model.consultas;
 
@@ -120,7 +121,7 @@ public class TelaConsultasUser {
 	    	    "Paciente: " + consulta.getNomeUsuario() +
 	    	    "\nMédico: " + consulta.getNomeMedico() +
 	    	    "\nEspecialidade: " + consulta.getEspecialidade() +
-	    	    "\nData: " + consulta.getDataConsulta().format(formatter) +
+	    	    "\nData: " + DateUtil.format(consulta.getDataConsulta()) +
 	    	    "\nStatus: " + consulta.getStatus()
 	    	);
 
