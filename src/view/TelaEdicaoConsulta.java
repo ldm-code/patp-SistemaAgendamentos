@@ -38,6 +38,14 @@ public class TelaEdicaoConsulta {
                 "11:00","11:30","13:00","13:30","14:00","14:30",
                 "15:00","15:30","16:00","16:30","17:00","17:30"
         );
+     String estiloDatePicker =
+     		"-fx-background-color: #1e1e1e;" +
+     				"-fx-control-inner-background: #1e1e1e;" +
+     				"-fx-text-fill: white;" +
+     				"-fx-prompt-text-fill: #aaaaaa;" +
+     				"-fx-background-radius: 10;" +
+     				"-fx-border-radius: 10;" +
+     				"-fx-padding: 5;";
 
         // 🔥 PRÉ-CARREGAR
         LocalDateTime atual = consulta.getDataConsulta();
@@ -50,6 +58,8 @@ public class TelaEdicaoConsulta {
         Button btnCancelar = new Button("Cancelar");
 
         // ===== SALVAR =====
+        comboHora.setStyle(estiloDatePicker);
+        dataConsulta.setStyle(estiloDatePicker);
         btnSalvar.setOnAction(e -> {
             try {
                 LocalDate data = dataConsulta.getValue();
@@ -85,6 +95,19 @@ public class TelaEdicaoConsulta {
         });
 
         btnCancelar.setOnAction(e -> janela.close());
+        
+        btnSalvar.setStyle("-fx-background-color: #FFD700; " +
+                "-fx-text-fill: black; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 10; " +
+                "-fx-padding: 10 20;");
+       btnCancelar.setStyle("-fx-background-color: #FF0000; " +
+                "-fx-text-fill: black; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 10; " +
+                "-fx-padding: 10 20;");
+
+
 
         // ===== LAYOUT =====
         VBox layout = new VBox(15, titulo, dataConsulta, comboHora, btnSalvar, btnCancelar, feedback);
