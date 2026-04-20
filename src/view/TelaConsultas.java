@@ -1,6 +1,7 @@
 package view;
 
 // ===== IMPORTS =====
+import dao.medicosDAO;
 // Importações do JavaFX para construção da interface gráfica
 import javafx.geometry.Insets;      // Espaçamento interno (padding)
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ import java.util.List;                     // Lista de objetos
 import dao.ConsultaDAO;   // Classe responsável por acessar o banco
 import List.Consulta;     // Classe modelo da consulta (dados)
 import model.consultas;   // Classe com métodos de ação (cancelar, concluir, etc)
+import model.medicos;
 import utils.DateUtil;
 
 public class TelaConsultas {
@@ -77,8 +79,24 @@ public class TelaConsultas {
                           "-fx-background-radius: 10; " +
                           "-fx-padding: 10 20;"
         );
+        Button btnMedicos = new Button("Cadastrar Médicos");
         
-        barraTopo.getChildren().addAll(filtroData, btnFiltrar);
+        btnMedicos.setStyle(
+        	    "-fx-background-color: #FFD700;" +
+        	    "-fx-text-fill: black;" +
+        	    "-fx-font-weight: bold;" +
+        	    "-fx-background-radius: 10;" +
+        	    "-fx-padding: 10 20;"
+
+        	);
+        Region espaco = new Region();
+        espaco.setMinWidth(850);
+        barraTopo.getChildren().addAll(
+                filtroData,
+                btnFiltrar,
+                espaco,
+                btnMedicos
+        );
 
         // ===== BOTÃO AGENDAR =====
 
@@ -95,6 +113,13 @@ public class TelaConsultas {
         // Ação ao clicar no botão
         btnAgendar.setOnAction(e -> {
             new TelaAgendamento().start(stage); 
+        });
+        btnMedicos.setOnAction(e -> {
+        	new TelaMedicos().start(() -> {
+        		carregarConsultas();
+        		
+        	});
+        	
         });
 
         // ===== LISTA DE CONSULTAS =====

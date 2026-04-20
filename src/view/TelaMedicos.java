@@ -1,6 +1,5 @@
-package imagensPATP;
-
-
+package view;
+import model.medicos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,7 +14,7 @@ public class TelaMedicos {
 
 
 
-	    public void start(String nomeAtual, String tipoAtual, Runnable onUpdate) {
+	    public void start( Runnable onUpdate) {
 
 	        Stage janela = new Stage();
 	        janela.initModality(Modality.APPLICATION_MODAL);
@@ -46,8 +45,8 @@ public class TelaMedicos {
 	        campoTipo.setStyle(estiloInput);
 
 	        // 🔥 PRÉ-CARREGAR
-	        campoNome.setText(nomeAtual);
-	        campoTipo.setText(tipoAtual);
+	        campoNome.setPromptText("nome do medico");
+	        campoTipo.setPromptText("Tipo/especialidade do medico");
 
 	        Label feedback = new Label();
 
@@ -70,6 +69,7 @@ public class TelaMedicos {
 
 	            feedback.setText("Atualizado com sucesso!");
 	            feedback.setTextFill(Color.LIGHTGREEN);
+	            medicos.cadastrarMedico(nome, tipo);
 
 	            onUpdate.run();
 	            janela.close();

@@ -1,28 +1,28 @@
 package model;
 
-
 import dao.medicosDAO;
+
 public class medicos {
-	public static void cadastrarMedico(String nome,String tipo) {
-		 try {
 
-	         if (nome == null || nome.isEmpty()) {
-	             System.out.println("Nome obrigatório");
-	             return;
-	             }
-	         else if(tipo==null) {
-	            	 System.out.println("tipo obrigatorio");
-	             }
-	         medicosDAO.inserir(nome, tipo);
-	         System.out.println("medico cadastrado com sucesso");
-	         }catch  (Exception e){
-	        	  System.out.println("Erro no cadastro:");
-	              e.printStackTrace();
-	         }
-		
-	}
-	
+    public static String cadastrarMedico(String nome, String tipo) {
 
+        try {
 
+            if (nome == null || nome.isEmpty()) {
+                return "Nome obrigatório";
+            }
+
+            if (tipo == null || tipo.isEmpty()) {
+                return "Tipo obrigatório";
+            }
+
+            medicosDAO.inserir(nome, tipo);
+
+            return "Médico cadastrado com sucesso";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erro no cadastro do médico";
+        }
+    }
 }
-
