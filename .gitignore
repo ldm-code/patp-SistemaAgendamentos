@@ -1,0 +1,15 @@
+# Eclipse
+.project
+.classpath
+.settings/
+
+# Build
+bin/
+
+# Config
+config.properties
+src/config.properties
+.env
+
+# Logs
+*.log

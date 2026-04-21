@@ -1,27 +1,38 @@
 package dao;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.io.InputStream;
+
 public class conexaoBanco {
-	private static final String URL="jdbc:mysql://localhost:3306/agendamentoPATP";
-	private static final String USER="root";
-	private static final String  PASSWORD="root";
-	public static Connection conectar() {
-		try {
-			Connection conn=DriverManager.getConnection(URL,USER ,PASSWORD);
-			
-		
-			   System.out.println("conectou");
-	            return conn;
-		 } catch (SQLException e) {
-	            System.out.println("Erro ao conectar ao banco de dados");
-	            e.printStackTrace();
-	            return null;
-	        }
-	    }
-		
-	}
-	
-	
 
+    public static Connection conectar() {
 
+        Properties props = new Properties();
+
+        try {
+            // Carrega o arquivo de configuração
+            InputStream file = conexaoBanco.class
+                    .getClassLoader()
+                    .getResourceAsStream("config.properties");
+
+            props.load(file);
+
+            String url = props.getProperty("db.url");
+            String user = props.getProperty("db.user");
+            String password = props.getProperty("db.password");
+
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            System.out.println("Conectou com sucesso");
+            return conn;
+
+        } catch (Exception e) {
+            System.out.println("Erro ao conectar ao banco de dados");
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
