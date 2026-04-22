@@ -12,7 +12,7 @@ A aplicação segue uma arquitetura em camadas, utilizando:
 
 ---
 
-## Requesitos da aplicação:
+## ⚙️ Requisitos da Aplicação
 
 - JDK 21
 - javaFX 21.0.10
