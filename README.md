@@ -163,3 +163,6 @@ VALUES (123456, 'senha', 'admin@email.com', 'adm', 'Administrador', '00000000000
 
 - O campo tipo deve ser definido como 'adm'
 - A senha deve seguir o padrão utilizado pelo sistema
+
+---
+
