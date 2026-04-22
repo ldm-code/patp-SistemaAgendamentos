@@ -12,6 +12,13 @@ A aplicação segue uma arquitetura em camadas, utilizando:
 
 ---
 
+## Requesitos da aplicação:
+
+- JDK 21
+- javaFX 21.0.10
+- jdbc 9.5.0
+- jakarta mail 2.0.1
+
 ## 🏗️ Estrutura do Projeto
 -  src/
 - ├── banco/
