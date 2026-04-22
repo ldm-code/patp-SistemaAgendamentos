@@ -138,3 +138,21 @@ private String email;
 - Caso o banco não esteja configurado corretamente ou não contenha as tabelas necessárias, o sistema não funcionará.
 
 ---
+
+## 🔑 Usuário Administrador
+
+O sistema não possui um usuário administrador padrão.
+
+Para acessar funcionalidades administrativas, é necessário inserir manualmente um usuário com o tipo `adm` no banco de dados.
+
+### Exemplo:
+
+```sql
+INSERT INTO usuarios (matricula, senha, email, tipo, nome, cpf)
+VALUES (123456, 'senha', 'admin@email.com', 'adm', 'Administrador', '00000000000');
+```
+
+- 📌 Observação:
+
+- O campo tipo deve ser definido como 'adm'
+- A senha deve seguir o padrão utilizado pelo sistema
