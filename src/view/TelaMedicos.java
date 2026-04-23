@@ -20,7 +20,7 @@ public class TelaMedicos {
 	        janela.initModality(Modality.APPLICATION_MODAL);
 
 	        // ===== TÍTULO =====
-	        Label titulo = new Label("Editar Dados");
+	        Label titulo = new Label("Cadastro de Médicos");
 	        titulo.setFont(new Font("Arial", 28));
 	        titulo.setTextFill(Color.web("#FFD700"));
 
