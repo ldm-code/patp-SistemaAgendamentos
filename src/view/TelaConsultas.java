@@ -374,22 +374,15 @@ public class TelaConsultas {
         });
         // Cancelar consulta
         btnCancelar.setOnAction(e -> {
-        	if (!confirmarAcao("Deseja cancelar esta consulta?")) {
-        		return; // usuário clicou em NÃO → sai
-        	}
-            try {
-                consultas.cancelarConsulta(consulta.getId());
-
-                mensagemFeedback.setText("Consulta cancelada com sucesso!");
-                mensagemFeedback.setTextFill(Color.RED);
-
-                carregarConsultas(); // atualiza tela
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            if (!confirmarAcao("Deseja cancelar esta consulta?")) {
+                return;
             }
-        });
 
+            new MotivoTelaCancelamento().start(
+                consulta.getId(), // 🔥 passa o ID
+                () -> carregarConsultas() // 🔥 só atualiza
+            );
+        });
         // Concluir consulta
         btnConcluir.setOnAction(e -> {
         	if (!confirmarAcao("Deseja marcar como concluida esta consulta?")) {

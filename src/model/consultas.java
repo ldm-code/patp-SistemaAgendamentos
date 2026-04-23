@@ -152,8 +152,9 @@ public class consultas {
 	        return "Erro ao editar consulta!";
 	    }
 	}
-	public static void cancelarConsulta(int id)throws Exception {
+	public static void cancelarConsulta(int id,String motivo)throws Exception {
 		ConsultaDAO.atualizarConsulta(id,"cancelada");
+		agendamentosDAO.inserirAgendamentoCancelado(id,motivo);
 		System.out.println("consulta cancelada com sucesso");
 	}
 	public static void concluirConsulta(int id)throws Exception {

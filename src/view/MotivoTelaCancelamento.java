@@ -1,5 +1,5 @@
-package imagensPATP;
-
+package view;
+import model.consultas;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,10 +9,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.consultas;
 
 public class MotivoTelaCancelamento {
 
-    public void start(String valorAtual, Runnable onUpdate) {
+	public void start(int idConsulta, Runnable onSucesso)  {
 
         Stage janela = new Stage();
         janela.initModality(Modality.APPLICATION_MODAL);
@@ -24,7 +25,7 @@ public class MotivoTelaCancelamento {
 
         // ===== CAMPO ÚNICO =====
         TextField campo = new TextField();
-        campo.setPromptText("Digite o valor");
+        
 
         String estiloInput =
                 "-fx-background-color: #1e1e1e;" +
@@ -39,7 +40,7 @@ public class MotivoTelaCancelamento {
         campo.applyCss();
 
         // PRÉ-CARREGAR
-        campo.setText(valorAtual);
+        campo.setPromptText("motivo do cancelamento:");
 
         Label feedback = new Label();
 
@@ -47,19 +48,27 @@ public class MotivoTelaCancelamento {
         Button btnCancelar = new Button("Cancelar");
 
         btnSalvar.setOnAction(e -> {
-            String valor = campo.getText();
+            String motivo = campo.getText();
 
-            if (valor.isEmpty()) {
+            if (motivo.isEmpty()) {
                 feedback.setText("Preencha o campo!");
                 feedback.setTextFill(Color.ORANGE);
                 return;
             }
 
-            feedback.setText("Atualizado com sucesso!");
-            feedback.setTextFill(Color.LIGHTGREEN);
+            try {
+                // 🔥 AGORA CANCELA AQUI
+            	consultas.cancelarConsulta(idConsulta, campo.getText());
 
-            onUpdate.run();
-            janela.close();
+                feedback.setText("Cancelado com sucesso!");
+                feedback.setTextFill(Color.LIGHTGREEN);
+
+                onSucesso.run(); // atualiza tela principal
+                janela.close();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         btnCancelar.setOnAction(e -> janela.close());
@@ -88,4 +97,5 @@ public class MotivoTelaCancelamento {
         janela.setTitle("Editar Dado");
         janela.show();
     }
+ 
 }

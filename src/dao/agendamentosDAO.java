@@ -20,6 +20,21 @@ public class agendamentosDAO  {
 	    stmt.close();
 	    conn.close();
 	}
+	public static void inserirAgendamentoCancelado(int idConsulta,String motivo) throws Exception {
+		Connection conn = conexaoBanco.conectar();
+		
+		String sql = "INSERT INTO agendamentos(fk_consulta,motivo) VALUES(?,?)";
+		
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1,idConsulta);
+	    stmt.setString(2, motivo);
+	    
+	    stmt.executeUpdate();
+
+	    stmt.close();
+	    conn.close();
+	}
+	
 	
 		  public static List<Agendamentos> listarAgendamentosConcluidos() throws Exception {
 
