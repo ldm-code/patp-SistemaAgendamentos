@@ -125,6 +125,8 @@ Responsável por representar as tabelas do banco de dados em forma de classes Ja
 ### 🗄️ Banco de Dados
 
 - O banco de dados é relacional e estruturado com as seguintes entidades principais:
+  
+  - medicos_dias_semana
   - usuários  
   - médicos  
   - consultas  
