@@ -8,28 +8,31 @@ import java.util.List;
 
 import List.MedicosSelect;
 public class medicosDAO {
-	public static void inserir(
+	public static int inserir(String nome, String tipo) throws Exception {
 
-		     String nome,
-		     String tipo
-		 ) throws Exception {
 	    Connection conn = conexaoBanco.conectar();
-	    String sql="INSERT INTO medicos (nome, tipo) VALUES (?, ?);";
-        PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, nome);
-        ps.setString(2, tipo);
 
-        int linhasAfetadas = ps.executeUpdate();
-        if (linhasAfetadas > 0) {
+	    String sql = "INSERT INTO medicos (nome, tipo) VALUES (?, ?)";
 
-            ResultSet generatedKeys = ps.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                long idGerado = generatedKeys.getLong(1);
-                System.out.println("ID gerado: " + idGerado);
-            }
-        }
+	    PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        ps.close(); 
+	    ps.setString(1, nome);
+	    ps.setString(2, tipo);
+
+	    ps.executeUpdate();
+
+	    ResultSet rs = ps.getGeneratedKeys();
+
+	    int idGerado = 0;
+
+	    if (rs.next()) {
+	        idGerado = rs.getInt(1);
+	    }
+
+	    rs.close();
+	    ps.close();
+
+	    return idGerado;
 	}
 	public static List<MedicosSelect> select()  throws Exception{
 		    List<MedicosSelect> lista = new ArrayList<>();
