@@ -24,6 +24,22 @@ public class consultas {
 	    }
 	    return false; 
 	}
+	public static boolean medicoAtendeNoDia(int idMedico, LocalDateTime data) throws Exception {
+
+	    int diaConsulta = data.getDayOfWeek().getValue(); // 1-7
+
+	    List<String> diasDoMedico = dao.MedicoDiasDAO.buscarDias(idMedico);
+
+	    for (String dia : diasDoMedico) {
+	        int diaBanco = utils.ValidacaoMedicoUtils.converterDia(dia);
+
+	        if (diaBanco == diaConsulta) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
 
 	
 
@@ -34,6 +50,9 @@ public class consultas {
 	        String email
 	) {
 	    try {
+	    	if (!medicoAtendeNoDia(idMed, dataConsultas)) {
+	    	    return "Médico não atende neste dia!";
+	    	}
 
 	        if (dataConsultas == null) {
 	            return "Data inválida ou inexistente.";
@@ -97,6 +116,9 @@ public class consultas {
 
 	) {
 	    try {
+	    	if (!medicoAtendeNoDia(consulta.getIdMedico(), novaData)) {
+	    	    return "Médico não atende neste dia!";
+	    	}
 
 	        // 🔴 1. valida nulo
 	        if (novaData == null) {
