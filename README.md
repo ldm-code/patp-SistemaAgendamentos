@@ -37,13 +37,6 @@ A aplicação segue uma arquitetura em camadas, utilizando:
 
 Responsável por representar as tabelas do banco de dados em forma de classes Java.
 
-### Exemplo:
-```java
-private int id;
-private String nome;
-private String email;
-```
-- Explicação:
 - Cada atributo → coluna no banco
 - Cada classe → tabela
 - Cada objeto → registro
@@ -76,6 +69,7 @@ private String email;
 - Manipulação de datas
 - Controle de sessão
 - Envio de e-mails
+- Converter os dias de atendimento do medico para o formato lido no backend 
 - 🧠 Importância:
 
 - Evita repetição de código e centraliza funcionalidades comuns.
