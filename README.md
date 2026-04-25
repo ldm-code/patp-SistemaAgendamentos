@@ -99,6 +99,7 @@ Responsável por representar as tabelas do banco de dados em forma de classes Ja
 
 - O sistema utiliza um banco relacional com as seguintes tabelas:
 
+- medicos_dias_semana
 - usuarios
 - medicos
 - consultas
