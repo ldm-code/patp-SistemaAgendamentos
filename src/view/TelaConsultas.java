@@ -321,23 +321,33 @@ public class TelaConsultas {
 
     private HBox criarCardConsulta(Consulta consulta){
 
-        Label info = new Label(
-                "Paciente: "+consulta.getNomeUsuario()+
-                "\nMédico: "+consulta.getNomeMedico()+
-                "\nEspecialidade: "+consulta.getEspecialidade()+
-                "\nData: "+DateUtil.format(consulta.getDataConsulta())+
-                "\nStatus: "+formatarStatus(
-                        consulta.getStatus()
-                )
-        );
+    	Label info = new Label(
+    	        "Paciente: " + consulta.getNomeUsuario() +
+    	        "\nMédico: " + consulta.getNomeMedico() +
+    	        "\nEspecialidade: " + consulta.getEspecialidade() +
 
+    	        "\nAgendada em: " +
+    	        DateUtil.format(
+    	            consulta.getDataAgendamento()
+    	        ) +
+
+    	        "\nConsulta para: " +
+    	        DateUtil.format(
+    	            consulta.getDataConsulta()
+    	        ) +
+
+    	        "\nStatus: " +
+    	        formatarStatus(
+    	            consulta.getStatus()
+    	        )
+    	);
         info.setTextFill(Color.WHITE);
 
 
         Button btnCancelar = new Button("Cancelar");
         Button btnConcluir = new Button("Concluir");
         Button btnEspera = new Button("Agendada");
-        Button btnEditar = new Button("Editar");
+        Button btnEditar = new Button("Reagendar");
 
 
         btnCancelar.setStyle(
