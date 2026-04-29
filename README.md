@@ -164,7 +164,7 @@ VALUES (123456, 'senha', 'admin@email.com', 'adm', 'Administrador', '00000000000
 ---
 ## melhorias solicitadas por colegas:
 
-- [ ] Renomear botao de editar como reagendar
-- [ ] Adicionar vizualizacao de data de agendamento na consulta
+- [x] Renomear botao de editar como reagendar
+- [x] Adicionar vizualizacao de data de agendamento na consulta
 - [ ] Adicionar pesquisa por nome de usuario na aba de consultas e pesquisa de data nos agendamentos
 
