@@ -503,5 +503,31 @@ public class ConsultaDAO {
 	        }
 	    }
 	}
+	public static String buscarEmailPorConsulta(int idConsulta) throws Exception {
+
+	    String email = null;
+
+	    String sql = """
+	        SELECT u.email
+	        FROM consultas c
+	        JOIN usuarios u ON c.fk_usuario = u.id
+	        WHERE c.id = ?
+	    """;
+
+	    try (Connection conn = conexaoBanco.conectar();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+	        ps.setInt(1, idConsulta);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+
+	            if (rs.next()) {
+	                email = rs.getString("email");
+	            }
+	        }
+	    }
+
+	    return email;
+	}
 
 }
