@@ -177,6 +177,11 @@ public class consultas {
 	public static void cancelarConsulta(int id,String motivo)throws Exception {
 		ConsultaDAO.atualizarConsulta(id,"cancelada");
 		agendamentosDAO.inserirAgendamentoCancelado(id,motivo);
+		String email=ConsultaDAO.buscarEmailPorConsulta(id);
+		enviarEmail.enviar(email, " Consulta Cancelada","Sua consulta foi canecalda por um adiministrador do sistema.\n "
+				+ "Para mais detalhes,entre em contato com a equipe de atendimento. \n"+"\n\n"
+				+ "Atenciosamente\n"+"\n"
+				+ "Equipe de atendimento.");
 		System.out.println("consulta cancelada com sucesso");
 	}
 	public static void concluirConsulta(int id)throws Exception {
