@@ -161,11 +161,19 @@ public class consultas {
 	        }
 
 	        // 🔹 8. atualiza no banco
-	        ConsultaDAO.atualizarHorario(
-	                consulta.getId(),
-	                novaData.toLocalDate(),
-	                novaData.toLocalTime()
+	        String dataFormatada = DateUtil.format(novaData);
+	        String email=ConsultaDAO.buscarEmailPorConsulta(consulta.getId());
+	        enviarEmail.enviar(email, "Consulta Reagendada", " Sua consulta acaba de ser reagendada para "+
+	        dataFormatada +"\n" +"Para mais informacoes, Contate um administrador do sistema"+ "\n \n"+
+	        		"Atenciosamente,\n" +
+	        		"Equipe de Atendimento."
+	        
 	        );
+	        ConsultaDAO.atualizarHorario(
+	        		consulta.getId(),
+	        		novaData.toLocalDate(),
+	        		novaData.toLocalTime()
+	        		);
 
 	        return "Consulta atualizada com sucesso!";
 
@@ -178,7 +186,7 @@ public class consultas {
 		ConsultaDAO.atualizarConsulta(id,"cancelada");
 		agendamentosDAO.inserirAgendamentoCancelado(id,motivo);
 		String email=ConsultaDAO.buscarEmailPorConsulta(id);
-		enviarEmail.enviar(email, " Consulta Cancelada","Sua consulta foi canecalda por um adiministrador do sistema.\n "
+		enviarEmail.enviar(email, " Consulta Cancelada","Sua consulta foi canecalda por um adiministrador do sistema.\n"
 				+ "Para mais detalhes,entre em contato com a equipe de atendimento. \n"+"\n\n"
 				+ "Atenciosamente\n"+"\n"
 				+ "Equipe de atendimento.");

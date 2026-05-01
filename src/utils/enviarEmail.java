@@ -11,37 +11,32 @@ import config.EmailSessionConfig;
 
 public class enviarEmail {
 
-    public static void enviar(String email, String titulo, String conteudo) {
+	public static void enviar(String email, String titulo, String conteudo) {
 
-        try {
-            Session session = EmailSessionConfig.getSession();
+	    new Thread(() -> {
+	        try {
+	            Session session = EmailSessionConfig.getSession();
 
-            Message message = new MimeMessage(session);
+	            Message message = new MimeMessage(session);
 
-            message.setFrom(new InternetAddress("demoraesleonardo327@gmail.com"));
+	            message.setFrom(new InternetAddress("demoraesleonardo327@gmail.com"));
 
-            message.setRecipients(
-                Message.RecipientType.TO,
-                InternetAddress.parse(email)
-            );
+	            message.setRecipients(
+	                Message.RecipientType.TO,
+	                InternetAddress.parse(email)
+	            );
 
-            message.setSubject(titulo);
+	            message.setSubject(titulo);
 
-            message.setText(conteudo);
+	            message.setText(conteudo);
 
-            new Thread(() -> {
-                try {
-					Transport.send(message);
-				} catch (MessagingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }).start();
+	            Transport.send(message);
 
-            System.out.println("Email enviado com sucesso!");
+	            System.out.println("Email enviado com sucesso!");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }).start();
+	}
 }
