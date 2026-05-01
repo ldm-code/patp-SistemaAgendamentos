@@ -18,6 +18,7 @@ module patp {
     exports dao;
     exports utils;
     exports main;
+    exports config;
 
     // OPEN (para JavaFX reflection)
     opens view to javafx.fxml;
