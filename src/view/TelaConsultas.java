@@ -21,14 +21,13 @@ import model.medicos;
 import utils.DateUtil;
 
 public class TelaConsultas {
-
     // Mais respiro entre cards
-    private VBox listaConsultas = new VBox(18);
+    private static VBox listaConsultas = new VBox(18);
 
-    private Label mensagemFeedback = new Label();
+    private static Label mensagemFeedback = new Label();
 
+    public static LocalDate data;
     public void start(Stage stage) {
-
         Label titulo = new Label("Consultas");
         titulo.setFont(new Font("Arial",28));
         titulo.setTextFill(Color.web("#FFD700"));
@@ -135,19 +134,23 @@ public class TelaConsultas {
                 "-fx-background-radius:10;"
         );
 
-        btnAgendar.setOnAction(e->
-                new TelaAgendamento().start(stage)
-        );
+        btnAgendar.setOnAction(e->{
+        	
+     
+                new TelaAgendamento().start(stage);
+                condicionarExibicao();
+        } );
 
         btnMedicos.setOnAction(e-> {
             new TelaMedicos().start(() -> {
-                carregarConsultas();
+            	 condicionarExibicao();
             });
         });
 
         btnEncerradas.setOnAction(e -> {
             // Abre tela de agendamentos 
            new AgendamentosView().start(stage);
+           condicionarExibicao() ;
         });
 
 
@@ -166,23 +169,17 @@ public class TelaConsultas {
                 "-fx-background-color:transparent;"+
                 "-fx-control-inner-background:transparent;"
         );
-
-        carregarConsultas();
-
+        
+        	
+        if (data != null) {
+          filtroData.setValue(data);
+          condicionarExibicao();
+        }
+        condicionarExibicao();
+        	
         btnFiltrar.setOnAction(e -> {
-            LocalDate data = filtroData.getValue();
-
-            try {
-                if(data==null){
-                    carregarConsultas();
-                }
-                else{
-                    carregarConsultasPorData(data);
-                }
-            }
-            catch(Exception ex){
-                ex.printStackTrace();
-            }
+          data = filtroData.getValue();
+          condicionarExibicao();
         });
 
 
@@ -213,8 +210,25 @@ public class TelaConsultas {
         stage.show();
     }
 
+    public static void condicionarExibicao() {
+        try {
+        	
+            if(data==null){
+                carregarConsultas();
+            }
+            else {
+            	
+                carregarConsultasPorData(data);
+            }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+  
 
-    private boolean confirmarAcao(String mensagem){
+
+    private static boolean confirmarAcao(String mensagem){
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 
@@ -242,7 +256,7 @@ public class TelaConsultas {
     }
 
 
-    private void carregarConsultasPorData(LocalDate data){
+    private static void carregarConsultasPorData(LocalDate data){
 
         listaConsultas.getChildren().clear();
 
@@ -273,7 +287,7 @@ public class TelaConsultas {
     }
 
 
-    private void carregarConsultas(){
+    private static void carregarConsultas(){
 
         listaConsultas.getChildren().clear();
 
@@ -298,7 +312,7 @@ public class TelaConsultas {
     }
 
 
-    private String formatarStatus(String status){
+    private static String formatarStatus(String status){
 
         if(status==null) return "";
 
@@ -319,7 +333,7 @@ public class TelaConsultas {
     }
 
 
-    private HBox criarCardConsulta(Consulta consulta){
+    private static HBox criarCardConsulta(Consulta consulta){
 
     	Label info = new Label(
     	        "Paciente: " + consulta.getNomeUsuario() +
@@ -402,7 +416,7 @@ public class TelaConsultas {
 
             new TelaEdicaoConsulta().start(
                     consulta,
-                    ()->carregarConsultas()
+                    ()->condicionarExibicao() 
             );
         });
 
@@ -415,7 +429,7 @@ public class TelaConsultas {
 
             new MotivoTelaCancelamento().start(
                     consulta.getId(),
-                    ()->carregarConsultas()
+                    ()->condicionarExibicao() 
             );
         });
 
@@ -430,7 +444,7 @@ public class TelaConsultas {
                 consultas.concluirConsulta(consulta.getId());
                 mensagemFeedback.setText("Consulta concluída!");
                 mensagemFeedback.setTextFill(Color.LIGHTGREEN);
-                carregarConsultas();
+                condicionarExibicao(); 
             }
             catch(Exception ex){
                 ex.printStackTrace();
@@ -451,7 +465,7 @@ public class TelaConsultas {
                 alert.setHeaderText(null);
                 alert.setContentText(resultado);
                 alert.showAndWait();
-                carregarConsultas();
+                condicionarExibicao();
             }
             catch(Exception ex){
                 ex.printStackTrace();
@@ -501,7 +515,7 @@ public class TelaConsultas {
     }
 
 
-    private HBox criarCardVazio(){
+    private static HBox criarCardVazio(){
 
         Label mensagem = new Label(
                 "Nenhuma consulta agendada."

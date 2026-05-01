@@ -79,9 +79,13 @@ public class AgendamentosView {
                 "-fx-padding:10 20;"
         );
 
-        btnVoltar.setOnAction(e ->
-                new TelaConsultas().start(stage)
-        );
+        btnVoltar.setOnAction(e ->{
+        	
+
+                new TelaConsultas().start(stage);
+                TelaConsultas.condicionarExibicao();
+                
+        });
 
         HBox acoesDireita = new HBox(btnVoltar);
         acoesDireita.setAlignment(Pos.CENTER_RIGHT);

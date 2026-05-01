@@ -119,6 +119,7 @@ public class TelaAgendamento {
                 if (resultado.contains("sucesso")) {
                     feedback.setTextFill(Color.LIGHTGREEN);
                     new TelaConsultas().start(stage);
+                    TelaConsultas.condicionarExibicao();
                 } else {
                     feedback.setTextFill(Color.RED);
                 }
@@ -133,7 +134,10 @@ public class TelaAgendamento {
         dataConsulta.setPromptText("Dia da consulta:");
 
         // ===== AÇÃO VOLTAR =====
-        btnVoltar.setOnAction(e -> new TelaConsultas().start(stage));
+        btnVoltar.setOnAction(e -> {
+            new TelaConsultas().start(stage);
+            TelaConsultas.condicionarExibicao();
+        });
 
         // ===== ESTILO CAMPOS (igual login) =====
         String estiloCampos =
