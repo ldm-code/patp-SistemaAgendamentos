@@ -158,13 +158,13 @@ VALUES (123456, 'senha', 'admin@email.com', 'adm', 'Administrador', '00000000000
 
 - 📌 Observação:
 
-- O campo tipo deve ser definido como 'adm'
-- A senha deve seguir o padrão utilizado pelo sistema
+- O campo tipo deve ser definido como 'adm'.
+- Em ambiente de teste,é recomendavel que a senha deve seguir o padrão utilizado pelo sistema.
 
 ---
 ## melhorias solicitadas por colegas:
 
-- [x] Renomear botao de editar como reagendar
-- [x] Adicionar vizualizacao de data de agendamento na consulta
-- [ ] Adicionar pesquisa por nome de usuario na aba de consultas e pesquisa de data nos agendamentos
+- [x] Renomear botao de editar como reagendar.
+- [x] Adicionar vizualizacao de data de agendamento na consulta.
+- [ ] Adicionar pesquisa por nome de usuario na aba de consultas e pesquisa de data nos agendamentos.
 
