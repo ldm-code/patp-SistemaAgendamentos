@@ -1,62 +1,47 @@
 package utils;
 
-import java.util.Properties;
-
-import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
-import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
-public class enviarEmail  {
-	 public static void enviar(String email,String titulo, String conteudo){
-		    final String remetente = "demoraesleonardo327@gmail.com";
-	        final String senha = "gpkx skpj ftln efmb"; 
+import config.EmailSessionConfig;
 
-	        String destinatario = email;
+public class enviarEmail {
 
-	        
-	        Properties props = new Properties();
-	        props.put("mail.smtp.auth", "true");
-	        props.put("mail.smtp.starttls.enable", "true");
-	        props.put("mail.smtp.host", "smtp.gmail.com");
-	        props.put("mail.smtp.host", "smtp.gmail.com");
-	        props.put("mail.smtp.port", "587"); 
-	        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+    public static void enviar(String email, String titulo, String conteudo) {
 
-	        try {
-	           
-	            Session session = Session.getInstance(props,
-	                new Authenticator() {
-	                    protected PasswordAuthentication getPasswordAuthentication() {
-	                        return new PasswordAuthentication(remetente, senha);
-	                    }
-	                }
-	            );
+        try {
+            Session session = EmailSessionConfig.getSession();
 
-	          
-	            Message message = new MimeMessage(session);
-	            message.setFrom(new InternetAddress(remetente));
-	            message.setRecipients(
-	                Message.RecipientType.TO,
-	                InternetAddress.parse(destinatario)
-	            );
-	            message.setSubject(titulo);
-	            message.setText(conteudo);
+            Message message = new MimeMessage(session);
 
-	            Transport.send(message);
+            message.setFrom(new InternetAddress("demoraesleonardo327@gmail.com"));
 
-	            System.out.println("Email enviado com sucesso!");
+            message.setRecipients(
+                Message.RecipientType.TO,
+                InternetAddress.parse(email)
+            );
 
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+            message.setSubject(titulo);
 
-		 
-	 }
-		
-	
+            message.setText(conteudo);
 
+            new Thread(() -> {
+                try {
+					Transport.send(message);
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }).start();
+
+            System.out.println("Email enviado com sucesso!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
