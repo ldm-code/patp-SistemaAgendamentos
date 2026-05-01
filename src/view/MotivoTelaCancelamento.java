@@ -10,7 +10,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.consultas;
-
+import utils.enviarEmail;
 public class MotivoTelaCancelamento {
 
 	public void start(int idConsulta, Runnable onSucesso)  {
@@ -59,7 +59,6 @@ public class MotivoTelaCancelamento {
             try {
                 // 🔥 AGORA CANCELA AQUI
             	consultas.cancelarConsulta(idConsulta, campo.getText());
-
                 feedback.setText("Cancelado com sucesso!");
                 feedback.setTextFill(Color.LIGHTGREEN);
 
