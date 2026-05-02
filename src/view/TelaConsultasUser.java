@@ -28,7 +28,7 @@ public class TelaConsultasUser {
 	        titulo.setFont(new Font("Arial", 28));
 	        titulo.setTextFill(Color.web("#FFD700"));
 
-	      
+	        
 	        // ===== LISTA =====
 	        listaConsultas.setPadding(new Insets(10));
 
@@ -42,15 +42,42 @@ public class TelaConsultasUser {
 	        carregarConsultas();
 
 	        // ===== LAYOUT =====
-	        VBox layout = new VBox(15);
-	        layout.setPadding(new Insets(20));
-	        layout.setAlignment(Pos.TOP_CENTER);
+	        AnchorPane root = new AnchorPane();
 
-	        layout.getChildren().addAll(titulo,  scroll);
+	     // ===== SEU LAYOUT PRINCIPAL =====
+	     VBox layout = new VBox(15);
+	     layout.setPadding(new Insets(60, 20, 20, 20));
+	     layout.setAlignment(Pos.TOP_CENTER);
+	     layout.getChildren().addAll(titulo, scroll);
+	     layout.setStyle("-fx-background-color: #0f3d2e;");
 
-	        layout.setStyle("-fx-background-color: #0f3d2e;");
+	     // Faz o layout ocupar toda a tela
+	     AnchorPane.setTopAnchor(layout, 0.0);
+	     AnchorPane.setBottomAnchor(layout, 0.0);
+	     AnchorPane.setLeftAnchor(layout, 0.0);
+	     AnchorPane.setRightAnchor(layout, 0.0);
 
-	        Scene scene = new Scene(layout, 1366, 700);
+	     // ===== BOTÃO NO CANTO =====
+	     Button botaoVoltar = new Button("Voltar");
+
+	     // Estilo (opcional, combinando com seu padrão)
+	     botaoVoltar.setStyle(
+	         "-fx-background-color: #FFD700;" +
+	         "-fx-text-fill: black;" +
+	         "-fx-font-weight: bold;"
+	     );
+
+	     // Posiciona no canto superior esquerdo
+	     AnchorPane.setTopAnchor(botaoVoltar, 10.0);
+	     AnchorPane.setLeftAnchor(botaoVoltar, 10.0);
+         botaoVoltar.setOnAction(e->{
+        	 new LoginUsuario().start(stage);
+         });	   
+         // ===== ADICIONA TUDO =====
+	     root.getChildren().addAll(layout, botaoVoltar);
+      
+	     // Cena
+	     Scene scene = new Scene(root, 1366, 700);
 	        stage.setScene(scene);
 	        stage.setTitle("Consultas");
 	        stage.show();
