@@ -1,29 +1,28 @@
 package config;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
 
-    public static void main(String[] args) {
+    private static Properties props = new Properties();
 
-        Properties props = new Properties();
-
+    static {
         try {
-            FileInputStream file = new FileInputStream("config.properties");
+            InputStream file = Config.class.getResourceAsStream("/config.properties");
+
+            if (file == null) {
+                throw new RuntimeException("config.properties não encontrado no classpath");
+            }
+
             props.load(file);
 
-            String url = props.getProperty("db.url");
-            String user = props.getProperty("db.user");
-            String password = props.getProperty("db.password");
-
-            System.out.println("URL: " + url);
-            System.out.println("User: " + user);
-            System.out.println("Password: " + password);
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String get(String key) {
+        return props.getProperty(key);
     }
 }

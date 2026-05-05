@@ -9,8 +9,8 @@ public class EmailSessionConfig {
 		if (session==null) {
 
 
-			            final String remetente = "demoraesleonardo327@gmail.com";
-			            final String senha = "gpkx skpj ftln efmb"; // depois vamos melhorar isso
+			            final String remetente = Config.get("mail.user");
+			            final String senha = Config.get("mail.password"); // depois vamos melhorar isso
 
 			            Properties props = new Properties();
 			            props.put("mail.smtp.auth", "true");
