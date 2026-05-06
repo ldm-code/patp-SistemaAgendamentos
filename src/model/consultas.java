@@ -189,7 +189,7 @@ public class consultas {
 		ConsultaDAO.atualizarConsulta(id,"cancelada");
 		agendamentosDAO.inserirAgendamentoCancelado(id,motivo);
 		String email=ConsultaDAO.buscarEmailPorConsulta(id);
-		enviarEmail.enviar(email, " Consulta Cancelada","Sua consulta foi canecalda por um adiministrador do sistema.\n"
+		enviarEmail.enviar(email, " Consulta Cancelada","Sua consulta foi cancelada por um administrador do sistema.\n"
 				+ "Para mais informacoes, Contate o seguinte ramal:"+"\n"
 				+"Para agendar com dentista:4455.\n"+
         		"Para agendar com outro medico:3347.\n"+"\n\n"

@@ -1,42 +1,48 @@
 package utils;
 
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+
 import config.Config;
 import config.EmailSessionConfig;
 
 public class enviarEmail {
 
-	public static void enviar(String email, String titulo, String conteudo) {
+    // 🔥 Pool com 2 threads (controla concorrência)
+    private static final ExecutorService executor = Executors.newFixedThreadPool(2);
 
-	    new Thread(() -> {
-	        try {
-	            Session session = EmailSessionConfig.getSession();
+    public static void enviar(String email, String titulo, String conteudo) {
 
-	            Message message = new MimeMessage(session);
+        executor.submit(() -> { // envia tarefa para a fila
+            try {
+                Session session = EmailSessionConfig.getSession();
 
-	            message.setFrom(new InternetAddress(Config.get("mail.user")));
+                MimeMessage message = new MimeMessage(session);
 
-	            message.setRecipients(
-	                Message.RecipientType.TO,
-	                InternetAddress.parse(email)
-	            );
+                message.setFrom(new InternetAddress(Config.get("mail.user")));
 
-	            message.setSubject(titulo);
+                message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(email)
+                );
 
-	            message.setText(conteudo);
+                message.setSubject(titulo, "UTF-8");
 
-	            Transport.send(message);
+                message.setText(conteudo, "UTF-8");
 
-	            System.out.println("Email enviado com sucesso!");
+                Transport.send(message);
 
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }).start();
-	}
+                System.out.println("Email enviado para: " + email);
+
+                // 🔥 pequeno delay para não sobrecarregar o servidor
+                Thread.sleep(500);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }
