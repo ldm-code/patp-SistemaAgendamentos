@@ -6,7 +6,7 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-
+import config.Config;
 import config.EmailSessionConfig;
 
 public class enviarEmail {
@@ -19,7 +19,7 @@ public class enviarEmail {
 
 	            Message message = new MimeMessage(session);
 
-	            message.setFrom(new InternetAddress("demoraesleonardo327@gmail.com"));
+	            message.setFrom(new InternetAddress(Config.get("mail.user")));
 
 	            message.setRecipients(
 	                Message.RecipientType.TO,
