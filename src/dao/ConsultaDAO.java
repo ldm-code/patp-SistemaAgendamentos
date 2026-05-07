@@ -449,7 +449,164 @@ public class ConsultaDAO {
 	        }
 	    }
 	}
+	public static List<Consulta> buscarFiltradas(
+	        LocalDate data,
+	        String status
+	) throws Exception {
 
+	    List<Consulta> lista = new ArrayList<>();
+
+	    Connection conn = conexaoBanco.conectar();
+
+	    // =========================
+	    // SQL BASE
+	    // =========================
+
+	    StringBuilder sql = new StringBuilder("""
+	        SELECT
+	            c.id,
+	            u.nome AS nome_usuario,
+	            m.nome AS nome_medico,
+	            m.tipo AS especialidade,
+	            c.data_consulta,
+	            c.data_agendamento,
+	            c.status,
+	            c.fk_medico,
+	            c.fk_usuario
+	        FROM consultas c
+	        JOIN usuarios u ON c.fk_usuario = u.id
+	        JOIN medicos m ON c.fk_medico = m.id
+	        WHERE 1=1
+	    """);
+
+	    // =========================
+	    // FILTRO STATUS
+	    // =========================
+
+	    if(status != null &&
+	       !status.equalsIgnoreCase("Todos")) {
+
+	        sql.append(" AND c.status = ?");
+	    }
+
+	    // =========================
+	    // FILTRO DATA
+	    // =========================
+
+	    if(data != null) {
+
+	        sql.append(
+	            " AND c.data_consulta BETWEEN ? AND ?"
+	        );
+	    }
+
+	    // =========================
+	    // ORDER BY OPCIONAL
+	    // =========================
+
+	    sql.append(" ORDER BY c.data_consulta ASC");
+
+	    PreparedStatement ps =
+	            conn.prepareStatement(sql.toString());
+
+	    // =========================
+	    // CONTROLE DOS PARÂMETROS
+	    // =========================
+
+	    int index = 1;
+
+	    // =========================
+	    // SET STATUS
+	    // =========================
+
+	    if(status != null &&
+	       !status.equalsIgnoreCase("Todos")) {
+
+	        ps.setString(index++, status);
+	    }
+
+	    // =========================
+	    // SET DATA
+	    // =========================
+
+	    if(data != null) {
+
+	        LocalDateTime inicio =
+	                data.atStartOfDay();
+
+	        LocalDateTime fim =
+	                data.atTime(23,59,59);
+
+	        ps.setTimestamp(
+	                index++,
+	                Timestamp.valueOf(inicio)
+	        );
+
+	        ps.setTimestamp(
+	                index++,
+	                Timestamp.valueOf(fim)
+	        );
+	    }
+
+	    ResultSet rs = ps.executeQuery();
+
+	    // =========================
+	    // MONTA LISTA
+	    // =========================
+
+	    while(rs.next()) {
+
+	        int id = rs.getInt("id");
+
+	        String usuario =
+	                rs.getString("nome_usuario");
+
+	        String medico =
+	                rs.getString("nome_medico");
+
+	        String especialidade =
+	                rs.getString("especialidade");
+
+	        LocalDateTime dataConsulta =
+	                rs.getTimestamp(
+	                        "data_consulta"
+	                ).toLocalDateTime();
+
+	        LocalDateTime dataAgendada =
+	                rs.getTimestamp(
+	                        "data_agendamento"
+	                ).toLocalDateTime();
+
+	        String statusConsulta =
+	                rs.getString("status");
+
+	        int idMedico =
+	                rs.getInt("fk_medico");
+
+	        int idUser =
+	                rs.getInt("fk_usuario");
+
+	        Consulta consulta = new Consulta(
+	                id,
+	                usuario,
+	                medico,
+	                especialidade,
+	                dataConsulta,
+	                dataAgendada,
+	                statusConsulta,
+	                idMedico,
+	                idUser
+	        );
+
+	        lista.add(consulta);
+	    }
+
+	    rs.close();
+	    ps.close();
+	    conn.close();
+
+	    return lista;
+	}
 
 
 	public static boolean usuarioJaTemConsultaEdicao(

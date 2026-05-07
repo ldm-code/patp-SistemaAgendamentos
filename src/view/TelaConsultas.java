@@ -25,9 +25,11 @@ public class TelaConsultas {
     private static VBox listaConsultas = new VBox(18);
 
     private static Label mensagemFeedback = new Label();
-
     public static LocalDate data;
+    public static String status = "Todos";
+    
     public void start(Stage stage) {
+
         Label titulo = new Label("Consultas");
         titulo.setFont(new Font("Arial",28));
         titulo.setTextFill(Color.web("#FFD700"));
@@ -57,7 +59,30 @@ public class TelaConsultas {
                 "-fx-prompt-text-fill:white;"
         );
 
+        // =========================
+        // NOVO FILTRO STATUS
+        // =========================
+
+        ComboBox<String> filtroStatus = new ComboBox<>();
+
+        filtroStatus.getItems().addAll(
+                "Todos",
+                "agendada",
+                "concluida",
+                "cancelada"
+        );
+
+        filtroStatus.setValue("Todos");
+
+        filtroStatus.setStyle(
+                "-fx-background-color:#1e1e1e;" +
+                "-fx-text-fill:white;" +
+                "-fx-background-radius:10;" +
+                "-fx-border-radius:10;"
+        );
+
         Button btnFiltrar = new Button("Filtrar");
+
         btnFiltrar.setStyle(
                 "-fx-background-color:#FFD700;"+
                 "-fx-text-fill:black;"+
@@ -66,12 +91,12 @@ public class TelaConsultas {
                 "-fx-padding:10 20;"
         );
 
-
         // =========================
         // BOTÕES TOPO
         // =========================
 
         Button btnEncerradas = new Button("Agendamentos Encerrados");
+
         btnEncerradas.setStyle(
                 "-fx-background-color:#FFD700;"+
                 "-fx-text-fill:black;"+
@@ -80,8 +105,8 @@ public class TelaConsultas {
                 "-fx-padding:10 20;"
         );
 
-
         Button btnMedicos = new Button("Cadastrar Médicos");
+
         btnMedicos.setStyle(
                 "-fx-background-color:#FFD700;"+
                 "-fx-text-fill:black;"+
@@ -90,25 +115,29 @@ public class TelaConsultas {
                 "-fx-padding:10 20;"
         );
 
+        // =========================
+        // HBOX FILTROS
+        // =========================
 
-        HBox filtros = new HBox(15,
+        HBox filtros = new HBox(
+                15,
                 filtroData,
+                filtroStatus,
                 btnFiltrar
         );
-        filtros.setAlignment(Pos.CENTER_LEFT);
 
+        filtros.setAlignment(Pos.CENTER_LEFT);
 
         HBox acoesDireita = new HBox(
                 15,
                 btnEncerradas,
                 btnMedicos
         );
-        acoesDireita.setAlignment(Pos.CENTER_RIGHT);
 
+        acoesDireita.setAlignment(Pos.CENTER_RIGHT);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
 
         HBox barraTopo = new HBox(
                 20,
@@ -119,7 +148,6 @@ public class TelaConsultas {
 
         barraTopo.setAlignment(Pos.CENTER);
         barraTopo.setMaxWidth(1050);
-
 
         // =========================
         // AGENDAR
@@ -135,24 +163,34 @@ public class TelaConsultas {
         );
 
         btnAgendar.setOnAction(e->{
-        	
-     
-                new TelaAgendamento().start(stage);
-                condicionarExibicao();
-        } );
+
+            new TelaAgendamento().start(stage);
+            condicionarExibicao();
+        });
 
         btnMedicos.setOnAction(e-> {
             new TelaMedicos().start(() -> {
-            	 condicionarExibicao();
+                condicionarExibicao();
             });
         });
 
         btnEncerradas.setOnAction(e -> {
-            // Abre tela de agendamentos 
-           new AgendamentosView().start(stage);
-           condicionarExibicao() ;
+            new AgendamentosView().start(stage);
+            condicionarExibicao();
         });
 
+        // =========================
+        // BOTÃO FILTRAR
+        // =========================
+
+        btnFiltrar.setOnAction(e -> {
+
+            data = filtroData.getValue();
+
+            status = filtroStatus.getValue();
+
+            condicionarExibicao();
+        });
 
         // =========================
         // LISTA
@@ -169,25 +207,20 @@ public class TelaConsultas {
                 "-fx-background-color:transparent;"+
                 "-fx-control-inner-background:transparent;"
         );
-        
-        	
-        if (data != null) {
-          filtroData.setValue(data);
-          condicionarExibicao();
-        }
-        condicionarExibicao();
-        	
-        btnFiltrar.setOnAction(e -> {
-          data = filtroData.getValue();
-          condicionarExibicao();
-        });
 
+        if (data != null) {
+            filtroData.setValue(data);
+            condicionarExibicao();
+        }
+
+        condicionarExibicao();
 
         // =========================
         // LAYOUT PRINCIPAL
         // =========================
 
         VBox layout = new VBox(15);
+
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.TOP_CENTER);
 
@@ -205,20 +238,26 @@ public class TelaConsultas {
         layout.setStyle("-fx-background-color:#0f3d2e;");
 
         Scene scene = new Scene(layout,1366,700);
+
         stage.setScene(scene);
         stage.setTitle("Consultas");
         stage.show();
     }
-
     public static void condicionarExibicao() {
         try {
         	
-            if(data==null){
+            if(data==null && status=="Todos"){
                 carregarConsultas();
             }
-            else {
+            else if (status=="Todos" && data!=null) {
             	
                 carregarConsultasPorData(data);
+            }
+            else if (status!="Todos" && data!=null) {
+            	carregarConsultasPorStatusEdata(status);
+            }
+            else if (data==null && status!="Todos") {
+            	carregarConsultasPorStatusEdata(status);
             }
         }
         catch(Exception ex){
@@ -272,6 +311,40 @@ public class TelaConsultas {
             for(Consulta c:consultas){
 
                 HBox wrapper=new HBox(
+                        criarCardConsulta(c)
+                );
+
+                wrapper.setAlignment(Pos.CENTER);
+
+                listaConsultas.getChildren().add(wrapper);
+            }
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static void carregarConsultasPorStatusEdata(String status){
+
+        listaConsultas.getChildren().clear();
+
+        try{
+           
+            List<Consulta> consultas =
+                    ConsultaDAO.buscarFiltradas(data, status);
+
+            if(consultas == null || consultas.isEmpty()){
+
+                listaConsultas.getChildren().add(
+                        criarCardVazio()
+                );
+
+                return;
+            }
+
+            for(Consulta c : consultas){
+
+                HBox wrapper = new HBox(
                         criarCardConsulta(c)
                 );
 
