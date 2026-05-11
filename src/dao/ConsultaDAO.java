@@ -451,7 +451,8 @@ public class ConsultaDAO {
 	}
 	public static List<Consulta> buscarFiltradas(
 	        LocalDate data,
-	        String status
+	        String status,
+	        String nomeUsuario
 	) throws Exception {
 
 	    List<Consulta> lista = new ArrayList<>();
@@ -490,21 +491,35 @@ public class ConsultaDAO {
 	    }
 
 	    // =========================
+	    // FILTRO NOME USUÁRIO
+	    // =========================
+
+	    if(nomeUsuario != null &&
+	       !nomeUsuario.isBlank()) {
+
+	        sql.append("""
+	            AND LOWER(u.nome) LIKE LOWER(?)
+	        """);
+	    }
+
+	    // =========================
 	    // FILTRO DATA
 	    // =========================
 
 	    if(data != null) {
 
-	        sql.append(
-	            " AND c.data_consulta BETWEEN ? AND ?"
-	        );
+	        sql.append("""
+	            AND c.data_consulta BETWEEN ? AND ?
+	        """);
 	    }
 
 	    // =========================
-	    // ORDER BY OPCIONAL
+	    // ORDER BY
 	    // =========================
 
-	    sql.append(" ORDER BY c.data_consulta ASC");
+	    sql.append("""
+	        ORDER BY c.data_consulta ASC
+	    """);
 
 	    PreparedStatement ps =
 	            conn.prepareStatement(sql.toString());
@@ -523,6 +538,19 @@ public class ConsultaDAO {
 	       !status.equalsIgnoreCase("Todos")) {
 
 	        ps.setString(index++, status);
+	    }
+
+	    // =========================
+	    // SET NOME
+	    // =========================
+
+	    if(nomeUsuario != null &&
+	       !nomeUsuario.isBlank()) {
+
+	        ps.setString(
+	                index++,
+	                "%" + nomeUsuario + "%"
+	        );
 	    }
 
 	    // =========================
@@ -607,7 +635,6 @@ public class ConsultaDAO {
 
 	    return lista;
 	}
-
 
 	public static boolean usuarioJaTemConsultaEdicao(
 	        int idUsuario,

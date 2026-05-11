@@ -18,3 +18,5 @@ public class Main extends Application {
      
     }
 }
+// fazer algo no sistema que bloqueie dias e horarios indisponiveis para agendamentos de consultas
+// melhorar ux dos filtros,colocando letras mais legiveis e descrever cada campo encima.

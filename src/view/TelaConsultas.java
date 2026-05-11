@@ -27,6 +27,7 @@ public class TelaConsultas {
     private static Label mensagemFeedback = new Label();
     public static LocalDate data;
     public static String status = "Todos";
+    public static String nomeUsuario = "";
     
     public void start(Stage stage) {
 
@@ -80,7 +81,17 @@ public class TelaConsultas {
                 "-fx-background-radius:10;" +
                 "-fx-border-radius:10;"
         );
+        TextField filtroNome = new TextField();
 
+        filtroNome.setPromptText("Buscar paciente:");
+
+        filtroNome.setStyle(
+                "-fx-background-color:#1e1e1e;" +
+                "-fx-text-fill:white;" +
+                "-fx-prompt-text-fill:#aaaaaa;" +
+                "-fx-background-radius:10;" +
+                "-fx-border-radius:10;"
+        );
         Button btnFiltrar = new Button("Filtrar");
 
         btnFiltrar.setStyle(
@@ -123,10 +134,12 @@ public class TelaConsultas {
                 15,
                 filtroData,
                 filtroStatus,
+                filtroNome,
                 btnFiltrar
         );
 
         filtros.setAlignment(Pos.CENTER_LEFT);
+        HBox.setMargin(filtros, new Insets(0,0,0,-100));
 
         HBox acoesDireita = new HBox(
                 15,
@@ -135,10 +148,9 @@ public class TelaConsultas {
         );
 
         acoesDireita.setAlignment(Pos.CENTER_RIGHT);
-
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
+        HBox.setMargin(acoesDireita, new Insets(0, -90, 0, 0));
         HBox barraTopo = new HBox(
                 20,
                 filtros,
@@ -188,7 +200,9 @@ public class TelaConsultas {
             data = filtroData.getValue();
 
             status = filtroStatus.getValue();
-
+            
+            nomeUsuario=filtroNome.getText();
+            
             condicionarExibicao();
         });
 
@@ -246,17 +260,29 @@ public class TelaConsultas {
     public static void condicionarExibicao() {
         try {
         	
-            if(data==null && status=="Todos"){
+            if(data==null && status=="Todos" && nomeUsuario.isBlank()){
                 carregarConsultas();
             }
-            else if (status=="Todos" && data!=null) {
+            else if (status=="Todos" && data!=null && nomeUsuario.isBlank()) {
             	
                 carregarConsultasPorData(data);
             }
-            else if (status!="Todos" && data!=null) {
+            else if (status!="Todos" && data!=null && nomeUsuario.isBlank()) {
             	carregarConsultasPorStatusEdata(status);
             }
-            else if (data==null && status!="Todos") {
+            else if (data==null && status!="Todos" && nomeUsuario.isBlank()) {
+            	carregarConsultasPorStatusEdata(status);
+            }
+            else if(data==null && status=="Todos" && !nomeUsuario.isBlank()) {
+            	carregarConsultasPorStatusEdata(status);
+            }
+            else if(data!=null && status=="Todos" && !nomeUsuario.isBlank()) {
+            	carregarConsultasPorStatusEdata(status);
+            }
+            else if(data!=null && status!="Todos" && !nomeUsuario.isBlank()) {
+            	carregarConsultasPorStatusEdata(status);
+            }
+            else if(data==null && status!="Todos" && !nomeUsuario.isBlank()) {
             	carregarConsultasPorStatusEdata(status);
             }
         }
@@ -331,7 +357,7 @@ public class TelaConsultas {
         try{
            
             List<Consulta> consultas =
-                    ConsultaDAO.buscarFiltradas(data, status);
+                    ConsultaDAO.buscarFiltradas(data, status, nomeUsuario);
 
             if(consultas == null || consultas.isEmpty()){
 
