@@ -25,8 +25,8 @@ public class TelaConsultas {
     private static VBox listaConsultas = new VBox(18);
 
     private static Label mensagemFeedback = new Label();
-    public static LocalDate data;
-    public static String status = "Todos";
+    public static LocalDate data=LocalDate.now();
+    public static String status = "agendada";
     public static String nomeUsuario = "";
     
     public void start(Stage stage) {
@@ -44,7 +44,7 @@ public class TelaConsultas {
 
         DatePicker filtroData = new DatePicker();
         filtroData.setPromptText("Filtrar por data");
-
+        
         filtroData.setStyle(
                 "-fx-background-color: #1e1e1e;"+
                 "-fx-control-inner-background: #1e1e1e;"+
@@ -73,24 +73,29 @@ public class TelaConsultas {
                 "cancelada"
         );
 
-        filtroStatus.setValue("Todos");
+        filtroStatus.setValue("agendada");
 
         filtroStatus.setStyle(
-                "-fx-background-color:#1e1e1e;" +
-                "-fx-text-fill:white;" +
-                "-fx-background-radius:10;" +
-                "-fx-border-radius:10;"
+        		 "-fx-background-color: #1e1e1e;"+
+        	                "-fx-control-inner-background: #1e1e1e;"+
+        	                "-fx-text-fill: white;"+
+        	                "-fx-prompt-text-fill: white;"+
+        	                "-fx-border-radius:10;"+
+        	                "-fx-background-radius:10;"+
+        	                "-fx-padding:5;"
         );
         TextField filtroNome = new TextField();
 
         filtroNome.setPromptText("Buscar paciente:");
 
         filtroNome.setStyle(
-                "-fx-background-color:#1e1e1e;" +
-                "-fx-text-fill:white;" +
-                "-fx-prompt-text-fill:#aaaaaa;" +
-                "-fx-background-radius:10;" +
-                "-fx-border-radius:10;"
+        		 "-fx-background-color: #1e1e1e;"+
+        	                "-fx-control-inner-background: #1e1e1e;"+
+        	                "-fx-text-fill: white;"+
+        	                "-fx-prompt-text-fill: white;"+
+        	                "-fx-border-radius:10;"+
+        	                "-fx-background-radius:10;"+
+        	                "-fx-padding:5;"
         );
         Button btnFiltrar = new Button("Filtrar");
 
@@ -513,10 +518,15 @@ public class TelaConsultas {
                     "Deseja editar esta consulta?"
             )) return;
 
-            new TelaEdicaoConsulta().start(
-                    consulta,
-                    ()->condicionarExibicao() 
-            );
+            try {
+				new TelaEdicaoConsulta().start(
+				        consulta,
+				        ()->condicionarExibicao() 
+				);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
         });
 
 

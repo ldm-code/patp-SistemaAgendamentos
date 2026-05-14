@@ -713,5 +713,59 @@ public class ConsultaDAO {
 
 	    return email;
 	}
+	public static List<LocalTime> buscarHorariosOcupados(
+	        int idMedico,
+	        LocalDate data
+	) throws Exception {
+
+	    List<LocalTime> horarios = new ArrayList<>();
+
+	    String sql = """
+	        SELECT data_consulta
+	        FROM consultas
+	        WHERE fk_medico = ?
+	        AND status = 'agendada'
+	        AND data_consulta BETWEEN ? AND ?
+	    """;
+
+	    try (
+	        Connection conn = conexaoBanco.conectar();
+	        PreparedStatement ps = conn.prepareStatement(sql)
+	    ) {
+
+	        LocalDateTime inicio = data.atStartOfDay();
+	        LocalDateTime fim = data.atTime(23,59,59);
+
+	        ps.setInt(1, idMedico);
+
+	        ps.setTimestamp(
+	            2,
+	            Timestamp.valueOf(inicio)
+	        );
+
+	        ps.setTimestamp(
+	            3,
+	            Timestamp.valueOf(fim)
+	        );
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while(rs.next()) {
+
+	            LocalTime hora =
+	                rs.getTimestamp(
+	                    "data_consulta"
+	                )
+	                .toLocalDateTime()
+	                .toLocalTime();
+
+	            horarios.add(hora);
+	        }
+
+	        rs.close();
+	    }
+
+	    return horarios;
+	}
 
 }

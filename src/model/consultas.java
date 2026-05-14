@@ -2,11 +2,14 @@ package model;
 import java.time.LocalDate;
 import dao.ConsultaDAO;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import dao.agendamentosDAO;
 import utils.DateUtil;
 import utils.enviarEmail;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import List.Consulta;
@@ -222,5 +225,55 @@ public class consultas {
 
 	    return "Consulta marcada como agendada!";
 	}
+	public static List<String> buscarHorariosDisponiveis(
+	        int idMedico,
+	        LocalDate data
+	) throws Exception {
 
+	    LocalDateTime dataTeste =
+	            data.atTime(8,0);
+
+	    // 🔥 Médico não atende nesse dia
+	    if(!medicoAtendeNoDia(
+	            idMedico,
+	            dataTeste
+	    )) {
+
+	        return new ArrayList<>();
+	    }
+
+	    List<String> todosHorarios = List.of(
+	        "08:00","08:30",
+	        "09:00","09:30",
+	        "10:00","10:30",
+	        "11:00","11:30",
+	        "13:00","13:30",
+	        "14:00","14:30",
+	        "15:00","15:30",
+	        "16:00","16:30",
+	        "17:00","17:30"
+	    );
+
+	    List<LocalTime> ocupados =
+	        ConsultaDAO.buscarHorariosOcupados(
+	            idMedico,
+	            data
+	        );
+
+	    List<String> disponiveis =
+	        new ArrayList<>();
+
+	    for(String horario : todosHorarios) {
+
+	        LocalTime hora =
+	            LocalTime.parse(horario);
+
+	        if(!ocupados.contains(hora)) {
+
+	            disponiveis.add(horario);
+	        }
+	    }
+
+	    return disponiveis;
+	}
 }

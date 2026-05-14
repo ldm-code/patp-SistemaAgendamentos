@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import model.consultas;
+import utils.AtualizadorHorarios;
 import dao.UsuarioDAO;
 import dao.medicosDAO;
 
@@ -37,15 +38,79 @@ public class TelaAgendamento {
         selectMedico.setPromptText("Selecione um médico");
 
         DatePicker dataConsulta = new DatePicker();
+        dataConsulta.setDayCellFactory(picker -> new DateCell() {
 
+            @Override
+            public void updateItem(LocalDate data, boolean empty) {
+
+                super.updateItem(data, empty);
+
+                try {
+
+                    MedicosSelect medico =
+                            selectMedico.getValue();
+
+                    // 🔴 sem médico ainda
+                    if(medico == null) {
+                        return;
+                    }
+
+                    boolean atende =
+                            consultas.medicoAtendeNoDia(
+                                    medico.getId(),
+                                    data.atStartOfDay()
+                            );
+
+                    // 🔴 desabilita datas sem atendimento
+                    if(!atende) {
+
+                        setDisable(true);
+
+                        setStyle(
+                            "-fx-background-color: #2b2b2b;"
+                        );
+                    }
+
+                    // 🔴 bloqueia datas passadas
+                    if(data.isBefore(LocalDate.now())) {
+
+                        setDisable(true);
+
+                        setStyle(
+                            "-fx-background-color: #3a3a3a;"
+                        );
+                    }
+
+                } catch (Exception ex) {
+
+                    ex.printStackTrace();
+                }
+            }
+        });
         ComboBox<String> comboHora = new ComboBox<>();
         comboHora.setPromptText("Horário");
 
-        comboHora.getItems().addAll(
-                "08:00","08:30", "09:00","09:30", "10:00","10:30", "11:00","11:30",
-                "13:00","13:30", "14:00","14:30", "15:00","15:30", "16:00","16:30",
-                "17:00","17:30"
-        );
+        selectMedico.valueProperty().addListener(
+        	    (obs, oldValue, newValue) -> {
+
+        	        AtualizadorHorarios.atualizar(
+        	                comboHora,
+        	                selectMedico,
+        	                dataConsulta
+        	        );
+        	    }
+        	);
+
+        	dataConsulta.valueProperty().addListener(
+        	    (obs, oldValue, newValue) -> {
+
+        	        AtualizadorHorarios.atualizar(
+        	                comboHora,
+        	                selectMedico,
+        	                dataConsulta
+        	        );
+        	    }
+        	);
 
         // ===== CARREGAR MÉDICOS =====
         try {
@@ -149,13 +214,13 @@ public class TelaAgendamento {
                 "-fx-border-radius: 10;" +
                 "-fx-padding: 8;";
         String estiloDatePicker =
-        		"-fx-background-color: #1e1e1e;" +
-        				"-fx-control-inner-background: #1e1e1e;" +
-        				"-fx-text-fill: white;" +
-        				"-fx-prompt-text-fill: #aaaaaa;" +
-        				"-fx-background-radius: 10;" +
-        				"-fx-border-radius: 10;" +
-        				"-fx-padding: 5;";
+        		 "-fx-background-color: #1e1e1e;" +
+        	                "-fx-control-inner-background: #1e1e1e;" +
+        	                "-fx-text-fill: white;" +
+        	                "-fx-prompt-text-fill: #aaaaaa;" +
+        	                "-fx-background-radius: 10;" +
+        	                "-fx-border-radius: 10;" +
+        	                "-fx-padding: 5;";
         campoEmail.setStyle(estiloCampos);
         selectMedico.setStyle(estiloCampos  +   "-fx-control-inner-background: #1e1e1e;" );
 

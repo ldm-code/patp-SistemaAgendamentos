@@ -10,16 +10,21 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.consultas;
+import utils.AtualizadorHorarios;
 import dao.ConsultaDAO;
+import dao.MedicoDiasDAO;
 import List.Consulta;
+import List.MedicosSelect;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TelaEdicaoConsulta {
 
-    public void start(Consulta consulta, Runnable onUpdate) {
+    public void start(Consulta consulta, Runnable onUpdate) throws Exception {
 
         Stage janela = new Stage();
         janela.initModality(Modality.APPLICATION_MODAL);
@@ -31,13 +36,83 @@ public class TelaEdicaoConsulta {
 
         // ===== CAMPOS =====
         DatePicker dataConsulta = new DatePicker();
+        final List<String> diasMedico =
+                MedicoDiasDAO.buscarDias(consulta.getIdMedico());
 
+      
+        dataConsulta.setDayCellFactory(picker -> new DateCell() {
+
+            @Override
+            public void updateItem(LocalDate data, boolean empty) {
+
+                super.updateItem(data, empty);
+
+                // 🔥 reset obrigatório
+                setDisable(false);
+                setStyle("");
+
+                // 🔴 células vazias
+                if(empty || data == null) {
+
+                    setText(null);
+                    setGraphic(null);
+
+                    return;
+                }
+
+                // 🔴 datas passadas
+                if(data.isBefore(LocalDate.now())) {
+
+                    setDisable(true);
+
+                    setStyle(
+                        "-fx-background-color: #3a3a3a;"
+                    );
+
+                    return;
+                }
+
+                // 🔥 dia da semana
+                int diaSemana =
+                        data.getDayOfWeek().getValue();
+
+                boolean atende = false;
+
+                // 🔥 verifica em memória
+                for(String dia : diasMedico) {
+
+                    int diaBanco =
+                            utils.ValidacaoMedicoUtils
+                            .converterDia(dia);
+
+                    if(diaBanco == diaSemana) {
+
+                        atende = true;
+                        break;
+                    }
+                }
+
+                // 🔴 médico não atende
+                if(!atende) {
+
+                    setDisable(true);
+
+                    setStyle(
+                        "-fx-background-color: #2b2b2b;"
+                    );
+
+                } else {
+
+                    // 🟢 estilo normal
+                    setStyle(
+                        "-fx-background-color: #1e1e1e;" +
+                        "-fx-text-fill: white;"
+                    );
+                }
+            }
+        });
         ComboBox<String> comboHora = new ComboBox<>();
-        comboHora.getItems().addAll(
-                "08:00","08:30","09:00","09:30","10:00","10:30",
-                "11:00","11:30","13:00","13:30","14:00","14:30",
-                "15:00","15:30","16:00","16:30","17:00","17:30"
-        );
+       
      String estiloDatePicker =
      		"-fx-background-color: #1e1e1e;" +
      				"-fx-control-inner-background: #1e1e1e;" +
@@ -50,7 +125,22 @@ public class TelaEdicaoConsulta {
         // 🔥 PRÉ-CARREGAR
         LocalDateTime atual = consulta.getDataConsulta();
         dataConsulta.setValue(atual.toLocalDate());
-        comboHora.setValue(atual.toLocalTime().toString());
+        AtualizadorHorarios.atualizarEdicao(
+                comboHora,
+                consulta.getIdMedico(),
+                atual.toLocalDate(),
+                atual.toLocalTime().toString()
+        );
+        dataConsulta.setOnAction(e -> {
+
+            AtualizadorHorarios.atualizarEdicao(
+                    comboHora,
+                    consulta.getIdMedico(),
+                    dataConsulta.getValue(),
+                    atual.toLocalTime().toString()
+            );
+        });
+    
 
         Label feedback = new Label();
 
