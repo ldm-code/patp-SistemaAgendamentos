@@ -1,25 +1,30 @@
 package view;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+
+import List.MedicosSelect;
+import List.Usuario;
+import dao.UsuarioDAO;
+import dao.medicosDAO;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import model.consultas;
 import utils.AtualizadorHorarios;
-import dao.UsuarioDAO;
-import dao.medicosDAO;
-
-import List.Usuario;
-import List.MedicosSelect;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
 
 public class TelaAgendamento {
 
@@ -36,7 +41,42 @@ public class TelaAgendamento {
 
         ComboBox<MedicosSelect> selectMedico = new ComboBox<>();
         selectMedico.setPromptText("Selecione um médico");
+        selectMedico.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(MedicosSelect m, boolean empty) {
 
+                super.updateItem(m, empty);
+
+                setText(
+                    empty || m == null
+                    ? null
+                    : m.getNome() + " - " + m.getTipo()
+                );
+
+                setTextFill(Color.web("#d3d3d3"));
+
+                setStyle(
+                    "-fx-background-color:#1e1e1e;"
+                );
+            }
+        });
+        selectMedico.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(MedicosSelect m, boolean empty) {
+
+                super.updateItem(m, empty);
+
+                setText(
+                    empty || m == null
+                    ? null
+                    : m.getNome()
+                );
+
+                setTextFill(
+                    Color.web("#d3d3d3")
+                );
+            }
+        });
         DatePicker dataConsulta = new DatePicker();
         dataConsulta.setDayCellFactory(picker -> new DateCell() {
 
@@ -67,7 +107,7 @@ public class TelaAgendamento {
                         setDisable(true);
 
                         setStyle(
-                            "-fx-background-color: #2b2b2b;"
+                        		"-fx-background-color: #2b2b2b;"
                         );
                     }
 
@@ -89,7 +129,18 @@ public class TelaAgendamento {
         });
         ComboBox<String> comboHora = new ComboBox<>();
         comboHora.setPromptText("Horário");
+        comboHora.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
 
+                setText(empty || item == null
+                        ? null
+                        : item);
+
+                setTextFill(Color.WHITE);
+            }
+        });
         selectMedico.valueProperty().addListener(
         	    (obs, oldValue, newValue) -> {
 
@@ -121,22 +172,7 @@ public class TelaAgendamento {
         }
 
         // Mostrar nome do médico
-        selectMedico.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(MedicosSelect m, boolean empty) {
-                super.updateItem(m, empty);
-                setText(empty || m == null ? "" : m.getNome() + " - " + m.getTipo());
-            }
-        });
-
-        selectMedico.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(MedicosSelect m, boolean empty) {
-                super.updateItem(m, empty);
-                setText(empty || m == null ? "" : m.getNome());
-            }
-        });
-
+       
         // ===== FEEDBACK =====
         Label feedback = new Label();
 

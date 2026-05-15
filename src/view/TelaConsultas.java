@@ -77,15 +77,26 @@ public class TelaConsultas {
 
         filtroStatus.setStyle(
         		 "-fx-background-color: #1e1e1e;"+
+        				 "-fx-text-color: #1e1e1e;"+
         	                "-fx-control-inner-background: #1e1e1e;"+
         	                "-fx-text-fill: white;"+
-        	                "-fx-prompt-text-fill: white;"+
+        	                
         	                "-fx-border-radius:10;"+
         	                "-fx-background-radius:10;"+
-        	                "-fx-padding:5;"
+        	                "-fx-padding:5;"+
+        	               " -fx-prompt-text-fill: white;"
         );
-        TextField filtroNome = new TextField();
+        filtroStatus.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
 
+                setText(empty || item == null ? null : item);
+                setTextFill(Color.WHITE);
+            }
+        });
+        TextField filtroNome = new TextField();
+      
         filtroNome.setPromptText("Buscar paciente:");
 
         filtroNome.setStyle(

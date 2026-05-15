@@ -18,5 +18,6 @@ public class Main extends Application {
      
     }
 }
-// fazer algo no sistema que bloqueie dias e horarios indisponiveis para agendamentos de consultas
-// melhorar ux dos filtros,colocando letras mais legiveis e descrever cada campo encima.
+// implementar filtro por medico.
+// implementar email 1 dia antes da consulta.
+// melhorar ux dos filtros em agendamentos e reagendamento,colocando letras mais legiveis e descrever cada campo encima.

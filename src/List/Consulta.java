@@ -79,7 +79,7 @@ public class Consulta {
         return status;
     }
 
-    public int getIdMedico() {
+    public  int getIdMedico() {
         return idMedico;
     }
 
