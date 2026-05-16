@@ -767,5 +767,61 @@ public class ConsultaDAO {
 
 	    return horarios;
 	}
+	public static boolean lembreteJaEnviado(
+	        int idConsulta
+	)throws Exception {
+
+	    String sql = """
+	        SELECT lembrete_enviado
+	        FROM consultas
+	        WHERE id = ?
+	    """;
+
+	    try(
+	        Connection conn =
+	            conexaoBanco.conectar();
+
+	        PreparedStatement ps =
+	            conn.prepareStatement(sql)
+	    ) {
+
+	        ps.setInt(1, idConsulta);
+
+	        ResultSet rs =
+	            ps.executeQuery();
+
+	        if(rs.next()) {
+
+	            return rs.getBoolean(
+	                "lembrete_enviado"
+	            );
+	        }
+	    }
+
+	    return false;
+	}
+	public static void marcarLembreteEnviado(
+	        int idConsulta
+	)throws Exception {
+
+	    String sql = """
+	        UPDATE consultas
+	        SET lembrete_enviado = true
+	        WHERE id = ?
+	    """;
+
+	    try(
+	        Connection conn =
+	            conexaoBanco.conectar();
+
+	        PreparedStatement ps =
+	            conn.prepareStatement(sql)
+	    ) {
+
+	        ps.setInt(1, idConsulta);
+
+	        ps.executeUpdate();
+	    }
+	}
 
 }

@@ -1,4 +1,5 @@
 package model;
+import java.time.Duration;
 import java.time.LocalDate;
 import dao.ConsultaDAO;
 import java.time.LocalDateTime;
@@ -276,4 +277,107 @@ public class consultas {
 
 	    return disponiveis;
 	}
+	public static void enviarLembretesConsultas()
+			throws Exception {
+
+			    // 🔹 Busca todas as consultas
+			    List<Consulta> lista =
+			        ConsultaDAO.listarConsultas();
+
+			    // 🔹 Percorre todas
+			    for(Consulta consulta : lista) {
+
+			        // =====================================
+			        // 1. Apenas consultas AGENDADAS
+			        // =====================================
+
+			        if(!consulta.getStatus()
+			                .equalsIgnoreCase("agendada")) {
+
+			            continue;
+			        }
+
+			        // =====================================
+			        // 2. Data da consulta
+			        // =====================================
+
+			        LocalDateTime dataConsulta =
+			            consulta.getDataConsulta();
+
+			        // =====================================
+			        // 3. Data atual
+			        // =====================================
+
+			        LocalDateTime agora =
+			            LocalDateTime.now();
+
+			        // =====================================
+			        // 4. Diferença entre agora e consulta
+			        // =====================================
+
+			        Duration diferenca =
+			            Duration.between(
+			                agora,
+			                dataConsulta
+			            );
+
+			        // =====================================
+			        // 5. Converte para horas
+			        // =====================================
+
+			        long horas =
+			            diferenca.toHours();
+
+			        // =====================================
+			        // 6. Verifica se falta entre
+			        //    23h e 24h
+			        // =====================================
+			        boolean enviado =
+			        	    ConsultaDAO
+			        	        .lembreteJaEnviado(
+			        	            consulta.getId()
+			        	        );
+
+			        if(enviado) {
+			        	    continue;
+			        	}
+			        if(horas <= 24 && horas >=0) {
+
+			            // 🔹 Busca email do usuário
+			            String email =
+			                ConsultaDAO
+			                    .buscarEmailPorConsulta(
+			                        consulta.getId()
+			                    );
+
+			            // 🔹 Formata data
+			            String dataFormatada =
+			                DateUtil.format(
+			                    dataConsulta
+			                );
+
+			            // 🔹 Envia email
+			            enviarEmail.enviar(
+			                email,
+			                "Lembrete de Consulta",
+			                "Olá!\n\n" +
+
+			                "Este é um lembrete da sua consulta agendada para:\n\n"
+
+			                + dataFormatada +
+
+			                "\n\nAtenciosamente,\n" +
+			                "Equipe de Atendimento.\n"
+			            );
+
+			            ConsultaDAO.marcarLembreteEnviado(
+			            		consulta.getId()
+			            		);
+			            System.out.println(
+			                "Lembrete enviado para consulta ID: "
+			                + consulta.getId()
+			            );
+			        }
+			    }
+			}
 }
