@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import dao.agendamentosDAO;
+import dao.medicosDAO;
 import utils.DateUtil;
 import utils.enviarEmail;
 
@@ -330,7 +331,7 @@ public class consultas {
 
 			        // =====================================
 			        // 6. Verifica se falta entre
-			        //    23h e 24h
+			        //    0h e 24h
 			        // =====================================
 			        boolean enviado =
 			        	    ConsultaDAO
@@ -349,6 +350,7 @@ public class consultas {
 			                    .buscarEmailPorConsulta(
 			                        consulta.getId()
 			                    );
+			            String nomeMedico =medicosDAO.buscarNomePorId(consulta.getIdMedico());
 
 			            // 🔹 Formata data
 			            String dataFormatada =
@@ -362,7 +364,7 @@ public class consultas {
 			                "Lembrete de Consulta",
 			                "Olá!\n\n" +
 
-			                "Este é um lembrete da sua consulta agendada para:\n\n"
+			                "Este é um lembrete da sua consulta agendada com o medico "+ nomeMedico +" marcada para:\n\n"
 
 			                + dataFormatada +
 

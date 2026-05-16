@@ -10,14 +10,13 @@ public class EmailSessionConfig {
 
 
 			            final String remetente = Config.get("mail.user");
-			            final String senha = Config.get("mail.password"); // depois vamos melhorar isso
+			            final String senha = Config.get("mail.password"); 
 
 			            Properties props = new Properties();
 			            props.put("mail.smtp.auth", "true");
 			          
 			            props.put("mail.smtp.host", Config.get("mail.smtp.host"));
 			            props.put("mail.smtp.port", "587");
-			          
 
 			            session = Session.getInstance(props, new Authenticator() {
 			                protected PasswordAuthentication getPasswordAuthentication() {

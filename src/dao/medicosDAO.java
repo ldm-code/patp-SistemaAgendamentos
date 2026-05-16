@@ -34,6 +34,35 @@ public class medicosDAO {
 
 	    return idGerado;
 	}
+	public static String buscarNomePorId(int id)
+	        throws Exception {
+
+	    Connection conn =
+	        conexaoBanco.conectar();
+
+	    String sql =
+	        "SELECT nome FROM medicos WHERE id = ?";
+
+	    PreparedStatement ps =
+	        conn.prepareStatement(sql);
+
+	    ps.setInt(1, id);
+
+	    ResultSet rs =
+	        ps.executeQuery();
+
+	    String nome = null;
+
+	    if(rs.next()) {
+
+	        nome = rs.getString("nome");
+	    }
+
+	    rs.close();
+	    ps.close();
+
+	    return nome;
+	}
 	public static List<MedicosSelect> select()  throws Exception{
 		    List<MedicosSelect> lista = new ArrayList<>();
 		    Connection conn = conexaoBanco.conectar();
