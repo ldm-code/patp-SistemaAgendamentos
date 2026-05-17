@@ -369,7 +369,7 @@ public class consultas {
 			                + dataFormatada +
 
 			                "\n\nAtenciosamente,\n" +
-			                "Equipe de Atendimento.\n"
+			                "Equipe de Atendimento.\n\n"
 			            );
 
 			            ConsultaDAO.marcarLembreteEnviado(

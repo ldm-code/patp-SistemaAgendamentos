@@ -112,7 +112,37 @@ public class TelaEdicaoConsulta {
             }
         });
         ComboBox<String> comboHora = new ComboBox<>();
-       
+        comboHora.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText("Selecione a hora");
+                    setTextFill(Color.WHITE);
+                } else {
+                    setText(item);
+                    setTextFill(Color.WHITE);
+                }
+            }
+        });
+        comboHora.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setTextFill(Color.WHITE);
+                }
+
+                setStyle("-fx-background-color: #1e1e1e;");
+            }
+        });
      String estiloDatePicker =
      		"-fx-background-color: #1e1e1e;" +
      				"-fx-control-inner-background: #1e1e1e;" +

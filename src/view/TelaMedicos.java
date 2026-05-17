@@ -31,10 +31,10 @@ public class TelaMedicos {
         // ===== CAMPOS =====
         TextField campoNome = new TextField();
         campoNome.setPromptText("Digite o nome");
-
+        campoNome.setMaxWidth(250);
         TextField campoTipo = new TextField();
         campoTipo.setPromptText("Digite o tipo");
-
+        campoTipo.setMaxWidth(250);
         String estiloInput =
                 "-fx-background-color: #1e1e1e;" +
                 "-fx-control-inner-background: #1e1e1e;" +
@@ -149,6 +149,7 @@ public class TelaMedicos {
         janela.setScene(scene);
         janela.setTitle("Cadastro de Médicos");
         janela.show();
+       
     }
 
     private void estilizar(CheckBox cb) {

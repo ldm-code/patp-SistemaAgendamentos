@@ -38,7 +38,7 @@ public class MotivoTelaCancelamento {
 
         campo.setStyle(estiloInput);
         campo.applyCss();
-
+        campo.setMaxWidth(250);
         // PRÉ-CARREGAR
         campo.setPromptText("motivo do cancelamento:");
 
