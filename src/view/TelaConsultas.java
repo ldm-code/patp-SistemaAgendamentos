@@ -163,13 +163,13 @@ public class TelaConsultas {
             }
         });
         filtroMedico.setStyle(
-                "-fx-background-color: #1e1e1e;" +
-                "-fx-control-inner-background: #1e1e1e;" +
-                "-fx-text-fill: white;" +
-                "-fx-prompt-text-fill: #aaaaaa;" +
-                "-fx-background-radius: 10;" +
-                "-fx-border-radius: 10;" +
-                "-fx-padding: 8;"
+        		 "-fx-background-color: #1e1e1e;"+
+     	                "-fx-control-inner-background: #1e1e1e;"+
+     	                "-fx-text-fill: white;"+
+     	                "-fx-prompt-text-fill: white;"+
+     	                "-fx-border-radius:10;"+
+     	                "-fx-background-radius:10;"+
+     	                "-fx-padding:5;"
         );
         try {
 
@@ -220,42 +220,72 @@ public class TelaConsultas {
                 "-fx-background-radius:10;"+
                 "-fx-padding:10 20;"
         );
-
+       
         // =========================
         // HBOX FILTROS
         // =========================
 
-        HBox filtros = new HBox(
-                15,
-                filtroData,
-                filtroStatus,
-                filtroNome,
-                filtroMedico,
-                btnFiltrar
-        );
+     // =========================
+     // FILTROS ESQUERDA
+     // =========================
 
-        filtros.setAlignment(Pos.CENTER_LEFT);
-        HBox.setMargin(filtros, new Insets(0,0,0,-100));
+     HBox filtros = new HBox(
+             10,
+             filtroData,
+             filtroStatus,
+             filtroNome,
+             filtroMedico,
+             btnFiltrar
+     );
 
-        HBox acoesDireita = new HBox(
-                15,
-                btnEncerradas,
-                btnMedicos
-        );
+     filtros.setAlignment(Pos.CENTER_LEFT);
 
-        acoesDireita.setAlignment(Pos.CENTER_RIGHT);
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox.setMargin(acoesDireita, new Insets(0, -90, 0, 0));
-        HBox barraTopo = new HBox(
-                20,
-                filtros,
-                spacer,
-                acoesDireita
-        );
+     // =========================
+     // BOTÕES DIREITA
+     // =========================
 
-        barraTopo.setAlignment(Pos.CENTER);
-        barraTopo.setMaxWidth(1050);
+     HBox acoesDireita = new HBox(
+             10,
+             btnEncerradas,
+             btnMedicos
+     );
+
+     acoesDireita.setAlignment(Pos.CENTER_RIGHT);
+
+     // =========================
+     // ESPAÇADOR RESPONSIVO
+     // =========================
+
+     Region spacer = new Region();
+
+     HBox.setHgrow(
+             spacer,
+             Priority.ALWAYS
+     );
+
+     // =========================
+     // BARRA TOPO
+     // =========================
+
+     HBox barraTopo = new HBox(
+             20,
+             filtros,
+             spacer,
+             acoesDireita
+     );
+
+     barraTopo.setAlignment(Pos.CENTER);
+
+     barraTopo.setPrefWidth(1200);
+
+     barraTopo.setMaxWidth(
+             Double.MAX_VALUE
+     );
+
+     barraTopo.setPadding(
+             new Insets(10, 20, 10, 20)
+     );
+   
 
         // =========================
         // AGENDAR
@@ -353,8 +383,8 @@ public class TelaConsultas {
 
         layout.getChildren().addAll(
                 titulo,
-                linhaAcoes,
                 barraTopo,
+                linhaAcoes,
                 mensagemFeedback,
                 scroll
         );
