@@ -16,6 +16,7 @@ import java.util.List;
 
 import dao.ConsultaDAO;
 import List.Consulta;
+import List.MedicosSelect;
 import model.consultas;
 import model.medicos;
 import utils.DateUtil;
@@ -28,6 +29,7 @@ public class TelaConsultas {
     public static LocalDate data=LocalDate.now();
     public static String status = "agendada";
     public static String nomeUsuario = "";
+    public static int idMedico = 0;
     
     public void start(Stage stage) {
 
@@ -98,7 +100,7 @@ public class TelaConsultas {
         TextField filtroNome = new TextField();
       
         filtroNome.setPromptText("Buscar paciente:");
-
+        	
         filtroNome.setStyle(
         		 "-fx-background-color: #1e1e1e;"+
         	                "-fx-control-inner-background: #1e1e1e;"+
@@ -117,7 +119,84 @@ public class TelaConsultas {
                 "-fx-background-radius:10;"+
                 "-fx-padding:10 20;"
         );
+        ComboBox<MedicosSelect> filtroMedico = new ComboBox<>();
 
+        filtroMedico.setPromptText("Filtrar médico");
+        filtroMedico.setCellFactory(param -> new ListCell<>() {
+
+            @Override
+            protected void updateItem(MedicosSelect m, boolean empty) {
+
+                super.updateItem(m, empty);
+
+                setText(
+                	    empty || m == null
+                	    ? null
+                	    : m.getTipo() == null || m.getTipo().isBlank()
+                	        ? m.getNome()
+                	        : m.getNome() + " - " + m.getTipo()
+                	);
+
+                setTextFill(Color.web("#d3d3d3"));
+
+                setStyle(
+                    "-fx-background-color:#1e1e1e;"
+                );
+            }
+        });
+        filtroMedico.setButtonCell(new ListCell<>() {
+
+            @Override
+            protected void updateItem(MedicosSelect m, boolean empty) {
+
+                super.updateItem(m, empty);
+
+                setText(
+                    empty || m == null
+                    ? null
+                    : m.getNome()
+                );
+
+                setTextFill(
+                    Color.web("#d3d3d3")
+                );
+            }
+        });
+        filtroMedico.setStyle(
+                "-fx-background-color: #1e1e1e;" +
+                "-fx-control-inner-background: #1e1e1e;" +
+                "-fx-text-fill: white;" +
+                "-fx-prompt-text-fill: #aaaaaa;" +
+                "-fx-background-radius: 10;" +
+                "-fx-border-radius: 10;" +
+                "-fx-padding: 8;"
+        );
+        try {
+
+            List<MedicosSelect> medicos =
+                    medicosDAO.select();
+
+            // ITEM PADRÃO
+            MedicosSelect todos =
+                    new MedicosSelect();
+
+            todos.setId(0);
+            todos.setNome("Todos");
+            todos.setTipo("");
+
+            // adiciona "Todos"
+            filtroMedico.getItems().add(todos);
+
+            // adiciona médicos reais
+            filtroMedico.getItems().addAll(medicos);
+
+            // valor inicial
+            filtroMedico.setValue(todos);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
         // =========================
         // BOTÕES TOPO
         // =========================
@@ -151,6 +230,7 @@ public class TelaConsultas {
                 filtroData,
                 filtroStatus,
                 filtroNome,
+                filtroMedico,
                 btnFiltrar
         );
 
@@ -216,9 +296,23 @@ public class TelaConsultas {
             data = filtroData.getValue();
 
             status = filtroStatus.getValue();
-            
-            nomeUsuario=filtroNome.getText();
-            
+
+            nomeUsuario = filtroNome.getText();
+
+            // PEGA MÉDICO SELECIONADO
+            MedicosSelect medicoSelecionado =
+                    filtroMedico.getValue();
+
+            if(medicoSelecionado != null){
+
+                idMedico = medicoSelecionado.getId();
+
+            }
+            else{
+
+                idMedico = 0;
+            }
+
             condicionarExibicao();
         });
 
@@ -276,31 +370,93 @@ public class TelaConsultas {
     public static void condicionarExibicao() {
         try {
         	
-            if(data==null && status=="Todos" && nomeUsuario.isBlank()){
-                carregarConsultas();
-            }
-            else if (status=="Todos" && data!=null && nomeUsuario.isBlank()) {
-            	
-                carregarConsultasPorData(data);
-            }
-            else if (status!="Todos" && data!=null && nomeUsuario.isBlank()) {
-            	carregarConsultasPorStatusEdata(status);
-            }
-            else if (data==null && status!="Todos" && nomeUsuario.isBlank()) {
-            	carregarConsultasPorStatusEdata(status);
-            }
-            else if(data==null && status=="Todos" && !nomeUsuario.isBlank()) {
-            	carregarConsultasPorStatusEdata(status);
-            }
-            else if(data!=null && status=="Todos" && !nomeUsuario.isBlank()) {
-            	carregarConsultasPorStatusEdata(status);
-            }
-            else if(data!=null && status!="Todos" && !nomeUsuario.isBlank()) {
-            	carregarConsultasPorStatusEdata(status);
-            }
-            else if(data==null && status!="Todos" && !nomeUsuario.isBlank()) {
-            	carregarConsultasPorStatusEdata(status);
-            }
+        	if(
+        		    data == null
+        		    && status.equals("Todos")
+        		    && nomeUsuario.isBlank()
+        		    && idMedico == 0
+        		){
+        		    carregarConsultas();
+        		}
+
+        		else if (
+        		    status.equals("Todos")
+        		    && data != null
+        		    && nomeUsuario.isBlank()
+        		    && idMedico == 0
+        		) {
+
+        		    carregarConsultasPorData(data);
+        		}
+
+        		else if (
+        		    !status.equals("Todos")
+        		    && data != null
+        		    && nomeUsuario.isBlank()
+        		    && idMedico == 0
+        		) {
+
+        		    carregarConsultasPorStatusEdata(status);
+        		}
+
+        		else if (
+        		    data == null
+        		    && !status.equals("Todos")
+        		    && nomeUsuario.isBlank()
+        		    && idMedico == 0
+        		) {
+
+        		    carregarConsultasPorStatusEdata(status);
+        		}
+
+        		else if (
+        		    data == null
+        		    && status.equals("Todos")
+        		    && !nomeUsuario.isBlank()
+        		    && idMedico == 0
+        		) {
+
+        		    carregarConsultasPorStatusEdata(status);
+        		}
+
+        		else if (
+        		    data != null
+        		    && status.equals("Todos")
+        		    && !nomeUsuario.isBlank()
+        		    && idMedico == 0
+        		) {
+
+        		    carregarConsultasPorStatusEdata(status);
+        		}
+
+        		else if (
+        		    data != null
+        		    && !status.equals("Todos")
+        		    && !nomeUsuario.isBlank()
+        		    && idMedico == 0
+        		) {
+
+        		    carregarConsultasPorStatusEdata(status);
+        		}
+
+        		else if (
+        		    data == null
+        		    && !status.equals("Todos")
+        		    && !nomeUsuario.isBlank()
+        		    && idMedico == 0
+        		) {
+
+        		    carregarConsultasPorStatusEdata(status);
+        		}
+
+        		// =========================
+        		// QUALQUER CASO COM MÉDICO
+        		// =========================
+
+        		else {
+
+        		    carregarConsultasPorStatusEdata(status);
+        		}
         }
         catch(Exception ex){
             ex.printStackTrace();
@@ -373,7 +529,7 @@ public class TelaConsultas {
         try{
            
             List<Consulta> consultas =
-                    ConsultaDAO.buscarFiltradas(data, status, nomeUsuario);
+                    ConsultaDAO.buscarFiltradas(data, status, nomeUsuario,idMedico);
 
             if(consultas == null || consultas.isEmpty()){
 

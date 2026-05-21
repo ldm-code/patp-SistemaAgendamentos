@@ -450,9 +450,10 @@ public class ConsultaDAO {
 	    }
 	}
 	public static List<Consulta> buscarFiltradas(
-	        LocalDate data,
-	        String status,
-	        String nomeUsuario
+			LocalDate data,
+			String status,
+			String nomeUsuario,
+			int idMedico
 	) throws Exception {
 
 	    List<Consulta> lista = new ArrayList<>();
@@ -506,6 +507,12 @@ public class ConsultaDAO {
 	    // FILTRO DATA
 	    // =========================
 
+	    if(idMedico != 0) {
+	    	
+	    	sql.append("""
+	        		AND c.fk_medico = ?
+	        				""");
+	    }
 	    if(data != null) {
 
 	        sql.append("""
@@ -552,6 +559,21 @@ public class ConsultaDAO {
 	                "%" + nomeUsuario + "%"
 	        );
 	    }
+	 // =========================
+	 // SET MÉDICO
+	 // =========================
+
+	 if(idMedico != 0) {
+
+	     ps.setInt(
+	             index++,
+	             idMedico
+	     );
+	 }
+	 // =========================
+	 // FILTRO MÉDICO
+	 // =========================
+
 
 	    // =========================
 	    // SET DATA
@@ -608,7 +630,11 @@ public class ConsultaDAO {
 	        String statusConsulta =
 	                rs.getString("status");
 
-	        int idMedico =
+	        // =========================
+	        // AJUSTE DO NOME DA VARIÁVEL
+	        // =========================
+
+	        int idMedicoConsulta =
 	                rs.getInt("fk_medico");
 
 	        int idUser =
@@ -622,7 +648,7 @@ public class ConsultaDAO {
 	                dataConsulta,
 	                dataAgendada,
 	                statusConsulta,
-	                idMedico,
+	                idMedicoConsulta,
 	                idUser
 	        );
 
