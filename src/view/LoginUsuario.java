@@ -64,13 +64,63 @@ public class LoginUsuario {
                 senha.setManaged(false);
             }
         });
-        Label mensagem = new Label();
-        mensagem.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-         
+        
+//         
+//        	botaoLogin.setOnAction(e -> {
+//
+//        	    String emailDigitado = email.getText();
+//        	    String senhaDigitada;
+//        	    if (senhaVisivel.isVisible()) {
+//        	        senhaDigitada = senhaVisivel.getText();
+//        	    } else {
+//        	        senhaDigitada = senha.getText();
+//        	    }
+//
+//        	    String erro = usuario.validarLogin(emailDigitado, senhaDigitada);
+//
+//        	    if (erro != null) {
+//        	        mensagem.setText(erro);
+//        	        return;
+//        	    }
+//
+//        	    // só aqui você decide logar
+//        	    Usuario user;
+//				try {
+//					user = usuario.buscarUsuario(emailDigitado, senhaDigitada);
+//					SessaoUsuario.usuarioLogado = user;
+//     
+//        	        mensagem.setText("Login realizado com sucesso!");
+//        	        mensagem.setStyle("-fx-text-fill: green;");
+//        	        
+//
+//        	    if (user !=null) {
+//
+//        	        mensagem.setText("Login realizado com sucesso!");
+//        	        mensagem.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+//
+//        	        // opcional: trocar de tela
+//        	        if (SessaoUsuario.usuarioLogado.getTipo().equals("adm")) {
+//        	            new TelaConsultas().start(stage);
+//        	        	
+//        	        }
+//        	        else {
+//        	        	new TelaConsultasUser().start(stage);
+//        	        }
+//        	        email.clear();
+//        	        senha.clear();
+//        	    }
+//
+//				} catch (Exception e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//        	});
         	botaoLogin.setOnAction(e -> {
 
         	    String emailDigitado = email.getText();
         	    String senhaDigitada;
+
         	    if (senhaVisivel.isVisible()) {
         	        senhaDigitada = senhaVisivel.getText();
         	    } else {
@@ -80,42 +130,35 @@ public class LoginUsuario {
         	    String erro = usuario.validarLogin(emailDigitado, senhaDigitada);
 
         	    if (erro != null) {
-        	        mensagem.setText(erro);
+        	        mostrarAlert("Login", erro, Alert.AlertType.WARNING);
         	        return;
         	    }
 
-        	    // só aqui você decide logar
-        	    Usuario user;
-				try {
-					user = usuario.buscarUsuario(emailDigitado, senhaDigitada);
-					SessaoUsuario.usuarioLogado = user;
-     
-        	        mensagem.setText("Login realizado com sucesso!");
-        	        mensagem.setStyle("-fx-text-fill: green;");
-        	        
+        	    try {
+        	        Usuario user = usuario.buscarUsuario(emailDigitado, senhaDigitada);
 
-        	    if (user !=null) {
-
-        	        mensagem.setText("Login realizado com sucesso!");
-        	        mensagem.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-
-        	        // opcional: trocar de tela
-        	        if (SessaoUsuario.usuarioLogado.getTipo().equals("adm")) {
-        	            new TelaConsultas().start(stage);
-        	        	
+        	        if (user == null) {
+        	            mostrarAlert("Login", "Usuário não encontrado!", Alert.AlertType.ERROR);
+        	            return;
         	        }
-        	        else {
-        	        	new TelaConsultasUser().start(stage);
-        	        }
+
+        	        SessaoUsuario.usuarioLogado = user;
+
+        
+
         	        email.clear();
         	        senha.clear();
-        	    }
 
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
+        	        if (user.getTipo().equals("adm")) {
+        	            new TelaConsultas().start(stage);
+        	        } else {
+        	            new TelaConsultasUser().start(stage);
+        	        }
+
+        	    } catch (Exception ex) {
+        	        ex.printStackTrace();
+        	        mostrarAlert("Erro", "Erro ao tentar autenticar!", Alert.AlertType.ERROR);
+        	    }
         	});
         	  StackPane campoSenha = new StackPane();
               campoSenha.getChildren().addAll(senha, senhaVisivel, olho);
@@ -174,8 +217,8 @@ public class LoginUsuario {
                 titulo,
                 email,
                 campoSenha,
-                boxBotoes,
-                mensagem
+                boxBotoes
+              
         );
 
         // ===== FUNDO =====
@@ -187,5 +230,14 @@ public class LoginUsuario {
         stage.setTitle("Tela de Login");
         stage.setScene(scene);
         stage.show();
+    }
+    private void mostrarAlert(String titulo, String msg, Alert.AlertType tipo) {
+
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        alert.show();
     }
 }
