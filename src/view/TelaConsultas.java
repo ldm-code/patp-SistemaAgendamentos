@@ -181,7 +181,7 @@ public class TelaConsultas {
                     new MedicosSelect();
 
             todos.setId(0);
-            todos.setNome("Todos");
+            todos.setNome("Todos os Medicos:");
             todos.setTipo("");
 
             // adiciona "Todos"
