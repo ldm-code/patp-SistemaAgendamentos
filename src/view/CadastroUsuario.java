@@ -103,30 +103,22 @@ public class CadastroUsuario extends Application {
                        "-fx-background-radius: 10; " +
                        "-fx-padding: 10 20;");
 
-        Label mensagem = new Label();
-        mensagem.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-
-        // ===== AÇÃO =====
+                // ===== AÇÃO =====
         botao.setOnAction(e -> {
 
             String m = matricula.getText();
             String n = nome.getText();
             String em = email.getText();
-
             String s = senha.isVisible() ? senha.getText() : senhaVisivel.getText();
-
             String c = cpf.getText();
 
             String erro = usuario.cadastrarUsuario(m, n, em, s, c);
 
             if (erro != null) {
-                mensagem.setText(erro);
-                mensagem.setStyle("-fx-text-fill: red;");
+                mostrarAlert("Cadastro", erro, Alert.AlertType.WARNING);
                 return;
             }
 
-            mensagem.setText("Usuário cadastrado com sucesso!");
-            mensagem.setStyle("-fx-text-fill: #00ff88; -fx-font-weight: bold;");
 
             matricula.clear();
             nome.clear();
@@ -134,17 +126,18 @@ public class CadastroUsuario extends Application {
             senha.clear();
             senhaVisivel.clear();
             cpf.clear();
-			try {
-				Usuario user;
-				user = usuario.buscarUsuario(em, s);
-				SessaoUsuario.usuarioLogado = user;
-				new TelaConsultasUser().start(stage);
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-        });
-        matricula.setMaxWidth(300);
+
+            try {
+                Usuario user = usuario.buscarUsuario(em, s);
+                SessaoUsuario.usuarioLogado = user;
+
+                new TelaConsultasUser().start(stage);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                mostrarAlert("Erro", "Erro ao iniciar sessão!", Alert.AlertType.ERROR);
+            }
+        });        matricula.setMaxWidth(300);
         cpf.setMaxWidth(300);
         nome.setMaxWidth(300);
         email.setMaxWidth(300);
@@ -161,8 +154,7 @@ public class CadastroUsuario extends Application {
                 email,
                 campoSenha,
                 cpf,
-                botao,
-                mensagem
+                botao
         );
 
         layout.setStyle("-fx-background-color: #0f3d2e;");
@@ -172,6 +164,15 @@ public class CadastroUsuario extends Application {
         stage.setTitle("Tela de Cadastro");
         stage.setScene(scene);
         stage.show();
+    }
+    private void mostrarAlert(String titulo, String msg, Alert.AlertType tipo) {
+
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        alert.show();
     }
 
     public static void main(String[] args) {
