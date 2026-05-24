@@ -186,8 +186,11 @@ public class TelaEdicaoConsulta {
                 String horaStr = comboHora.getValue();
 
                 if (data == null || horaStr == null) {
-                    feedback.setText("Preencha todos os campos!");
-                    feedback.setTextFill(Color.ORANGE);
+                    mostrarAlert(
+                        "Atenção",
+                        "Preencha todos os campos!",
+                        Alert.AlertType.WARNING
+                    );
                     return;
                 }
 
@@ -196,24 +199,36 @@ public class TelaEdicaoConsulta {
 
                 String resultado = consultas.editarConsulta(consulta, novaData);
 
-                feedback.setText(resultado);
-
                 if (resultado.contains("sucesso")) {
-                    feedback.setTextFill(Color.LIGHTGREEN);
 
-                    onUpdate.run(); // atualiza tela principal
+                    mostrarAlert(
+                        "Sucesso",
+                        "Consulta atualizada com sucesso!",
+                        Alert.AlertType.INFORMATION
+                    );
+
+                    onUpdate.run();
                     janela.close();
+
                 } else {
-                    feedback.setTextFill(Color.RED);
+
+                    mostrarAlert(
+                        "Erro",
+                        resultado,
+                        Alert.AlertType.ERROR
+                    );
                 }
 
             } catch (Exception ex) {
                 ex.printStackTrace();
-                feedback.setText("Erro ao atualizar!");
-                feedback.setTextFill(Color.RED);
+
+                mostrarAlert(
+                    "Erro",
+                    "Erro ao atualizar consulta!",
+                    Alert.AlertType.ERROR
+                );
             }
         });
-
         btnCancelar.setOnAction(e -> janela.close());
         
         btnSalvar.setStyle("-fx-background-color: #FFD700; " +
@@ -244,6 +259,16 @@ public class TelaEdicaoConsulta {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText(msg);
         return alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
+    }
+    private void mostrarAlert(String titulo, String msg, Alert.AlertType tipo) {
+
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        // deixa ele mais leve (não bloqueia tanto visualmente)
+        alert.show();
     }
 
 }
