@@ -25,7 +25,7 @@ public class TelaConsultas {
     // Mais respiro entre cards
     private static VBox listaConsultas = new VBox(18);
 
-    private static Label mensagemFeedback = new Label();
+    
     public static LocalDate data=LocalDate.now();
     public static String status = "agendada";
     public static String nomeUsuario = "";
@@ -37,8 +37,8 @@ public class TelaConsultas {
         titulo.setFont(new Font("Arial",28));
         titulo.setTextFill(Color.web("#FFD700"));
 
-        mensagemFeedback.setTextFill(Color.LIGHTGREEN);
-        mensagemFeedback.setFont(new Font("Arial",14));
+  
+        
 
         // =========================
         // FILTRO
@@ -385,7 +385,7 @@ public class TelaConsultas {
                 titulo,
                 barraTopo,
                 linhaAcoes,
-                mensagemFeedback,
+               
                 scroll
         );
 
@@ -748,8 +748,8 @@ public class TelaConsultas {
 
             try{
                 consultas.concluirConsulta(consulta.getId());
-                mensagemFeedback.setText("Consulta concluída!");
-                mensagemFeedback.setTextFill(Color.LIGHTGREEN);
+                
+                mostrarAlert("Consulta Concluida","Consulta finalizada com sucesso!",Alert.AlertType.INFORMATION);
                 condicionarExibicao(); 
             }
             catch(Exception ex){
@@ -865,5 +865,14 @@ public class TelaConsultas {
         );
 
         return card;
+    }
+    private static void mostrarAlert(String titulo, String msg, Alert.AlertType tipo) {
+
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        alert.show();
     }
 }
