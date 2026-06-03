@@ -173,5 +173,5 @@ VALUES (123456, 'senha', 'admin@email.com', 'adm', 'Administrador', '00000000000
 - [x] Adicionar vizualizacao de data de agendamento na consulta.
 - [x] Adicionar pesquisa por nome de usuario na aba de consultas e pesquisa de data nos agendamentos.
 ## Planejamentos futuros
-- reuniao com a encarregada do setor de ti para a implementação do projeto
+- reuniao com a encarregada do setor de ti para apresentar o sistema
 
