@@ -8,7 +8,8 @@ A aplicação segue uma arquitetura em camadas, utilizando:
 - Java
 - JDBC para acesso ao banco de dados
 - Banco de dados relacional (MySQL)
-- Interface gráfica (Swing)
+- Interface gráfica (javaFX)
+- Envio de e-mails automaticamente(jakarta Mail)
 
 ---
 
