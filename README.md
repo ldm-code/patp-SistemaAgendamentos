@@ -86,7 +86,11 @@ Responsável por representar as tabelas do banco de dados em forma de classes Ja
 
 ## 🔹 Config
 
-- Responsável por armazenar configurações do sistema,especificamente o acesso de credenciais de banco de dados e envio de e-mail.
+- Responsável por carregar e disponibilizar as configurações da aplicação.
+
+
+
+- A classe Config realiza a leitura desse arquivo durante a inicialização da aplicação e permite que outras partes do sistema acessem essas configurações de forma centralizada.
 - AS credenciais estao num arquivo .properties, para executar a aplicacao e preciso configurar um arquivo proprieties com credenciais
 
 ## 🔹 Main (Ponto de Entrada)
