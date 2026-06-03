@@ -85,7 +85,7 @@ Responsável por representar as tabelas do banco de dados em forma de classes Ja
 
 ## 🔹 Config
 
-- Responsável por armazenar configurações do sistema.
+- Responsável por armazenar configurações do sistema,especificamente o acesso de credenciais de banco de dados e envio de e-mail.
 - AS credenciais estao num arquivo .properties, para executar a aplicacao e preciso configurar um arquivo proprieties com credenciais
 
 ## 🔹 Main (Ponto de Entrada)
