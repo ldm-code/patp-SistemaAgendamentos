@@ -78,6 +78,7 @@ public class TelaAgendamento {
             }
         });
         DatePicker dataConsulta = new DatePicker();
+        dataConsulta.setDisable(true);
         dataConsulta.setDayCellFactory(picker -> new DateCell() {
 
             @Override
@@ -143,6 +144,15 @@ public class TelaAgendamento {
         });
         selectMedico.valueProperty().addListener(
         	    (obs, oldValue, newValue) -> {
+
+        	        // Habilita ou desabilita o calendário
+        	        dataConsulta.setDisable(newValue == null);
+
+        	        // Limpa a data anterior ao trocar de médico
+        	        dataConsulta.setValue(null);
+
+        	        // Limpa os horários
+        	        comboHora.getItems().clear();
 
         	        AtualizadorHorarios.atualizar(
         	                comboHora,
@@ -232,7 +242,7 @@ public class TelaAgendamento {
             }
         });
         
-        dataConsulta.setPromptText("Dia da consulta:");
+        dataConsulta.setPromptText("Dia da consulta:(selecione o medico primeiro)");
 
         // ===== AÇÃO VOLTAR =====
         btnVoltar.setOnAction(e -> {
