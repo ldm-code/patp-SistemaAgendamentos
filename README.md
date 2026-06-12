@@ -19,7 +19,136 @@ A aplicação segue uma arquitetura em camadas, utilizando:
 - javaFX 21.0.10
 - jdbc 9.5.0
 - jakarta mail 2.0.1
-⚙️ Configuração de Ambiente de Desenvolvimento
+
+---
+## ⚙️ Configuração de Ambiente de Desenvolvimento
+
+- Este guia apresenta a configuração mínima necessária para executar o projeto no **Eclipse** e no **VS Code**, sem utilização de Maven, utilizando bibliotecas `.jar` manuais.
+- A pasta lib/ da aplicaco contem os .jar das bibliotecas acima, Para configurar o ambiente de desenvolvimento,faca o seguinte processo:
+
+---
+
+## Para Eclipse IDE
+
+### 1. Importar o projeto
+- File → Open Projects from File System
+- Selecionar a pasta do projeto
+
+---
+
+### 2. Configurar JDK
+- Project → Properties
+- Java Build Path → Libraries
+- Remover JRE antigo
+- Adicionar JDK 21
+
+---
+
+### 3. Criar User Libraries
+
+#### JavaFX
+- Window → Preferences → Java → Build Path → User Libraries
+- Criar: `javaFX21`
+- Adicionar:
+
+- `javafx-swt.jar`
+- `javafx.base.jar`
+- `javafx.controls.jar`
+- `javafx.fxml.jar`
+- `javafx.graphics.jar`
+- `javafx.media.jar`
+- `javafx.swing.jar`
+- `javafx.web.jar`
+
+
+#### JDBC
+- Criar: `JDBC`
+- Adicionar o seguinte .jar
+
+   - mysql-connector-j-9.5.0.jar
+
+
+#### Jakarta Mail
+- Criar: `jakartaMail`
+- Adicionar:
+  - `jakarta.mail-2.0.1.jar`
+  - `jakarta.activation-2.0.1.jar`
+
+---
+
+### 4. Adicionar bibliotecas ao projeto
+- Project → Properties → Java Build Path
+- Aba Libraries
+- Adicionar:
+  - javaFX21
+  - JDBC
+  - jakartaMail
+- **observacao**: ao configurar o projeto no eclipse, lembre se de adicionar javafx21 e jakartamail ao modulepath junto da jre System library[jdk21], enquanto o jdbc deve ficar no classpath 
+---
+
+### 5. Configurar VM Arguments (JavaFX)
+
+Run Configurations → Arguments → VM arguments:
+
+```bash
+--module-path lib/javafx-sdk-21.0.10/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics
+````
+
+---
+
+### 7. Executar aplicação
+- Executar `main.Main`
+- Ou rodar o projeto normalmente no arquivo main do package main
+
+---
+
+## Para VS Code
+
+### 1. Abrir o projeto
+- Abrir a pasta raiz do projeto
+
+---
+
+### 2. Extensões necessárias
+- Extension Pack for Java
+
+---
+
+### 3. Configurar JDK
+- Definir Java Home para JDK 21
+
+---
+
+### 4. settings.json
+
+```json
+{
+  "java.project.sourcePaths": ["src"],
+  "java.project.outputPath": "bin",
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar"
+  ]
+}
+````
+### 5. launch.json (JavaFX obrigatório)
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Run Main",
+      "request": "launch",
+      "mainClass": "main.Main",
+      "vmArgs": "--module-path lib/javafx-sdk-21.0.10/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics"
+    }
+  ]
+}
+````
+
+---
+
+
 
 Este guia contém apenas o necessário para executar o projeto no Eclipse e no VS Code sem Maven, utilizando bibliotecas .jar manualmente.
 ## 🏗️ Estrutura do Projeto
