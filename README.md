@@ -19,7 +19,9 @@ A aplicação segue uma arquitetura em camadas, utilizando:
 - javaFX 21.0.10
 - jdbc 9.5.0
 - jakarta mail 2.0.1
+⚙️ Configuração de Ambiente de Desenvolvimento
 
+Este guia contém apenas o necessário para executar o projeto no Eclipse e no VS Code sem Maven, utilizando bibliotecas .jar manualmente.
 ## 🏗️ Estrutura do Projeto
 -  src/
 - ├── banco/
@@ -30,6 +32,7 @@ A aplicação segue uma arquitetura em camadas, utilizando:
 - ├── model/
 - ├── utils/
 - └── view/
+- lib/ 
 
 
 ---
