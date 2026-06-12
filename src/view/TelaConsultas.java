@@ -308,7 +308,9 @@ public class TelaConsultas {
 
         btnMedicos.setOnAction(e-> {
             new TelaMedicos().start(() -> {
+                carregarMedicos(filtroMedico);
                 condicionarExibicao();
+                
             });
         });
 
@@ -491,6 +493,33 @@ public class TelaConsultas {
         catch(Exception ex){
             ex.printStackTrace();
         }
+    }
+    private void carregarMedicos(ComboBox<MedicosSelect> filtroMedico) {
+
+        try {
+
+            filtroMedico.getItems().clear();
+
+            List<MedicosSelect> medicos =
+                    medicosDAO.select();
+
+            MedicosSelect todos = new MedicosSelect();
+
+            todos.setId(0);
+            todos.setNome("Todos os Medicos:");
+            todos.setTipo("");
+
+            filtroMedico.getItems().add(todos);
+            filtroMedico.getItems().addAll(medicos);
+
+            filtroMedico.setValue(todos);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
     }
   
 
