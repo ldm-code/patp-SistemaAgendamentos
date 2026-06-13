@@ -21,7 +21,7 @@ A aplicação segue uma arquitetura em camadas, utilizando:
 - jakarta mail 2.0.1
 
 ---
-## ⚙️ Configuração de Ambiente de Desenvolvimento
+## Configuração de Ambiente de Desenvolvimento
 
 - Este guia apresenta a configuração mínima necessária para executar o projeto no **Eclipse** e no **VS Code**, sem utilização de Maven, utilizando bibliotecas `.jar` manuais.
 - A pasta lib/ da aplicaco contem os .jar das bibliotecas acima, Para configurar o ambiente de desenvolvimento,faca o seguinte processo:
@@ -165,6 +165,9 @@ Este guia contém apenas o necessário para executar o projeto no Eclipse e no V
 
 
 ---
+## Lib
+
+- Contem todos os arquivos de configuracoes de ambiente de desenvolvimento do projeto, Para eclipse e para vs code, Conforme descrito  em [Configuração de Ambiente de Desenvolvimento](#Configuração-de-Ambiente-de-Desenvolvimento)
 
 ## 🔹 Model (Entidades)
 
