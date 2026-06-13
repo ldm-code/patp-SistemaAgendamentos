@@ -167,7 +167,7 @@ Este guia contém apenas o necessário para executar o projeto no Eclipse e no V
 ---
 ## Lib
 
-- Contem todos os arquivos de configuracoes de ambiente de desenvolvimento do projeto, Para eclipse e para vs code, Conforme descrito  em [Configuração de Ambiente de Desenvolvimento](#Configuração-de-Ambiente-de-Desenvolvimento)
+- Contem todos os arquivos .jar de configuracoes de ambiente de desenvolvimento do projeto, Para eclipse e para vs code, Conforme descrito  em [Configuração de Ambiente de Desenvolvimento](#Configuração-de-Ambiente-de-Desenvolvimento)
 
 ## 🔹 Model (Entidades)
 
