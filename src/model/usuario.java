@@ -1,5 +1,6 @@
 package model;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 
 import List.Usuario;
 import dao.UsuarioDAO;
@@ -61,7 +62,13 @@ public class usuario {
 		        if (senha.length() < 6) {
 		            return "Senha muito curta";
 		        }
+		        	
+		        
+		        Usuario usuariosCadastrados = UsuarioDAO.buscarPorEmail(email);
 
+		        if (usuariosCadastrados != null) {
+		            return "Já existe um usuário com esse email";
+		        }
 		        String senhaCripto = gerarHash(senha);
 
 		        UsuarioDAO.inserir(matricula, nome, email, senhaCripto, cpf);

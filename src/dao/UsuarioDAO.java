@@ -4,6 +4,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import List.Usuario;
 
@@ -69,6 +70,7 @@ public class UsuarioDAO {
 
 	 
  }
+ 
  public static Usuario buscarPorEmail(String email) throws Exception{
 	 Connection conn = conexaoBanco.conectar();
 	 String sql = "SELECT * FROM usuarios WHERE email = ?";
@@ -102,6 +104,7 @@ public class UsuarioDAO {
 
 	 
  }
+ 
  
  
 }
