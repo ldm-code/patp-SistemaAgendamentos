@@ -1,5 +1,6 @@
 package model;
 import java.time.Duration;
+
 import java.time.LocalDate;
 import dao.ConsultaDAO;
 import java.time.LocalDateTime;

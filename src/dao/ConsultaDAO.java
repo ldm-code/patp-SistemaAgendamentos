@@ -15,37 +15,33 @@ import java.sql.Timestamp;
 
 public class ConsultaDAO {
 
-	public static void inserir(
-	        int idUser,
-	        int idMedico,
-	        LocalDateTime dataConsulta
-	) throws Exception {
-
-	    Connection conn = conexaoBanco.conectar();
+	public static void inserir(int idUser, int idMedico, LocalDateTime dataConsulta) throws Exception {
 
 	    String sql = "INSERT INTO consultas (fk_usuario,fk_medico,data_consulta) VALUES (?, ?, ?)";
 
-	    PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	    try (Connection conn = conexaoBanco.conectar();
+	         PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-	    ps.setInt(1, idUser);
-	    ps.setInt(2, idMedico);
-	    ps.setObject(3, dataConsulta);
+	        ps.setInt(1, idUser);
+	        ps.setInt(2, idMedico);
+	        ps.setTimestamp(3, Timestamp.valueOf(dataConsulta));
 
-	    ps.executeUpdate();
-
-	    ps.close();
-	    conn.close();
+	        ps.executeUpdate();
+	    }
 	}
 
 	public static void atualizarConsulta(
 			int id,
 			String status)throws Exception {
 
-		Connection conn=conexaoBanco.conectar();
+		
 
+		
 		String sql="UPDATE consultas SET status = ? WHERE id = ?";
-
-		PreparedStatement stmt = conn.prepareStatement(sql);
+	
+		try(Connection conn=conexaoBanco.conectar();
+				PreparedStatement stmt = conn.prepareStatement(sql);){
+			
 
 		stmt.setString(1,status);
 		stmt.setInt(2,id);
@@ -57,6 +53,9 @@ public class ConsultaDAO {
         } else {
               System.out.println("Nenhum registro encontrado.");
         }
+			
+		}
+	
 	}
 
 
@@ -65,7 +64,6 @@ public class ConsultaDAO {
 
 	    List<Consulta> lista = new ArrayList<>();
 
-	    Connection conn = conexaoBanco.conectar();
 
 	    String sql = """
 	        SELECT 
@@ -83,7 +81,9 @@ public class ConsultaDAO {
 	        JOIN medicos m ON c.fk_medico = m.id
 	    """;
 
-	    PreparedStatement ps = conn.prepareStatement(sql);
+        try(	    Connection conn = conexaoBanco.conectar();
+	    PreparedStatement ps = conn.prepareStatement(sql);){
+        	
 	    ResultSet rs = ps.executeQuery();
 
 	    while (rs.next()) {
@@ -126,6 +126,7 @@ public class ConsultaDAO {
 	    ps.close();
 	    conn.close();
 
+        }
 	    return lista;
 	}
 
@@ -135,7 +136,6 @@ public class ConsultaDAO {
 
 	    List<Consulta> lista = new ArrayList<>();
 
-	    Connection conn = conexaoBanco.conectar();
 
 	    String sql = """
 	        SELECT 
@@ -154,7 +154,10 @@ public class ConsultaDAO {
 	        WHERE c.fk_usuario = ? AND c.status = "agendada"
 	    """;
 
-	    PreparedStatement ps = conn.prepareStatement(sql);
+	    try(
+	    Connection conn = conexaoBanco.conectar();
+			   PreparedStatement ps = conn.prepareStatement(sql);){
+		   
 
 	    ps.setInt(1,idUsuario);
 
@@ -200,6 +203,7 @@ public class ConsultaDAO {
 	    rs.close();
 	    ps.close();
 	    conn.close();
+	    }
 
 	    return lista;
 	}
@@ -210,8 +214,7 @@ public class ConsultaDAO {
 
 	    List<Consulta> lista = new ArrayList<>();
 
-	    Connection conn = conexaoBanco.conectar();
-
+	  
 	    String sql = """
 	        SELECT 
 	            c.id,
@@ -228,8 +231,10 @@ public class ConsultaDAO {
 	        JOIN medicos m ON c.fk_medico = m.id
 	        WHERE c.data_consulta BETWEEN ? AND ?
 	    """;
+	   try( Connection conn = conexaoBanco.conectar();
 
-	    PreparedStatement ps = conn.prepareStatement(sql);
+	    PreparedStatement ps = conn.prepareStatement(sql);){
+		   
 
 	    LocalDateTime inicio = data.atStartOfDay();
 	    LocalDateTime fim = data.atTime(23,59,59);
@@ -287,6 +292,7 @@ public class ConsultaDAO {
 	    ps.close();
 	    conn.close();
 
+	   }
 	    return lista;
 	}
 
@@ -380,14 +386,15 @@ public class ConsultaDAO {
 	        LocalTime novaHora
 	)throws Exception{
 
-	    Connection conn=
-	        conexaoBanco.conectar();
 
 	    String sql=
 	        "UPDATE consultas SET data_consulta=? WHERE id=?";
+	  try(  Connection conn=
+	    		conexaoBanco.conectar();
 
 	    PreparedStatement ps=
-	        conn.prepareStatement(sql);
+	        conn.prepareStatement(sql);){
+		  
 
 	    LocalDateTime dataHora=
 	        LocalDateTime.of(
@@ -408,6 +415,7 @@ public class ConsultaDAO {
 
 	    ps.close();
 	    conn.close();
+	  }
 	}
 
 
@@ -458,7 +466,6 @@ public class ConsultaDAO {
 
 	    List<Consulta> lista = new ArrayList<>();
 
-	    Connection conn = conexaoBanco.conectar();
 
 	    // =========================
 	    // SQL BASE
@@ -528,8 +535,10 @@ public class ConsultaDAO {
 	        ORDER BY c.data_consulta ASC
 	    """);
 
+	try(    Connection conn = conexaoBanco.conectar();
 	    PreparedStatement ps =
-	            conn.prepareStatement(sql.toString());
+	            conn.prepareStatement(sql.toString());){
+		
 
 	    // =========================
 	    // CONTROLE DOS PARÂMETROS
@@ -658,6 +667,7 @@ public class ConsultaDAO {
 	    rs.close();
 	    ps.close();
 	    conn.close();
+	}
 
 	    return lista;
 	}

@@ -1,95 +1,93 @@
 package dao;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import List.MedicosSelect;
+
 public class medicosDAO {
-	public static int inserir(String nome, String tipo) throws Exception {
 
-	    Connection conn = conexaoBanco.conectar();
+    public static int inserir(String nome, String tipo) throws Exception {
 
-	    String sql = "INSERT INTO medicos (nome, tipo) VALUES (?, ?)";
+        String sql = "INSERT INTO medicos (nome, tipo) VALUES (?, ?)";
 
-	    PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        try (
+                Connection conn = conexaoBanco.conectar();
+                PreparedStatement ps = conn.prepareStatement(
+                        sql,
+                        PreparedStatement.RETURN_GENERATED_KEYS
+                )
+        ) {
 
-	    ps.setString(1, nome);
-	    ps.setString(2, tipo);
+            ps.setString(1, nome);
+            ps.setString(2, tipo);
 
-	    ps.executeUpdate();
+            ps.executeUpdate();
 
-	    ResultSet rs = ps.getGeneratedKeys();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
 
-	    int idGerado = 0;
+                int idGerado = 0;
 
-	    if (rs.next()) {
-	        idGerado = rs.getInt(1);
-	    }
+                if (rs.next()) {
+                    idGerado = rs.getInt(1);
+                }
 
-	    rs.close();
-	    ps.close();
+                return idGerado;
+            }
+        }
+    }
 
-	    return idGerado;
-	}
-	public static String buscarNomePorId(int id)
-	        throws Exception {
+    public static String buscarNomePorId(int id) throws Exception {
 
-	    Connection conn =
-	        conexaoBanco.conectar();
+        String sql = "SELECT nome FROM medicos WHERE id = ?";
 
-	    String sql =
-	        "SELECT nome FROM medicos WHERE id = ?";
+        try (
+                Connection conn = conexaoBanco.conectar();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
 
-	    PreparedStatement ps =
-	        conn.prepareStatement(sql);
+            ps.setInt(1, id);
 
-	    ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
 
-	    ResultSet rs =
-	        ps.executeQuery();
+                String nome = null;
 
-	    String nome = null;
+                if (rs.next()) {
+                    nome = rs.getString("nome");
+                }
 
-	    if(rs.next()) {
+                return nome;
+            }
+        }
+    }
 
-	        nome = rs.getString("nome");
-	    }
+    public static List<MedicosSelect> select() throws Exception {
 
-	    rs.close();
-	    ps.close();
+        List<MedicosSelect> lista = new ArrayList<>();
 
-	    return nome;
-	}
-	public static List<MedicosSelect> select()  throws Exception{
-		    List<MedicosSelect> lista = new ArrayList<>();
-		    Connection conn = conexaoBanco.conectar();
-		    
-			    
-		    	
-		   String sql = "SELECT id, nome, tipo FROM medicos";
-           PreparedStatement ps = conn.prepareStatement(sql);
-           ResultSet rs=ps.executeQuery();
-           while (rs.next()) {
-        	   MedicosSelect m=new MedicosSelect();
-        	   m.setId(rs.getInt("id"));
-               m.setNome(rs.getString("nome"));
-               m.setTipo(rs.getString("tipo"));
+        String sql = "SELECT id, nome, tipo FROM medicos";
 
-        	   
-        	   lista.add(m);
-        	   
-           }
-           rs.close();
-           ps.close();
-           return lista;
+        try (
+                Connection conn = conexaoBanco.conectar();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
 
-		    
-		
-	}
+            while (rs.next()) {
 
+                MedicosSelect m = new MedicosSelect();
 
+                m.setId(rs.getInt("id"));
+                m.setNome(rs.getString("nome"));
+                m.setTipo(rs.getString("tipo"));
+
+                lista.add(m);
+            }
+
+            return lista;
+        }
+    }
 }
-

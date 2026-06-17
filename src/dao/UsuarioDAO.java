@@ -72,9 +72,10 @@ public class UsuarioDAO {
  }
  
  public static Usuario buscarPorEmail(String email) throws Exception{
-	 Connection conn = conexaoBanco.conectar();
 	 String sql = "SELECT * FROM usuarios WHERE email = ?";
-	 PreparedStatement stmt = conn.prepareStatement(sql);
+	try( Connection conn = conexaoBanco.conectar();
+	 PreparedStatement stmt = conn.prepareStatement(sql);){
+		
 
 	    stmt.setString(1, email);
 	    ResultSet rs = stmt.executeQuery();
@@ -99,6 +100,43 @@ public class UsuarioDAO {
 	     stmt.close();
 	     conn.close();
 
+	}
+	     return null;
+	    	
+
+	 
+ }
+
+ public static Usuario buscarPorCpf(String cpf) throws Exception{
+	 String sql = "SELECT * FROM usuarios WHERE cpf = ?";
+try(	 Connection conn = conexaoBanco.conectar();
+	 PreparedStatement stmt = conn.prepareStatement(sql);
+){
+	
+	    stmt.setString(1, cpf);
+	    ResultSet rs = stmt.executeQuery();
+	
+	    if (rs.next()) {
+	    	Usuario u= new Usuario();
+	    	u.setId(rs.getInt("id"));
+	    	u.setMatricula(rs.getString("matricula"));
+	    	u.setNome(rs.getString("nome"));
+	    	u.setEmail(rs.getString("email"));
+	    	u.setCpf(rs.getString("cpf"));
+	    	u.setTipo(rs.getString("tipo"));
+	    	 rs.close();
+	         stmt.close();
+	         conn.close();
+
+	         return u;
+	     
+
+	    }
+	     rs.close();
+	     stmt.close();
+	     conn.close();
+
+}
 	     return null;
 	    	
 

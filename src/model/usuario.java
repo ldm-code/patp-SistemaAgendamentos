@@ -1,5 +1,6 @@
 package model;
 import java.security.MessageDigest;
+
 import java.util.ArrayList;
 
 import List.Usuario;
@@ -63,7 +64,10 @@ public class usuario {
 		            return "Senha muito curta";
 		        }
 		        	
-		        
+		        Usuario cpfExiste=UsuarioDAO.buscarPorCpf(cpf);
+		        if (cpfExiste!=null) {
+		        	return "Ja existe um usuario com esse cpf";
+		        }
 		        Usuario usuariosCadastrados = UsuarioDAO.buscarPorEmail(email);
 
 		        if (usuariosCadastrados != null) {

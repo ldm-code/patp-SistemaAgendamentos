@@ -4,66 +4,53 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import model.consultas;
 import view.LoginUsuario;
+import dao.conexaoBanco;
 
-// Classe Principal (Main) da Aplicação
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Main extends Application {
+
+    private static final ExecutorService executor =
+            Executors.newSingleThreadExecutor();
 
     @Override
     public void start(Stage stage) {
 
-        // 🔹 Inicia sistema de lembretes automáticos
+        // 🔥 LIMPA/RESET de conexões ao iniciar sistema
+        try {
+            conexaoBanco.fecharTudo(); // precisa existir no teu conexaoBanco
+        } catch (Exception e) {
+            System.out.println("Sem conexões antigas para fechar ou erro ao limpar.");
+        }
+
+        // 🔹 inicia lembretes de forma controlada
         iniciarLembretes();
 
-        // 🔹 Abre tela de login
+        // 🔹 abre login
         new LoginUsuario().start(stage);
     }
 
-    // 🔹 Thread responsável pelos lembretes
     public void iniciarLembretes() {
 
-        new Thread(() -> {
+        executor.submit(() -> {
 
             while (true) {
 
                 try {
 
-                    // 🔹 Executa verificação de consultas
                     consultas.enviarLembretesConsultas();
 
-                    // 🔹 Espera 1 hora
-                    Thread.sleep(3600000);
+                    Thread.sleep(3600000); // 1 hora
 
                 } catch (Exception e) {
-
                     e.printStackTrace();
                 }
             }
-
-        }).start();
+        });
     }
 
     public static void main(String[] args) {
-
-        // launch() inicia a aplicação JavaFX
-        // e chama o método start()
         launch();
     }
 }
-
-/*
-IMPLEMENTAÇÕES FUTURAS
-
-- implementar filtro por médico.
-
-- implementar email 1 dia antes da consulta.
-
-- melhorar UX dos filtros em agendamentos
-  e reagendamento:
-  
-    • letras mais legíveis
-    • descrição acima de cada campo
-    • melhor alinhamento visual
-*/
-// implementar filtro por medico.
-// implementar email 1 dia antes da consulta.
-// melhorar ux dos filtros em agendamentos e reagendamento,colocando letras mais legiveis e descrever cada campo encima.
