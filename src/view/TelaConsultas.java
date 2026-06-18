@@ -661,6 +661,9 @@ public class TelaConsultas {
                 return status;
         }
     }
+    private static void atualizarLista() {
+        condicionarExibicao();
+    }
 
 
     private static HBox criarCardConsulta(Consulta consulta){
@@ -747,7 +750,7 @@ public class TelaConsultas {
             try {
 				new TelaEdicaoConsulta().start(
 				        consulta,
-				        ()->condicionarExibicao() 
+				        ()->atualizarLista() 
 				);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
@@ -764,7 +767,7 @@ public class TelaConsultas {
 
             new MotivoTelaCancelamento().start(
                     consulta.getId(),
-                    ()->condicionarExibicao() 
+                    ()->atualizarLista()
             );
         });
 
@@ -779,7 +782,7 @@ public class TelaConsultas {
                 consultas.concluirConsulta(consulta.getId());
                 
                 mostrarAlert("Consulta Concluida","Consulta finalizada com sucesso!",Alert.AlertType.INFORMATION);
-                condicionarExibicao(); 
+                atualizarLista();
             }
             catch(Exception ex){
                 ex.printStackTrace();
