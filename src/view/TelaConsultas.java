@@ -393,11 +393,32 @@ public class TelaConsultas {
 
         layout.setStyle("-fx-background-color:#0f3d2e;");
 
-        Scene scene = new Scene(layout,1366,700);
+        AnchorPane root = new AnchorPane();
 
-        stage.setScene(scene);
-        stage.setTitle("Consultas");
-        stage.show();
+     // Faz o layout ocupar toda a tela
+     AnchorPane.setTopAnchor(layout, 0.0);
+     AnchorPane.setBottomAnchor(layout, 0.0);
+     AnchorPane.setLeftAnchor(layout, 0.0);
+     AnchorPane.setRightAnchor(layout, 0.0);
+     Button botaoVoltar = new Button("Voltar");
+
+     botaoVoltar.setStyle(
+         "-fx-background-color: #FFD700;" +
+         "-fx-text-fill: black;" +
+         "-fx-font-weight: bold;"
+     );
+     AnchorPane.setTopAnchor(botaoVoltar, 10.0);
+     AnchorPane.setLeftAnchor(botaoVoltar, 10.0);
+     botaoVoltar.setOnAction(e -> {
+    	    new LoginUsuario().start(stage);
+    	});
+     root.getChildren().addAll(layout, botaoVoltar);
+
+     Scene scene = new Scene(root, 1366, 700);
+
+     stage.setScene(scene);
+     stage.setTitle("Consultas");
+     stage.show();
     }
     public static void condicionarExibicao() {
         try {
