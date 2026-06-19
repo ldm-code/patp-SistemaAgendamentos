@@ -724,16 +724,21 @@ public class TelaConsultas {
 
         String status=consulta.getStatus();
 
-        if(status.equalsIgnoreCase("concluida")
-        || status.equalsIgnoreCase("cancelada")){
-            btnEditar.setDisable(true);
-        }
+//        if(status.equalsIgnoreCase("concluida")
+//        || status.equalsIgnoreCase("cancelada")){
+//            btnEditar.setDisable(true);
+//            
+//        }
 
         if(status.equalsIgnoreCase("concluida")){
             btnConcluir.setDisable(true);
+            btnCancelar.setDisable(true);
+            btnEditar.setDisable(true);
         }
         else if(status.equalsIgnoreCase("cancelada")){
-            btnCancelar.setDisable(true);
+        	  btnConcluir.setDisable(true);
+              btnCancelar.setDisable(true);
+              btnEditar.setDisable(true);
         }
         else if(status.equalsIgnoreCase("agendada")){
             btnEspera.setDisable(true);

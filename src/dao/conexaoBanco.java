@@ -46,7 +46,7 @@ public class conexaoBanco {
     // 🔥 FECHA TODAS AS CONEXÕES DO SISTEMA
     public static void fecharTudo() {
 
-        System.out.println("Fechando conexões do banco...");
+        
 
         for (Connection conn : conexoes) {
 
@@ -62,6 +62,6 @@ public class conexaoBanco {
         conexoes.clear();
         conexaoUnica = null;
 
-        System.out.println("Todas as conexões foram fechadas.");
+      
     }
 }

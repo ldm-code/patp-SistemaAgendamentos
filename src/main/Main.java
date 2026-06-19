@@ -17,9 +17,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
 
-        // 🔥 LIMPA/RESET de conexões ao iniciar sistema
+      
         try {
-            conexaoBanco.fecharTudo(); // precisa existir no teu conexaoBanco
+            conexaoBanco.fecharTudo();
         } catch (Exception e) {
             System.out.println("Sem conexões antigas para fechar ou erro ao limpar.");
         }
