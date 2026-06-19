@@ -142,6 +142,40 @@ try(	 Connection conn = conexaoBanco.conectar();
 
 	 
  }
+ public static ArrayList<Usuario> buscarEmails(String email) throws Exception {
+
+	    ArrayList<Usuario> lista = new ArrayList<>();
+
+	    String sql = "SELECT * FROM usuarios WHERE email LIKE ? LIMIT 10";
+
+	    try (
+	        Connection conn = conexaoBanco.conectar();
+	        PreparedStatement stmt = conn.prepareStatement(sql);
+	    ) {
+
+	    	stmt.setString(1, "%" + email.trim() + "%");
+
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+
+	            Usuario u = new Usuario();
+
+	            u.setId(rs.getInt("id"));
+	            u.setMatricula(rs.getString("matricula"));
+	            u.setNome(rs.getString("nome"));
+	            u.setEmail(rs.getString("email"));
+	            u.setCpf(rs.getString("cpf"));
+	            u.setTipo(rs.getString("tipo"));
+
+	            lista.add(u);
+	        }
+
+	        rs.close();
+	    }
+
+	    return lista;
+	}
  
  
  

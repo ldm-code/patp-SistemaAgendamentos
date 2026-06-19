@@ -18,6 +18,7 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -37,7 +38,94 @@ public class TelaAgendamento {
 
         // ===== CAMPOS =====
         TextField campoEmail = new TextField();
-        campoEmail.setPromptText("Email do paciente");
+        campoEmail.setPromptText("Digite o email do paciente...");
+
+        ComboBox<Usuario> sugestoes = new ComboBox<>();
+        sugestoes.setVisibleRowCount(6);
+        sugestoes.setPrefWidth(campoEmail.getPrefWidth());
+        esconderSugestoes(sugestoes);
+        // 🔴 deixa invisível sem quebrar funcionamento
+     
+        sugestoes.setStyle(
+        	    "-fx-opacity: 0;" +
+        	    "-fx-background-color: transparent;" +
+        	    "-fx-border-color: transparent;"
+        	);
+
+        // 🔴 remove seta do ComboBox
+        sugestoes.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Usuario item, boolean empty) {
+                super.updateItem(item, empty);
+                setText("");
+            }
+        });
+        sugestoes.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(Usuario u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    setText(null);
+                    return;
+                }
+
+                setText(u.getEmail());
+                setTextFill(Color.WHITE);
+                setStyle("-fx-background-color:#1e1e1e;");
+            }
+        });
+        campoEmail.textProperty().addListener((obs, old, novo) -> {
+
+            if (novo == null || novo.isBlank()) {
+                esconderSugestoes(sugestoes);
+                sugestoes.getItems().clear();
+                return;
+            }
+
+            try {
+                List<Usuario> lista = UsuarioDAO.buscarEmails(novo);
+                sugestoes.getItems().setAll(lista);
+
+                if (!lista.isEmpty()) {
+                    mostrarSugestoes(sugestoes);
+
+                    if (!sugestoes.isShowing()) {
+                        sugestoes.show();
+                    }
+                } else {
+                    esconderSugestoes(sugestoes);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        sugestoes.setOnAction(e -> {
+            Usuario u = sugestoes.getValue();
+
+            if (u != null) {
+                campoEmail.setText(u.getEmail());
+                esconderSugestoes(sugestoes);
+            }
+        });
+        campoEmail.setOnMouseClicked(e -> {
+            if (!sugestoes.getItems().isEmpty()) {
+            	 mostrarSugestoes(sugestoes);
+            }
+        });
+        campoEmail.focusedProperty().addListener((obs, old, focado) -> {
+            if (!focado) {
+                esconderSugestoes(sugestoes);
+            }
+        });
+        VBox emailBox = new VBox(0);
+        sugestoes.setPrefWidth(300);
+        sugestoes.setMaxWidth(300);
+
+        emailBox.setAlignment(Pos.CENTER);
+        
+        emailBox.getChildren().addAll(campoEmail,sugestoes);
 
         ComboBox<MedicosSelect> selectMedico = new ComboBox<>();
         selectMedico.setPromptText("Selecione um médico");
@@ -312,8 +400,9 @@ public class TelaAgendamento {
         layout.setPadding(new Insets(30));
 
         layout.getChildren().addAll(
+        		
                 titulo,
-                campoEmail,
+                emailBox,
                 selectMedico,
                 dataConsulta,
                 comboHora,
@@ -328,5 +417,14 @@ public class TelaAgendamento {
         stage.setTitle("Agendamento");
         stage.setScene(scene);
         stage.show();
+    }
+    private void esconderSugestoes(ComboBox<?> combo) {
+        combo.setVisible(false);
+        combo.setManaged(false);
+        combo.hide();
+    }
+    private void mostrarSugestoes(ComboBox<?> combo) {
+        combo.setVisible(true);
+        combo.setManaged(true);
     }
 }
