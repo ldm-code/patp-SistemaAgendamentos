@@ -126,6 +126,7 @@ public class TelaAgendamento {
         emailBox.setAlignment(Pos.CENTER);
         
         emailBox.getChildren().addAll(campoEmail,sugestoes);
+        
 
         ComboBox<MedicosSelect> selectMedico = new ComboBox<>();
         selectMedico.setPromptText("Selecione um médico");
@@ -390,6 +391,7 @@ public class TelaAgendamento {
         btnVoltar.setMaxWidth(Double.MAX_VALUE);
         campoEmail.setMaxWidth(300);
         btnAgendar.setMaxWidth(300);
+        btnVoltar.setMaxWidth(70);
         selectMedico.setMaxWidth(300);
         dataConsulta.setMaxWidth(300);
         comboHora.setMaxWidth(300);
@@ -412,8 +414,11 @@ public class TelaAgendamento {
         );
 
         layout.setStyle("-fx-background-color: #0f3d2e;");
-
+      ;
         Scene scene = new Scene(layout, 1366, 700);
+        scene.setOnMousePressed(e -> {
+            esconderSugestoes(sugestoes);
+        });
         stage.setTitle("Agendamento");
         stage.setScene(scene);
         stage.show();
