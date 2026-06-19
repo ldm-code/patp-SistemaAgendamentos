@@ -28,7 +28,7 @@ import model.consultas;
 import utils.AtualizadorHorarios;
 
 public class TelaAgendamento {
-
+	private boolean emailSelecionado = false;
     public void start(Stage stage) {
 
         // ===== TÍTULO =====
@@ -89,6 +89,7 @@ public class TelaAgendamento {
 
                 if (!lista.isEmpty()) {
                     mostrarSugestoes(sugestoes);
+                    
 
                     if (!sugestoes.isShowing()) {
                         sugestoes.show();
@@ -107,11 +108,19 @@ public class TelaAgendamento {
             if (u != null) {
                 campoEmail.setText(u.getEmail());
                 esconderSugestoes(sugestoes);
+                emailSelecionado = true;
+
             }
         });
+        
         campoEmail.setOnMouseClicked(e -> {
+
+            if (emailSelecionado) {
+                return; // já selecionado, não reabre sugestão
+            }
+
             if (!sugestoes.getItems().isEmpty()) {
-            	 mostrarSugestoes(sugestoes);
+                sugestoes.show();
             }
         });
         campoEmail.focusedProperty().addListener((obs, old, focado) -> {
