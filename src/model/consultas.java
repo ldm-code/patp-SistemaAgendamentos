@@ -215,6 +215,9 @@ public class consultas {
 	    if (medicoOcupado) {
 	        return "Este médico já possui consulta nesse horário!";
 	    }
+	    if (data.isBefore(LocalDateTime.now())){
+	    	return "Data da consulta nao pode ser inferior á de hoje";
+	    }
 
 	    // 🔴 2. valida conflito do usuário com mesmo horário
 	    boolean usuarioOcupado = ConsultaDAO.usuarioJaTemConsultaMesmoHorario(idUsuario, data);
