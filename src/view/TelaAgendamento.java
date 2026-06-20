@@ -1,6 +1,7 @@
 package view;
 
 import java.time.LocalDate;
+import javafx.scene.layout.StackPane;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -20,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -128,14 +130,19 @@ public class TelaAgendamento {
                 esconderSugestoes(sugestoes);
             }
         });
-        VBox emailBox = new VBox(0);
-        sugestoes.setPrefWidth(300);
-        sugestoes.setMaxWidth(300);
+        StackPane emailBox = new StackPane();
 
-        emailBox.setAlignment(Pos.CENTER);
-        
-        emailBox.getChildren().addAll(campoEmail,sugestoes);
-        
+        campoEmail.setMaxWidth(300);
+
+        sugestoes.prefWidthProperty().bind(campoEmail.widthProperty());
+
+        // desloca o ComboBox para baixo do TextField
+        sugestoes.setTranslateY(35);
+        sugestoes.autosize();
+        emailBox.getChildren().addAll(campoEmail, sugestoes);
+
+        StackPane.setAlignment(campoEmail, Pos.TOP_CENTER);
+        StackPane.setAlignment(sugestoes, Pos.TOP_CENTER);
 
         ComboBox<MedicosSelect> selectMedico = new ComboBox<>();
         selectMedico.setPromptText("Selecione um médico");
