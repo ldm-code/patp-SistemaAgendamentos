@@ -10,6 +10,7 @@ import List.MedicosSelect;
 import List.Usuario;
 import dao.UsuarioDAO;
 import dao.medicosDAO;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,6 +32,7 @@ import utils.AtualizadorHorarios;
 
 public class TelaAgendamento {
 	private boolean emailSelecionado = false;
+	private boolean selecionandoEmail = false;
     public void start(Stage stage) {
 
         // ===== TÍTULO =====
@@ -79,6 +81,10 @@ public class TelaAgendamento {
         });
         campoEmail.textProperty().addListener((obs, old, novo) -> {
 
+            if (selecionandoEmail) {
+                return; // 🔥 evita loop e conflito JavaFX
+            }
+
             if (novo == null || novo.isBlank()) {
                 esconderSugestoes(sugestoes);
                 sugestoes.getItems().clear();
@@ -87,15 +93,17 @@ public class TelaAgendamento {
 
             try {
                 List<Usuario> lista = UsuarioDAO.buscarEmails(novo);
+
                 sugestoes.getItems().setAll(lista);
 
                 if (!lista.isEmpty()) {
                     mostrarSugestoes(sugestoes);
-                    
 
-                    if (!sugestoes.isShowing()) {
-                        sugestoes.show();
-                    }
+                    Platform.runLater(() -> {
+                        if (!sugestoes.isShowing()) {
+                            sugestoes.show();
+                        }
+                    });
                 } else {
                     esconderSugestoes(sugestoes);
                 }
@@ -105,24 +113,33 @@ public class TelaAgendamento {
             }
         });
         sugestoes.setOnAction(e -> {
+
             Usuario u = sugestoes.getValue();
 
             if (u != null) {
+
+                selecionandoEmail = true;
+
                 campoEmail.setText(u.getEmail());
-                esconderSugestoes(sugestoes);
                 emailSelecionado = true;
 
+                esconderSugestoes(sugestoes);
+
+                selecionandoEmail = false;
             }
         });
         
         campoEmail.setOnMouseClicked(e -> {
 
-            if (emailSelecionado) {
-                return; // já selecionado, não reabre sugestão
-            }
-
-            if (!sugestoes.getItems().isEmpty()) {
-                sugestoes.show();
+        	 if (sugestoes.getItems().isEmpty()) {
+        	        return;
+        	    }
+        	 else if (!sugestoes.getItems().isEmpty()) {
+        		 Platform.runLater(() -> {
+        			    if (!sugestoes.getItems().isEmpty()) {
+        			        sugestoes.show();
+        			    }
+        			});
             }
         });
         campoEmail.focusedProperty().addListener((obs, old, focado) -> {
@@ -134,10 +151,9 @@ public class TelaAgendamento {
 
         campoEmail.setMaxWidth(300);
 
-        sugestoes.prefWidthProperty().bind(campoEmail.widthProperty());
-
-        // desloca o ComboBox para baixo do TextField
-        sugestoes.setTranslateY(35);
+        sugestoes.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        sugestoes.setMinWidth(Region.USE_COMPUTED_SIZE);
+        sugestoes.setMaxWidth(Region.USE_COMPUTED_SIZE);
         sugestoes.autosize();
         emailBox.getChildren().addAll(campoEmail, sugestoes);
 
@@ -432,17 +448,17 @@ public class TelaAgendamento {
         layout.setStyle("-fx-background-color: #0f3d2e;");
       ;
         Scene scene = new Scene(layout, 1366, 700);
-        scene.setOnMousePressed(e -> {
-            esconderSugestoes(sugestoes);
-        });
+//        scene.setOnMousePressed(e -> {
+//            esconderSugestoes(sugestoes);
+//        });
         stage.setTitle("Agendamento");
         stage.setScene(scene);
         stage.show();
     }
     private void esconderSugestoes(ComboBox<?> combo) {
+    	combo.hide();
         combo.setVisible(false);
         combo.setManaged(false);
-        combo.hide();
     }
     private void mostrarSugestoes(ComboBox<?> combo) {
         combo.setVisible(true);
