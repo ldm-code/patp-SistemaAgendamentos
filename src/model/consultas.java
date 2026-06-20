@@ -208,9 +208,10 @@ public class consultas {
 		ConsultaDAO.atualizarConsulta(id,"concluida");
 	}
 	public static String marcarAgendamento(int id, int idMedico, LocalDateTime data, int idUsuario) throws Exception {
-
+		
 	    // 🔴 1. valida conflito do médico
 	    boolean medicoOcupado = ConsultaDAO.medicoJaTemConsultaEdicao(idMedico, data, id);
+	  
 
 	    if (medicoOcupado) {
 	        return "Este médico já possui consulta nesse horário!";
@@ -218,13 +219,32 @@ public class consultas {
 	    if (data.isBefore(LocalDateTime.now())){
 	    	return "Data da consulta nao pode ser inferior á de hoje";
 	    }
+	   
 
 	    // 🔴 2. valida conflito do usuário com mesmo horário
 	    boolean usuarioOcupado = ConsultaDAO.usuarioJaTemConsultaMesmoHorario(idUsuario, data);
-
+	    boolean existe = ConsultaDAO.usuarioJaTemConsulta(
+                idUsuario,
+                idMedico, 
+                data
+                
+               
+        );
+        if (existe) { 
+            return "Você já possui uma consulta com esse médico em um horário proximo!";
+        }
+      
 	    if (usuarioOcupado) {
 	        return "Você já possui uma consulta nesse horário!";
 	    }
+	    Consulta temp = new Consulta();
+        temp.setDataConsulta(data);
+
+        if (!temp.isHorarioValido()) {
+            return "Horário inválido!";
+        }
+
+	    
 
 	    // 🔴 3. atualiza status
 	    ConsultaDAO.atualizarConsulta(id, "agendada");
