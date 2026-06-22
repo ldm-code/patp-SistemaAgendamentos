@@ -146,7 +146,7 @@ try(	 Connection conn = conexaoBanco.conectar();
 
 	    ArrayList<Usuario> lista = new ArrayList<>();
 
-	    String sql = "SELECT * FROM usuarios WHERE email LIKE ? LIMIT 10";
+	    String sql = "SELECT * FROM usuarios WHERE email LIKE ? ";
 
 	    try (
 	        Connection conn = conexaoBanco.conectar();
