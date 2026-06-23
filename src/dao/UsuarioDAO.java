@@ -142,6 +142,41 @@ try(	 Connection conn = conexaoBanco.conectar();
 
 	 
  }
+ public static Usuario buscarPorMatricula(String matricula) throws Exception{
+	 String sql = "SELECT * FROM usuarios WHERE matricula = ?";
+try(	 Connection conn = conexaoBanco.conectar();
+	 PreparedStatement stmt = conn.prepareStatement(sql);
+){
+	
+	    stmt.setString(1, matricula);
+	    ResultSet rs = stmt.executeQuery();
+	
+	    if (rs.next()) {
+	    	Usuario u= new Usuario();
+	    	u.setId(rs.getInt("id"));
+	    	u.setMatricula(rs.getString("matricula"));
+	    	u.setNome(rs.getString("nome"));
+	    	u.setEmail(rs.getString("email"));
+	    	u.setCpf(rs.getString("cpf"));
+	    	u.setTipo(rs.getString("tipo"));
+	    	 rs.close();
+	         stmt.close();
+	         conn.close();
+
+	         return u;
+	     
+
+	    }
+	     rs.close();
+	     stmt.close();
+	     conn.close();
+
+}
+	     return null;
+	    	
+
+	 
+ }
  public static ArrayList<Usuario> buscarEmails(String email) throws Exception {
 
 	    ArrayList<Usuario> lista = new ArrayList<>();

@@ -24,6 +24,7 @@ public class usuario {
 		 return hex.toString();
 	 }
 	 public static boolean validarMatricula(String matricula) {
+		
 		    return matricula != null && matricula.matches("\\d+");
 		}
 
@@ -36,7 +37,6 @@ public class usuario {
 		) {
 
 		    try {
-
 		        if (matricula == null || matricula.isEmpty() ||
 		            nome == null || nome.isEmpty() ||
 		            email == null || email.isEmpty() ||
@@ -52,6 +52,13 @@ public class usuario {
 
 		        if (!validarMatricula(matricula)) {
 		            return "Matrícula inválida";
+		        }
+		        Usuario MatriculaExiste=UsuarioDAO.buscarPorMatricula(matricula);
+		        if (MatriculaExiste != null) {
+		        	return "Já existe um usuário com essa matricula";
+		        }
+		        if(!cpf.matches("[\\d.\\-]+")) {
+		        	return "Digite apenas números nesse campo";
 		        }
 
 		        cpf = cpf.replaceAll("[^\\d]", "");
