@@ -312,7 +312,12 @@ VALUES (123456, 'senha', 'admin@email.com', 'adm', 'Administrador', '00000000000
 - reuniao com a encarregada do setor de ti para apresentar o sistema
 ---
 ## Autores Do Projeto:
-- [Leonardo De Moraes](https://github.com/ldm-code)
-- [Kevin Sckariot](https://github.com/dilaozinhu)
-- [Eduardo](https://github.com/EDUARDOPEREIRA2644)
-- [Nicolas Cole](https://github.com/NicolasCCole)
+
+## Autores
+
+| Perfil | Nome | E-mail |
+|---|---|---|
+| ![Leonardo](https://github.com/ldm-code.png) | [Leonardo De Moraes](https://github.com/ldm-code) | - | [demoraesleonardo327@gmail.com](malito:demoraesleonardo327@gmail.com)
+| ![Kevin](https://github.com/dilaozinhu.png) | [Kevin Sckariot](https://github.com/dilaozinhu) | [KevinScariot@Outlook.com](mailto:KevinScariot@Outlook.com) |
+| ![Eduardo](https://github.com/EDUARDOPEREIRA2644.png) | [Eduardo](https://github.com/EDUARDOPEREIRA2644) | [eduardoserginho26@gmail.com](mailto:eduardoserginho26@gmail.com) |
+| ![Nicolas](https://github.com/NicolasCCole.png) | [Nicolas Cole](https://github.com/NicolasCCole) | - | [nicolascole543@gmail.com](malito:nicolascole543@gmail.com)
