@@ -311,4 +311,8 @@ VALUES (123456, 'senha', 'admin@email.com', 'adm', 'Administrador', '00000000000
 ## Planejamentos futuros
 - reuniao com a encarregada do setor de ti para apresentar o sistema
 ---
-
+## Autores Do Projeto:
+- [Leonardo De Moraes](https://github.com/ldm-code)
+- [Kevin Sckariot](https://github.com/dilaozinhu)
+- [Eduardo](https://github.com/EDUARDOPEREIRA2644)
+- [Nicolas Cole](https://github.com/NicolasCCole)
